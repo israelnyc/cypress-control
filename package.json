@@ -1,0 +1,14 @@
+{
+  "name": "cypress-dashboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Israel Schulman <israel.schulman@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "get-port": "^5.1.1",
+    "lowdb": "^1.0.0",
+    "mocha": "^8.2.1",
+    "socket.io": "^3.0.4"
+  }
+}
