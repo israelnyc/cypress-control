@@ -1,15 +1,17 @@
 const childProcess = require('child_process')
 const { resetProcessStatus } = require('./database.js')
-const processManager = require('./processManager')
+const processManager = require('./process-manager')
 
 module.exports = {
-    start: function() {
-        console.log('forking cypress process...')
+    start: function(runnerMessageCallback) {
+        let cypressProcess= childProcess.fork(`${__dirname}/cypress`)
 
-        let cypressProcess = childProcess.fork(`${__dirname}/cypress`)
+        cypressProcess.on('message', message => {
+            if(typeof runnerMessageCallback === 'function') {
+                runnerMessageCallback(message)
+            }
+        })
 
-        console.log('forked process:', cypressProcess.pid)
-        
         cypressProcess.on('close', function() {
             resetProcessStatus()
         })

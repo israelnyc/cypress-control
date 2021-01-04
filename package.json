@@ -9,6 +9,7 @@
     "get-port": "^5.1.1",
     "lowdb": "^1.0.0",
     "mocha": "^8.2.1",
-    "socket.io": "^3.0.4"
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4"
   }
 }
