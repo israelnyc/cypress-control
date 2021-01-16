@@ -3,8 +3,7 @@ const Mocha = require('mocha')
 const Base = Mocha.reporters.Base
 const { database } = require('./database.js')
 const { constants } = require('./status-events')
-const io = require('socket.io-client')
-const socket = io(`http://localhost:8686`)
+const { socket } = require('./socket')
 
 const {
     EVENT_RUN_BEGIN,
