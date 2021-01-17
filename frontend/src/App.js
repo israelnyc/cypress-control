@@ -22,6 +22,18 @@ function App() {
       updateTestStats(data)
     })
 
+    socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
+      console.log('suite begin: ', data)
+    })
+
+    socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
+      console.log('test begin: ', data)
+    })
+    
+    socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
+      console.log('test pending: ', data)
+    })
+
     socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
       console.log('Runner started...')
       setCypressIsRunning(true)
@@ -33,12 +45,12 @@ function App() {
     })
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
-      console.log('test passed')
+      console.log('test passed', data)
       setPassedCount(data.status.passed)
     })
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-      console.log('test failed')
+      console.log('test failed', data)
       setFailedCount(data.status.failed)
     })
 

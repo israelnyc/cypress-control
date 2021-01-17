@@ -21,6 +21,26 @@ app.get('/', (req, res) => {
 io.on('connection', socket => {  
   socket.emit(events.CYPRESS_DASHBOARD_STATUS, database.read('status').value())
 
+  socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
+    io.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data)
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
+    io.emit(events.CYPRESS_DASHBOARD_TEST_BEGIN, data)
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
+    io.emit(events.CYPRESS_DASHBOARD_TEST_PENDING, data)
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
+    io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...database.read('status').value() })
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
+    io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...database.read('status').value() })
+  })
+
   socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
     console.log('Attempting to start runner...')
     
@@ -31,12 +51,6 @@ io.on('connection', socket => {
     console.log('Stopping runner...')
     
     runner.stop()
-  })
-
-  Object.keys(events).forEach(statusEvent => {
-    socket.on(events[statusEvent], () => {
-      io.emit(events[statusEvent], database.read('status').value())
-    })
   })
 
   socket.on('disconnect', () => {
