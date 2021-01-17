@@ -41,15 +41,23 @@ io.on('connection', socket => {
     io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...database.read('status').value() })
   })
 
+  socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
+    io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...database.read('status').value() })
+  })
+
   socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
     console.log('Attempting to start runner...')
     
     runner.start()
+
+    io.emit(events.CYPRESS_DASHBOARD_START_RUNNER, database.read('status').value())
   })
 
   socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
     console.log('Stopping runner...')
     
+    io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, database.read('status').value())
+
     runner.stop()
   })
 

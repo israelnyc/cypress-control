@@ -10,11 +10,21 @@ function App() {
 
   useEffect(() => {
     const socket = getSocket()
+    const pageTitle = '%customValues Cypress Dashboard'
 
     function updateTestStats(data) {
       setPassedCount(data.status.passed)
       setFailedCount(data.status.failed)
       setCypressIsRunning(data.status.isRunning)
+      updatePageTitlePassedFailedStatus(data)
+    }
+
+    function setPageTitle(customValues = '') {
+      document.title = pageTitle.replace('%customValues', customValues)
+    }
+
+    function updatePageTitlePassedFailedStatus(data = {status: {passed: 0, failed: 0}}) {
+      setPageTitle(`(${data.status.passed} / ${data.status.failed})`)
     }
     
     socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
@@ -37,6 +47,7 @@ function App() {
     socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
       console.log('Runner started...')
       setCypressIsRunning(true)
+      updatePageTitlePassedFailedStatus()
     })
   
     socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
@@ -47,17 +58,21 @@ function App() {
     socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
       console.log('test passed', data)
       setPassedCount(data.status.passed)
+      updatePageTitlePassedFailedStatus(data)
     })
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
       console.log('test failed', data)
       setFailedCount(data.status.failed)
+      updatePageTitlePassedFailedStatus(data)
     })
 
     socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
       console.log('Run completed')
       updateTestStats(data)
     })
+
+    setPageTitle()
 
     return () => socket.disconnect()
   }, [])  
