@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import './App.css'
 import { startCypressRunner, stopCypressRunner, getSocket } from './utils'
+import events from './status-events'
 
 function App() {
   const [passedCount, setPassedCount] = useState(0)
@@ -16,32 +17,32 @@ function App() {
       setCypressIsRunning(data.status.isRunning)
     }
     
-    socket.on('cypress_dashboard_status', data => {
+    socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
       console.log('receiving status update from server')
       updateTestStats(data)
     })
 
-    socket.on('cypress_dashboard_start_runner', () => {
+    socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
       console.log('Runner started...')
       setCypressIsRunning(true)
     })
   
-    socket.on('cypress_dashboard_stop_runner', () => {
+    socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
       console.log('Runner stopped...')
       setCypressIsRunning(false)
     })
 
-    socket.on('cypress_dashboard_test_passed', data => {
+    socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
       console.log('test passed')
       setPassedCount(data.status.passed)
     })
 
-    socket.on('cypress_dashboard_test_failed', data => {
+    socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
       console.log('test failed')
       setFailedCount(data.status.failed)
     })
 
-    socket.on('cypress_dashboard_run_completed', data => {
+    socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
       console.log('Run completed')
       updateTestStats(data)
     })

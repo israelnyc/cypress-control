@@ -1,6 +1,6 @@
 const { database, resetTestCounts } = require('./database.js')
 const { handleSIGINT } = require('./process-manager')
-const { constants } = require('./status-events')
+const { events } = require('./status-events')
 
 try {
     let cypress = require(process.cwd() + '\\node_modules\\cypress')
@@ -13,7 +13,7 @@ try {
     resetTestCounts()
 
     process.send({
-        type: constants.CYPRESS_DASHBOARD_BEFORE_RUN
+        type: events.CYPRESS_DASHBOARD_BEFORE_RUN
     })
 
     cypress.run({
@@ -22,14 +22,14 @@ try {
         }
     }).then(results => {
         process.send({
-            type: constants.CYPRESS_DASHBOARD_RUN_COMPLETED,
+            type: events.CYPRESS_DASHBOARD_RUN_COMPLETED,
             data: results
         })
 
         process.exit(0)
     }).catch((error) => {
         process.send({
-            type: constants.CYPRESS_DASHBOARD_RUN_ERROR,
+            type: events.CYPRESS_DASHBOARD_RUN_ERROR,
             data: error
         })
 
@@ -37,7 +37,7 @@ try {
     })
 } catch(error) {
     process.send({
-        type: constants.CYPRESS_DASHBOARD_MODULE_INCLUDE_ERROR,
+        type: events.CYPRESS_DASHBOARD_MODULE_INCLUDE_ERROR,
         data: error
     })
 

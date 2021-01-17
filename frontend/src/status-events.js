@@ -1,4 +1,4 @@
-module.exports.events = {
+const events =  {
     CYPRESS_DASHBOARD_RUN_BEGIN: 'cypress_dashboard_run_begin',
     CYPRESS_DASHBOARD_TEST_PASSED: 'cypress_dashboard_test_passed',
     CYPRESS_DASHBOARD_TEST_FAILED: 'cypress_dashboard_test_failed',
@@ -10,3 +10,5 @@ module.exports.events = {
     CYPRESS_DASHBOARD_STOP_RUNNER: 'cypress_dashboard_stop_runner',
     CYPRESS_DASHBOARD_STATUS: 'cypress_dashboard_status'    
 }
+
+export default events

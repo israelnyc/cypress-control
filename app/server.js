@@ -2,7 +2,7 @@ const runner = require('./runner')
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
-const { constants } = require('./status-events')
+const { events } = require('./status-events')
 const { handleSIGINT } = require('./process-manager')
 const { database, resetProcessStatus } = require('./database.js')
 const path = require('path')
@@ -33,9 +33,9 @@ io.on('connection', socket => {
     runner.stop()
   })
 
-  Object.keys(constants).forEach(statusEvent => {
-    socket.on(constants[statusEvent], () => {
-      io.emit(constants[statusEvent], database.read('status').value())
+  Object.keys(events).forEach(statusEvent => {
+    socket.on(events[statusEvent], () => {
+      io.emit(events[statusEvent], database.read('status').value())
     })
   })
 
