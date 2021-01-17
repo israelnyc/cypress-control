@@ -3,6 +3,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const adapter = new FileSync(`${__dirname}/db.json`)
 const database = low(adapter)
 const { socket } = require('./socket')
+const { events } = require('./status-events')
 
 database.defaults({
     status: {
@@ -15,7 +16,7 @@ database.defaults({
 }).write()
 
 function emitDatabaseStatus() {
-    socket.emit('cypress_dashboard_status', database.read('status').value())
+    socket.emit(events.CYPRESS_DASHBOARD_STATUS, database.read('status').value())
 }
 
 function resetProcessStatus() {

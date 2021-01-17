@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import events from './status-events'
 
 export function getSocket() {
     window.cypressDashboardSocket = window.cypressDashboardSocket || io(`http://${window.location.hostname}:8686`)
@@ -9,11 +10,11 @@ export function getSocket() {
 export function startCypressRunner() {
     const socket = getSocket()
     console.log('Starting runner')
-    socket.emit('cypress_dashboard_start_runner')
+    socket.emit(events.CYPRESS_DASHBOARD_START_RUNNER)
 }
 
 export function stopCypressRunner() {
     const socket = getSocket()
     console.log('Stopping runner')
-    socket.emit('cypress_dashboard_stop_runner')
+    socket.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER)
 }
