@@ -3,7 +3,8 @@ const { handleSIGINT } = require('./process-manager')
 const { events } = require('./status-events')
 
 try {
-    let cypress = require(process.cwd() + '\\node_modules\\cypress')
+    const cypress = require(process.cwd() + '\\node_modules\\cypress')
+    const cypressConfig = require(process.cwd() + '\\cypress.json')
 
     database.get('status').assign({
         cypressPID: process.pid,

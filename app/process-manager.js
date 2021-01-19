@@ -26,6 +26,7 @@ function handleSIGINT() {
     }
     
     process.on('SIGINT', function() {
+        resetProcessStatus()
         process.exit()
     })
 }

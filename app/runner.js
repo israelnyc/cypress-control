@@ -2,6 +2,7 @@ const childProcess = require('child_process')
 const { resetProcessStatus, database } = require('./database.js')
 const processManager = require('./process-manager')
 const { socket } = require('./socket')
+const { events } = require('./status-events')
 
 module.exports = {
     start: function(runnerMessageCallback) {
@@ -19,9 +20,10 @@ module.exports = {
                 runnerMessageCallback(message)
             }
 
-            if(message.type === 'cypress_dashboard_run_completed') {
+            if(message.type === events.CYPRESS_DASHBOARD_RUN_COMPLETED) {
                 resetProcessStatus()
             }
+
             socket.emit(message.type, message.data)
         })
 

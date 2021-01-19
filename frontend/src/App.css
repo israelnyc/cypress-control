@@ -25,6 +25,24 @@ header {
   animation: none;
 }
 
+.connection-status {
+  padding: 10px;
+  color: #000;
+  font-weight: bold;
+}
+
+.connection-status.connected {
+  background-color: #88ea88;
+}
+
+.connection-status.disconnected {
+  background-color: #ea88a6;
+}
+
+.hidden {
+  display: none !important;
+}
+
 @keyframes status-fade {
   from { opacity: 1.0; }
   50% { opacity: 0.5; }
