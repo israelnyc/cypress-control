@@ -7,6 +7,7 @@ export function getSocket() {
     return window.cypressDashboardSocket
 }
 
+// TODO: prevent emitting events if not connected to the server
 export function startCypressRunner() {
     const socket = getSocket()
     console.log('Starting runner')

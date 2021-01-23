@@ -27,9 +27,13 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_SUITE_BEGIN, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
-                title: data.title
-            })
+            if(data.root) {
+                database.update('status.totalSpecsRan', totalSpecsRan => totalSpecsRan + 1).write()
+                
+                socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
+                    title: data.title
+                })
+            }
         })
 
         runner.on(EVENT_TEST_BEGIN, data => {

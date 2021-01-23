@@ -12,6 +12,8 @@ database.defaults({
         tests: 0, 
         failed: 0, 
         passed: 0,
+        totalSpecs: 0,
+        totalSpecsRan: 0,
     }
 }).write()
 
@@ -32,7 +34,9 @@ function resetTestCounts() {
     database.get('status').assign({
         tests: 0,
         failed: 0,
-        passed: 0
+        passed: 0,
+        totalSpecs: 0,
+        totalSpecsRan: 0,
     }).write()
 
     emitDatabaseStatus()
