@@ -10,6 +10,7 @@ const events =  {
     CYPRESS_DASHBOARD_STOP_RUNNER: 'cypress_dashboard_stop_runner',
     CYPRESS_DASHBOARD_STATUS: 'cypress_dashboard_status',
     CYPRESS_DASHBOARD_SUITE_BEGIN: 'cypress_dashboard_suite_begin',
+    CYPRESS_DASHBOARD_SUITE_END: 'cypress_dashboard_suite_end',
     CYPRESS_DASHBOARD_TEST_BEGIN: 'cypress_dashboard_test_begin',
     CYPRESS_DASHBOARD_TEST_PENDING: 'cypress_dashboard_test_pending'
 }

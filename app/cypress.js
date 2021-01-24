@@ -15,7 +15,6 @@ try {
     console.log('spec pattern:', specPattern)
 
     glob(specPattern, { nodir: true }, (err, matches) => {
-        console.log('spec length:', matches.length)
         database.update('status.totalSpecs', () => matches.length).write()
     })
 

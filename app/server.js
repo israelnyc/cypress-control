@@ -24,6 +24,10 @@ io.on('connection', socket => {
   socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
     io.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data)
   })
+  
+  socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
+    io.emit(events.CYPRESS_DASHBOARD_SUITE_END, data)
+  })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
     io.emit(events.CYPRESS_DASHBOARD_TEST_BEGIN, data)

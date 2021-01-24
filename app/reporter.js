@@ -27,13 +27,47 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_SUITE_BEGIN, data => {
+            let _suites = []
+
             if(data.root) {
-                database.update('status.totalSpecsRan', totalSpecsRan => totalSpecsRan + 1).write()
-                
-                socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
-                    title: data.title
-                })
+                getSuiteAndTestData(data.suites)
+
+                function getSuiteAndTestData(suites) {
+                    suites.forEach(suite => {
+                        _suites.push({
+                            title: suite.title,
+                            id: suite.id,
+                            file: data.file,
+                            tests: suite.tests.map(test => {
+                                return {
+                                    title: test.title,
+                                    id: test.id,
+                                    body: test.body,
+                                    file: data.file
+                                }
+                            })
+                        })
+                        if(suite.suites.length) getSuiteAndTestData(suite.suites)
+                    })
+                }
             }
+            
+            database.update('status.totalSpecsRan', totalSpecsRan => totalSpecsRan + 1).write()
+                
+            socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
+                title: data.title, 
+                id: data.id,
+                isRootSuite: data.root,
+                suites: _suites
+            })
+        })
+
+        runner.on(EVENT_SUITE_END, data => {            
+            socket.emit(events.CYPRESS_DASHBOARD_SUITE_END, {
+                title: data.title, 
+                id: data.id,
+                isRootSuite: data.root
+            })
         })
 
         runner.on(EVENT_TEST_BEGIN, data => {

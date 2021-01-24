@@ -38,6 +38,10 @@ class App extends React.Component {
             console.log('suite begin: ', data)
         })
 
+        this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
+            console.log('suite end: ', data)
+        })
+
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
             console.log('test begin: ', data)
         })
