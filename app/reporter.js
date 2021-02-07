@@ -1,7 +1,7 @@
 const createStatsCollector = require('mocha/lib/stats-collector')
 const Mocha = require('mocha')
 const Base = Mocha.reporters.Base
-const { database } = require('./database.js')
+const { database, getDatabaseStatus } = require('./database.js')
 const { events } = require('./status-events')
 const { socket } = require('./socket')
 
@@ -23,7 +23,7 @@ class CypressDashboardReporter {
         Base.call(this, runner)
 
         runner.on(EVENT_RUN_BEGIN, () => {
-            socket.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN)
+            socket.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, getDatabaseStatus())
         })
 
         runner.on(EVENT_SUITE_BEGIN, data => {
@@ -52,17 +52,23 @@ class CypressDashboardReporter {
                 }
             }
             
-            database.update('status.totalSpecsRan', totalSpecsRan => totalSpecsRan + 1).write()
                 
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
                 title: data.title, 
                 id: data.id,
                 isRootSuite: data.root,
-                suites: _suites
+                suites: _suites,
+                file: data.file
             })
         })
 
         runner.on(EVENT_SUITE_END, data => {            
+            if(data.root) {
+                database.update('status.totalSpecsRan', totalSpecsRan => {
+                    return totalSpecsRan + 1
+                }).write()
+            }
+
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_END, {
                 title: data.title, 
                 id: data.id,

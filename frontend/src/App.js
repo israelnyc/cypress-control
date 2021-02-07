@@ -2,6 +2,7 @@ import React from 'react'
 import './App.css'
 import events from './status-events'
 import { startCypressRunner, stopCypressRunner, getSocket } from './utils'
+import Suite from './Suite'
 class App extends React.Component {
     constructor() {
         super()
@@ -13,7 +14,8 @@ class App extends React.Component {
             failedCount: 0,
             cypressIsRunning: false,
             isConnectedToServer: false,
-            isSocketDisconnected: false
+            isSocketDisconnected: false,
+            currentSuite: {}
         }
 
         this.pageTitle = '%customValues Cypress Dashboard'
@@ -34,8 +36,18 @@ class App extends React.Component {
             this.updateTestStats(data)
         })
 
+        this.socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
+            console.log('cypress run begin...', data)
+            this.updateTestStats(data)
+        })
+
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
             console.log('suite begin: ', data)
+            if(data.isRootSuite) {
+                this.setState({ 
+                    currentSuite: data
+                })
+            }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
@@ -110,15 +122,21 @@ class App extends React.Component {
 
     render() {
         return (
-            <header className="App">
-                <button onClick={this.reconnectCypressSocket} className={`${this.state.isSocketDisconnected ? '' : 'hidden'}`}>Reconnect</button>
-                <p className={`connection-status ${this.state.isConnectedToServer ? 'connected' : 'disconnected'}`}>Connection</p>
-                <p>{this.state.passedCount} tests passed</p>
-                <p>{this.state.failedCount} tests failed</p>
-                <button onClick={startCypressRunner}>Start Cypress Runner</button>
-                <button onClick={stopCypressRunner}>Stop Cypress Runner</button>
-                <span className={`runner-status ${this.state.cypressIsRunning ? "running" : "stopped"}`}></span>
-            </header>
+            <div>
+                <header className="App">
+                    <button onClick={this.reconnectCypressSocket} className={`${this.state.isSocketDisconnected ? '' : 'hidden'}`}>Reconnect</button>
+                    <p className={`connection-status ${this.state.isConnectedToServer ? 'connected' : 'disconnected'}`}>Connection</p>
+                    <p>{this.state.tests} total tests</p>
+                    <p>{this.state.passedCount} tests passed</p>
+                    <p>{this.state.failedCount} tests failed</p>
+                    <p>Specs: {this.state.totalSpecsRan} / {this.state.totalSpecs}</p>
+                    <button onClick={startCypressRunner}>Start</button>
+                    <button onClick={stopCypressRunner}>Stop</button>
+                    <span className={`runner-status ${this.state.cypressIsRunning ? "running" : "stopped"}`}></span>
+                </header>
+
+                <Suite rootSuite={this.state.currentSuite}/>
+            </div>
         )
     }
 
@@ -135,13 +153,19 @@ class App extends React.Component {
         const {
             passed,
             failed,
-            isRunning
+            isRunning,
+            tests,
+            totalSpecs,
+            totalSpecsRan
         } = data.status
 
         this.setState({
             passedCount: passed,
             failedCount: failed,
-            cypressIsRunning: isRunning
+            cypressIsRunning: isRunning,
+            tests,
+            totalSpecs,
+            totalSpecsRan
         })
 
         this.updatePageTitlePassedFailedStatus(data)

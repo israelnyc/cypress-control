@@ -17,8 +17,12 @@ database.defaults({
     }
 }).write()
 
+function getDatabaseStatus() {
+    return database.read('status').value()
+}
+
 function emitDatabaseStatus() {
-    socket.emit(events.CYPRESS_DASHBOARD_STATUS, database.read('status').value())
+    socket.emit(events.CYPRESS_DASHBOARD_STATUS, getDatabaseStatus())
 }
 
 function resetProcessStatus() {
@@ -43,6 +47,7 @@ function resetTestCounts() {
 }
 
 module.exports = {
+    getDatabaseStatus,
     database,
     resetProcessStatus,
     resetTestCounts

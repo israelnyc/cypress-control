@@ -4,7 +4,7 @@ const app = express()
 const http = require('http').createServer(app)
 const { events } = require('./status-events')
 const { handleSIGINT } = require('./process-manager')
-const { database, resetProcessStatus } = require('./database.js')
+const { database, getDatabaseStatus, resetProcessStatus } = require('./database.js')
 const path = require('path')
 const io = require('socket.io')(http, {
   cors: {
@@ -19,7 +19,11 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', socket => {  
-  socket.emit(events.CYPRESS_DASHBOARD_STATUS, database.read('status').value())
+  socket.emit(events.CYPRESS_DASHBOARD_STATUS, getDatabaseStatus())
+
+  socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
+    io.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, data)
+  })
 
   socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
     io.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data)
@@ -38,15 +42,15 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...database.read('status').value() })
+    io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...getDatabaseStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...database.read('status').value() })
+    io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getDatabaseStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...database.read('status').value() })
+    io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...getDatabaseStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
@@ -54,13 +58,13 @@ io.on('connection', socket => {
     
     runner.start()
 
-    io.emit(events.CYPRESS_DASHBOARD_START_RUNNER, database.read('status').value())
+    io.emit(events.CYPRESS_DASHBOARD_START_RUNNER, getDatabaseStatus())
   })
 
   socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
     console.log('Stopping runner...')
     
-    io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, database.read('status').value())
+    io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, getDatabaseStatus())
 
     runner.stop()
   })
