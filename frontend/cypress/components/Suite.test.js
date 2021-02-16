@@ -1,7 +1,7 @@
 
 import { mount } from '@cypress/react'
 
-import Suite from '../../src/Suite'
+import Suite from '../../src/components/Suite'
 
 describe('Suite', () => {
     it('tests that Suite component updates with filename', () => {

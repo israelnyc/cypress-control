@@ -24,9 +24,9 @@ describe('App', () => {
                 }
             })
 
-            cy.get('.tests-passed').should('contain', '10 tests passed')
-            cy.get('.tests-failed').should('contain', '4 tests failed')
-            cy.get('.total-tests').should('contain', '14 total tests')
+            cy.get('.tests-passed .value').should('contain', '10')
+            cy.get('.tests-failed .value').should('contain', '4')
+            cy.get('.total-tests .value').should('contain', 'Total: 14')
             cy.get('.specs-of-total-specs').should('contain', 'Specs: 2 / 4')
             cy.get('.runner-status').should('have.class', 'running')
 

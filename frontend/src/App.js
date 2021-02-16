@@ -1,8 +1,9 @@
 import React from 'react'
 import './App.css'
 import events from './status-events'
-import { startCypressRunner, stopCypressRunner, getSocket } from './utils'
-import Suite from './Suite'
+import { getSocket } from './utils'
+import StatusBar from './components/StatusBar'
+import Suite from './components/Suite'
 class App extends React.Component {
     constructor() {
         super()
@@ -122,18 +123,15 @@ class App extends React.Component {
 
     render() {
         return (
-            <div>
-                <header className="App">
-                    <button onClick={this.reconnectCypressSocket} className={`${this.state.isSocketDisconnected ? '' : 'hidden'}`}>Reconnect</button>
-                    <p className={`connection-status ${this.state.isConnectedToServer ? 'connected' : 'disconnected'}`}>Connection</p>
-                    <p className="total-tests">{this.state.tests} total tests</p>
-                    <p className="tests-passed">{this.state.passedCount} tests passed</p>
-                    <p className="tests-failed">{this.state.failedCount} tests failed</p>
-                    <p className="specs-of-total-specs">Specs: {this.state.totalSpecsRan} / {this.state.totalSpecs}</p>
-                    <button className="start-runner-button" onClick={startCypressRunner}>Start</button>
-                    <button className="stop-runner-button" onClick={stopCypressRunner}>Stop</button>
-                    <span className={`runner-status ${this.state.cypressIsRunning ? "running" : "stopped"}`}></span>
-                </header>
+            <div role="application">
+                <StatusBar 
+                    totalTests = {this.state.tests}
+                    testsPassed = {this.state.passedCount}
+                    testsFailed = {this.state.failedCount}
+                    totalSpecsRan = {this.state.totalSpecsRan}
+                    totalSpecs = {this.state.totalSpecs}
+                    cypressIsRunning = {this.state.cypressIsRunning}
+                />
 
                 <Suite rootSuite={this.state.currentSuite}/>
             </div>

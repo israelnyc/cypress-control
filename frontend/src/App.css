@@ -1,28 +1,16 @@
+:root {
+  --main-dark-color: #282c34;
+  --success-green: #88ea88;
+  --failed-red: #ea88a6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: #282c34;
+  background-color: var(--main-dark-color);
   color: white;
-}
-
-header {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.runner-status {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-}
-
-.runner-status.running {
-  background-color: #88ea88;
-  animation: status-fade 2s infinite;
-}
-
-.runner-status.stopped {
-  background-color: #ea88a6;
-  animation: none;
 }
 
 .connection-status {
@@ -32,15 +20,19 @@ header {
 }
 
 .connection-status.connected {
-  background-color: #88ea88;
+  background-color: var(--success-green);
 }
 
 .connection-status.disconnected {
-  background-color: #ea88a6;
+  background-color: var(--failed-red);
 }
 
 .hidden {
   display: none !important;
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 @keyframes status-fade {
