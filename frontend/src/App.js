@@ -126,12 +126,12 @@ class App extends React.Component {
                 <header className="App">
                     <button onClick={this.reconnectCypressSocket} className={`${this.state.isSocketDisconnected ? '' : 'hidden'}`}>Reconnect</button>
                     <p className={`connection-status ${this.state.isConnectedToServer ? 'connected' : 'disconnected'}`}>Connection</p>
-                    <p>{this.state.tests} total tests</p>
-                    <p>{this.state.passedCount} tests passed</p>
-                    <p>{this.state.failedCount} tests failed</p>
-                    <p>Specs: {this.state.totalSpecsRan} / {this.state.totalSpecs}</p>
-                    <button onClick={startCypressRunner}>Start</button>
-                    <button onClick={stopCypressRunner}>Stop</button>
+                    <p className="total-tests">{this.state.tests} total tests</p>
+                    <p className="tests-passed">{this.state.passedCount} tests passed</p>
+                    <p className="tests-failed">{this.state.failedCount} tests failed</p>
+                    <p className="specs-of-total-specs">Specs: {this.state.totalSpecsRan} / {this.state.totalSpecs}</p>
+                    <button className="start-runner-button" onClick={startCypressRunner}>Start</button>
+                    <button className="stop-runner-button" onClick={stopCypressRunner}>Stop</button>
                     <span className={`runner-status ${this.state.cypressIsRunning ? "running" : "stopped"}`}></span>
                 </header>
 

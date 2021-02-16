@@ -2,12 +2,17 @@ import io from 'socket.io-client'
 import events from './status-events'
 
 export function getSocket() {
-    window.cypressDashboardSocket = window.cypressDashboardSocket || io(`http://${window.location.hostname}:8686`)
-    console.log(window.cypressDashboardSocket.id)
+    const socketURL = `http://${window.location.hostname}:8686`
+    
+    window.cypressDashboardSocket = window.cypressDashboardSocket || io(socketURL)
+
+    if(process.env.NODE_ENV === 'test') {
+        window.cypressDashboardSocket.disconnect()
+    }
+
     return window.cypressDashboardSocket
 }
 
-// TODO: prevent emitting events if not connected to the server
 export function startCypressRunner() {
     const socket = getSocket()
     console.log('Starting runner')

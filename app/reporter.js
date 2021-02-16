@@ -47,6 +47,7 @@ class CypressDashboardReporter {
                                 }
                             })
                         })
+                        
                         if(suite.suites.length) getSuiteAndTestData(suite.suites)
                     })
                 }

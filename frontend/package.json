@@ -5,6 +5,7 @@
   "dependencies": {
     "@cypress/react": "^4.16.0",
     "cypress": "^6.1.0",
+    "cypress-dashboard": "link:./../../cypress-dashboard",
     "eslint-plugin-cypress": "^2.11.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -15,13 +16,24 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test-server": "node test-server"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest",
       "plugin:cypress/recommended"
+    ],
+    "overrides": [
+      {
+        "files": [
+          "*.test.js",
+          "*.spec.js"
+        ],
+        "rules": {
+          "no-unused-expressions": 0
+        }
+      }
     ]
   },
   "nyc": {

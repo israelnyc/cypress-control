@@ -7,14 +7,24 @@ const path = require('path')
 try {
     const cypress = require(process.cwd() + '\\node_modules\\cypress')
     const {
+        componentFolder,
         integrationFolder = 'cypress/integration/'
     } = require(process.cwd() + '\\cypress.json')
 
-    let specPattern = path.normalize(`./${integrationFolder}/*/**`)
+    const specPattern = [path.normalize(`./${integrationFolder}/**/**`)]
 
+    if(componentFolder) {
+        specPattern.push(path.normalize(`./${componentFolder}/**/**`))
+    }
+
+    console.log('config componentFolder:', componentFolder)
+    console.log('config integrationFolder:', integrationFolder)
     console.log('spec pattern:', specPattern)
+    console.log('cwd:', process.cwd())
 
-    glob(specPattern, { nodir: true }, (err, matches) => {
+    const globPattern = `{${specPattern.join(',')}}`
+
+    glob(globPattern, { nodir: true }, (err, matches) => {
         database.update('status.totalSpecs', () => matches.length).write()
     })
 
@@ -32,7 +42,8 @@ try {
     cypress.run({
         config: {
             "reporter": __dirname + "/reporter.js"
-        }
+        },
+        spec: specPattern
     }).then(results => {
         process.send({
             type: events.CYPRESS_DASHBOARD_RUN_COMPLETED,
