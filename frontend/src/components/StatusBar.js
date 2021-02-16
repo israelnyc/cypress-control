@@ -26,10 +26,6 @@ class StatusBar extends React.Component {
                 
                 <div className={`runner-status ${this.props.cypressIsRunning ? "running" : "stopped"}`}></div>
                 
-                <div className="total-tests stat">
-                    <div className="value">Total: {this.props.totalTests}</div>
-                </div>
-                
                 <div className="tests-passed stat">
                     <FontAwesomeIcon icon={faCheck} />
                     <div className="value">{this.props.testsPassed}</div>
@@ -38,6 +34,10 @@ class StatusBar extends React.Component {
                 <div className="tests-failed stat">
                     <FontAwesomeIcon icon={faTimes} />
                     <div className="value">{this.props.testsFailed}</div>
+                </div>
+
+                <div className="total-tests stat">
+                    <div className="value">Tests: {this.props.testsFailed + this.props.testsPassed}</div>
                 </div>
                 
                 <div className="specs-of-total-specs stat">
