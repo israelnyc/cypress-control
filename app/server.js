@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
 io.on('connection', socket => {  
   socket.emit(events.CYPRESS_DASHBOARD_STATUS, getDatabaseStatus())
 
+  socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
+    io.emit(events.CYPRESS_DASHBOARD_STATUS, data)
+  })
+
   socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
     io.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, data)
   })

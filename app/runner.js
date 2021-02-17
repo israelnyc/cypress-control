@@ -26,10 +26,6 @@ module.exports = {
 
             socket.emit(message.type, message.data)
         })
-
-        cypressProcess.on('close', function(data) {
-            resetProcessStatus()
-        })
     },
     stop: function() {
         processManager.killCypressProcess()
