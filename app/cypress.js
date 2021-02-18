@@ -1,4 +1,4 @@
-const { database, resetTestCounts } = require('./database.js')
+// const { database, resetTestCounts } = require('./database.js')
 const { handleSIGINT } = require('./process-manager')
 const { events } = require('./status-events')
 const glob = require('glob')
@@ -25,19 +25,21 @@ try {
     const globPattern = `{${specPattern.join(',')}}`
 
     glob(globPattern, { nodir: true }, (err, matches) => {
-        database.update('status.totalSpecs', () => matches.length).write()
+        // database.update('status.totalSpecs', () => matches.length).write()
+        process.send({
+            type: events.CYPRESS_DASHBOARD_BEFORE_RUN,
+            data: {
+                totalSpecs: matches.length
+            }
+        })
     })
 
-    database.get('status').assign({
-        cypressPID: process.pid,
-        isRunning: true
-    }).write()
+    // database.get('status').assign({
+    //     cypressPID: process.pid,
+    //     isRunning: true
+    // }).write()
 
-    resetTestCounts()
-
-    process.send({
-        type: events.CYPRESS_DASHBOARD_BEFORE_RUN
-    })
+    // resetTestCounts()
 
     cypress.run({
         config: {

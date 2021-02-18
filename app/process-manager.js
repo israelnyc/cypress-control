@@ -1,16 +1,19 @@
-const { database, resetProcessStatus } = require('./database')
+// const { database, resetProcessStatus } = require('./database')
+const { broadcastStatus, resetProcessStatus } = require('./status')
+const { socket } = require('./socket')
 
 function killCypressProcess() {
-    const {
-        cypressPID,
-        isRunning
-    } = database.read('status').value().status
+    // const {
+    //     cypressPID,
+    //     isRunning
+    // } = database.read('status').value().status
+    broadcastStatus(status => {
+        if(status.isRunning && status.cypressPID) {
+            process.kill(status.cypressPID)
     
-    if(isRunning && cypressPID) {
-        process.kill(cypressPID)
-
-        resetProcessStatus()
-    }
+            resetProcessStatus()
+        }
+    })
 }
 
 function handleSIGINT() {

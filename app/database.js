@@ -8,8 +8,7 @@ const { events } = require('./status-events')
 database.defaults({
     status: {
         cypressPID: null,
-        isRunning: false,
-        tests: 0, 
+        isRunning: false, 
         failed: 0, 
         passed: 0,
         totalSpecs: 0,
@@ -26,6 +25,7 @@ function emitDatabaseStatus() {
 }
 
 function resetProcessStatus() {
+    console.log('----- resetting process status -----')
     database.get('status').assign({
         cypressPID: null,
         isRunning: false,
@@ -35,8 +35,8 @@ function resetProcessStatus() {
 }
 
 function resetTestCounts() {
+    console.log('----- resetting test counts -----')
     database.get('status').assign({
-        tests: 0,
         failed: 0,
         passed: 0,
         totalSpecs: 0,

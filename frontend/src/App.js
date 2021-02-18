@@ -76,13 +76,13 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
             console.log('test passed', data)
-            this.setState({passedCount: data.status.passed})
+            this.setState({passedCount: data.passed})
             this.updatePageTitlePassedFailedStatus(data)
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
             console.log('test failed', data)
-            this.setState({ failedCount: data.status.failed })
+            this.setState({ failedCount: data.failed })
             this.updatePageTitlePassedFailedStatus(data)
         })
 
@@ -125,7 +125,6 @@ class App extends React.Component {
         return (
             <div role="application">
                 <StatusBar 
-                    totalTests = {this.state.tests}
                     testsPassed = {this.state.passedCount}
                     testsFailed = {this.state.failedCount}
                     totalSpecsRan = {this.state.totalSpecsRan}
@@ -152,16 +151,14 @@ class App extends React.Component {
             passed,
             failed,
             isRunning,
-            tests,
             totalSpecs,
             totalSpecsRan
-        } = data.status
+        } = data
 
         this.setState({
             passedCount: passed,
             failedCount: failed,
             cypressIsRunning: isRunning,
-            tests,
             totalSpecs,
             totalSpecsRan
         })
@@ -170,8 +167,8 @@ class App extends React.Component {
     }
 
     updatePageTitlePassedFailedStatus(data) {
-        const passed = data?.status?.passed || 0
-        const failed = data?.status?.failed || 0
+        const passed = data?.passed || 0
+        const failed = data?.failed || 0
 
         this.setPageTitle(`(${passed} / ${failed})`)
     }

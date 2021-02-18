@@ -4,6 +4,7 @@ const Base = Mocha.reporters.Base
 const { database, getDatabaseStatus } = require('./database.js')
 const { events } = require('./status-events')
 const { socket } = require('./socket')
+const { getStatus } = require('./status')
 
 const {
     EVENT_RUN_BEGIN,
@@ -23,7 +24,7 @@ class CypressDashboardReporter {
         Base.call(this, runner)
 
         runner.on(EVENT_RUN_BEGIN, () => {
-            socket.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, getDatabaseStatus())
+            socket.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN)
         })
 
         runner.on(EVENT_SUITE_BEGIN, data => {
@@ -64,11 +65,12 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_SUITE_END, data => {            
-            if(data.root) {
-                database.update('status.totalSpecsRan', totalSpecsRan => {
-                    return totalSpecsRan + 1
-                }).write()
-            }
+            // if(data.root) {
+            //     console.log('----- updating status.totalSpecsRan -----')
+            //     database.update('status.totalSpecsRan', totalSpecsRan => {
+            //         return totalSpecsRan + 1
+            //     }).write()
+            // }
 
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_END, {
                 title: data.title, 
@@ -92,7 +94,7 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_TEST_PASS, data => {
-            database.update('status.passed', passed => passed + 1).write()
+            // database.update('status.passed', passed => passed + 1).write()
             socket.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, {
                 id: data.id,
                 title: data.title
@@ -100,7 +102,7 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_TEST_FAIL, data => {
-            database.update('status.failed', failed => failed + 1).write()
+            // database.update('status.failed', failed => failed + 1).write()
             socket.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, {
                 id: data.id,
                 title: data.title

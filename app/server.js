@@ -4,8 +4,9 @@ const app = express()
 const http = require('http').createServer(app)
 const { events } = require('./status-events')
 const { handleSIGINT } = require('./process-manager')
-const { database, getDatabaseStatus, resetProcessStatus } = require('./database.js')
+// const { database, getDatabaseStatus, resetProcessStatus } = require('./database.js')
 const path = require('path')
+const { broadcastStatus, getStatus, setStatus, resetProcessStatus, resetTestStatus } = require('./status')
 const io = require('socket.io')(http, {
   cors: {
     origin: ['http://localhost:3000']
@@ -19,14 +20,43 @@ app.get('/', (req, res) => {
 })
 
 io.on('connection', socket => {  
-  socket.emit(events.CYPRESS_DASHBOARD_STATUS, getDatabaseStatus())
+  socket.emit(events.CYPRESS_DASHBOARD_STATUS, getStatus())
 
-  socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
-    io.emit(events.CYPRESS_DASHBOARD_STATUS, data)
+  socket.on(events.CYPRESS_DASHBOARD_STATUS, (data, callback) => {
+    if(callback) callback(getStatus())
+    io.emit(events.CYPRESS_DASHBOARD_STATUS, getStatus())
   })
 
-  socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
-    io.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, data)
+  socket.on(events.CYPRESS_DASHBOARD_RESET_PROCESS_STATUS, (data, callback) => {
+    setStatus({
+      cypressPID: null,
+      isRunning: false
+    })
+
+    if(callback) callback()
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_RESET_TEST_STATUS, (data, callback) => {
+    setStatus({
+      failed: 0,
+      passed: 0,
+      totalSpecs: 0,
+      totalSpecsRan: 0
+    })
+
+    if(callback) callback()
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_BEFORE_RUN, data => {
+    resetTestStatus().then(() => {
+      setStatus({
+        totalSpecs: data.totalSpecs
+      })
+    })
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, () => {
+    io.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, getStatus())
   })
 
   socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
@@ -34,6 +64,11 @@ io.on('connection', socket => {
   })
   
   socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
+    if(data.isRootSuite) {
+      setStatus({
+        totalSpecsRan: getStatus().totalSpecsRan + 1
+      })
+    }
     io.emit(events.CYPRESS_DASHBOARD_SUITE_END, data)
   })
 
@@ -46,15 +81,18 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...getDatabaseStatus() })
+    setStatus({passed: getStatus().passed + 1})
+    io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...getStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getDatabaseStatus() })
+    setStatus({failed: getStatus().failed + 1})
+    io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
-    io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...getDatabaseStatus() })
+    console.log('server:run:completed', getStatus())
+    io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...getStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
@@ -62,13 +100,13 @@ io.on('connection', socket => {
     
     runner.start()
 
-    io.emit(events.CYPRESS_DASHBOARD_START_RUNNER, getDatabaseStatus())
+    io.emit(events.CYPRESS_DASHBOARD_START_RUNNER, getStatus())
   })
 
   socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
     console.log('Stopping runner...')
     
-    io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, getDatabaseStatus())
+    io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, getStatus())
 
     runner.stop()
   })
