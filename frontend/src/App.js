@@ -32,9 +32,9 @@ class App extends React.Component {
             this.startSocketDisconnectionTimer()
         }
 
-        this.socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
-            console.log('receiving status update from server')
-            this.updateTestStats(data)
+        this.socket.on(events.CYPRESS_DASHBOARD_STATUS, status => {
+            console.log('receiving status update from server', status)
+            this.updateTestStats(status)
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {

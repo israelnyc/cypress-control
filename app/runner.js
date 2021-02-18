@@ -1,5 +1,4 @@
 const childProcess = require('child_process')
-// const { resetProcessStatus, database } = require('./database.js')
 const processManager = require('./process-manager')
 const { socket } = require('./socket')
 const { events } = require('./status-events')
@@ -7,7 +6,6 @@ const { getStatus, setStatus, resetTestStatus, resetProcessStatus } = require('.
 
 module.exports = {
     start: function(runnerMessageCallback) {
-        // const { isRunning } = database.read('status').value().status
         const { isRunning } = getStatus()
 
         if(isRunning) {

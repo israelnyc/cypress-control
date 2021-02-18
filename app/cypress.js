@@ -1,4 +1,3 @@
-// const { database, resetTestCounts } = require('./database.js')
 const { handleSIGINT } = require('./process-manager')
 const { events } = require('./status-events')
 const glob = require('glob')
@@ -25,7 +24,6 @@ try {
     const globPattern = `{${specPattern.join(',')}}`
 
     glob(globPattern, { nodir: true }, (err, matches) => {
-        // database.update('status.totalSpecs', () => matches.length).write()
         process.send({
             type: events.CYPRESS_DASHBOARD_BEFORE_RUN,
             data: {
@@ -33,13 +31,6 @@ try {
             }
         })
     })
-
-    // database.get('status').assign({
-    //     cypressPID: process.pid,
-    //     isRunning: true
-    // }).write()
-
-    // resetTestCounts()
 
     cypress.run({
         config: {

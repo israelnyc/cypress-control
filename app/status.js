@@ -9,17 +9,26 @@ const status = {
     "totalSpecsRan": 0
 }
 
-function broadcastStatus(callback) {
-    socket.emit(events.CYPRESS_DASHBOARD_STATUS, {}, callback)
+function broadcastStatus() {
+    return new Promise(resolve => {
+        socket.emit(events.CYPRESS_DASHBOARD_STATUS, {}, status => resolve(status))
+    })
 }
 
-function setStatus(newStatus) {
+function setStatus(newStatus) {    
     Object.assign(status, newStatus)
+    
     broadcastStatus()
 }
 
 function getStatus() {
     return status
+}
+
+function getStatusFromServer() {
+    return new Promise(resolve => {
+        socket.emit(events.CYPRESS_DASHBOARD_GET_STATUS, {}, status => resolve(status))
+    })
 }
 
 function resetProcessStatus() {
@@ -38,6 +47,7 @@ function resetTestStatus() {
 module.exports = {
     broadcastStatus,
     getStatus,
+    getStatusFromServer,
     setStatus,
     resetProcessStatus,
     resetTestStatus

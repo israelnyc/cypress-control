@@ -4,9 +4,8 @@ const app = express()
 const http = require('http').createServer(app)
 const { events } = require('./status-events')
 const { handleSIGINT } = require('./process-manager')
-// const { database, getDatabaseStatus, resetProcessStatus } = require('./database.js')
 const path = require('path')
-const { broadcastStatus, getStatus, setStatus, resetProcessStatus, resetTestStatus } = require('./status')
+const { getStatus, setStatus, resetProcessStatus } = require('./status')
 const io = require('socket.io')(http, {
   cors: {
     origin: ['http://localhost:3000']
@@ -24,7 +23,12 @@ io.on('connection', socket => {
 
   socket.on(events.CYPRESS_DASHBOARD_STATUS, (data, callback) => {
     if(callback) callback(getStatus())
+
     io.emit(events.CYPRESS_DASHBOARD_STATUS, getStatus())
+  })
+
+  socket.on(events.CYPRESS_DASHBOARD_GET_STATUS, (data, callback) => {
+    if(callback) callback(getStatus())
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RESET_PROCESS_STATUS, (data, callback) => {
@@ -43,16 +47,14 @@ io.on('connection', socket => {
       totalSpecs: 0,
       totalSpecsRan: 0
     })
-
+    
     if(callback) callback()
   })
 
   socket.on(events.CYPRESS_DASHBOARD_BEFORE_RUN, data => {
-    resetTestStatus().then(() => {
       setStatus({
         totalSpecs: data.totalSpecs
       })
-    })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, () => {
@@ -81,12 +83,18 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
-    setStatus({passed: getStatus().passed + 1})
+    setStatus({
+      passed: getStatus().passed + 1
+    })
+
     io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, { ...data, ...getStatus() })
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-    setStatus({failed: getStatus().failed + 1})
+    setStatus({
+      failed: getStatus().failed + 1
+    })
+
     io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getStatus() })
   })
 
