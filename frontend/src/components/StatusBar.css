@@ -1,11 +1,23 @@
 .status-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   height: 40px;
   border-bottom: 1px solid #858080;
 }
 
-.status-bar > div {
+.status-bar .stats {
+  display: flex;
+  align-items: center;
+}
+
+.status-bar .control {
+  display: flex;
+  align-items: center;
+}
+
+.status-bar .stats > div,
+.status-bar .control > div {
   padding: 0 10px;
 }
 
@@ -35,7 +47,6 @@
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  margin-left: 10px;
 }
 
 .runner-status.running {
