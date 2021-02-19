@@ -1,0 +1,17 @@
+.progress-bar {
+    width: 100%;
+    height: 5px;
+}
+
+.progress-bar-track {
+    height: 100%;
+    transition: width 1s ease-in-out;
+}
+
+.progress-bar.theme-default {
+    background-color: #ccc;
+}
+
+.progress-bar.theme-default .progress-bar-track {
+    background-color: var(--progress-bar-default)
+}

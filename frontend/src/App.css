@@ -2,6 +2,7 @@
   --main-dark-color: #282c34;
   --success-green: #88ea88;
   --failed-red: #ea88a6;
+  --progress-bar-default: #7ac082;
 }
 
 * {
