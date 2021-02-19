@@ -130,6 +130,9 @@ class App extends React.Component {
                     totalSpecsRan = {this.state.totalSpecsRan}
                     totalSpecs = {this.state.totalSpecs}
                     cypressIsRunning = {this.state.cypressIsRunning}
+                    isConnectedToServer = {this.state.isConnectedToServer}
+                    reconnectCypressSocket = {this.reconnectCypressSocket}
+                    isSocketDisconnected = {this.state.isSocketDisconnected}
                 />
 
                 <Suite rootSuite={this.state.currentSuite}/>

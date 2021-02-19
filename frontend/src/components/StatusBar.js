@@ -2,12 +2,28 @@ import React from 'react'
 import './StatusBar.css'
 import { startCypressRunner, stopCypressRunner } from '../utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faTimes, faPlay, faStop } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faTimes, faPlay, faStop, faWifi } from '@fortawesome/free-solid-svg-icons'
 
 class StatusBar extends React.Component {
     render() {
         return (
             <header className="status-bar">
+                <div 
+                    title={
+                        `${this.props.isConnectedToServer ? 'Connected to' : 'Disconnected from'} server.` +
+                        `${!this.props.isConnectedToServer && this.props.isSocketDisconnected ? ' Socket has also been disconnected, click to reconnect socket.' : ''}` +
+                        `${!this.props.isConnectedToServer && !this.props.isSocketDisconnected ? ' Waiting for server to reconnect.' : ''}`
+                    }
+                    className={
+                        `server-connection-status ` +
+                        `${this.props.isConnectedToServer ? 'connected' : 'disconnected'}` +
+                        `${this.props.isSocketDisconnected ? ' pointer' : ''}`
+                    }
+
+                    { ...(this.props.isSocketDisconnected && { onClick: this.props.reconnectCypressSocket})}
+                >
+                    <FontAwesomeIcon icon={faWifi} />
+                </div>
                 <div 
                     title="Start test runner"
                     className={`start-runner-button ${this.props.cypressIsRunning ? 'hidden' : ''} pointer`}

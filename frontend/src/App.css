@@ -13,20 +13,6 @@ body {
   color: white;
 }
 
-.connection-status {
-  padding: 10px;
-  color: #000;
-  font-weight: bold;
-}
-
-.connection-status.connected {
-  background-color: var(--success-green);
-}
-
-.connection-status.disconnected {
-  background-color: var(--failed-red);
-}
-
 .hidden {
   display: none !important;
 }

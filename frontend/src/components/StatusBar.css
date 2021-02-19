@@ -1,41 +1,49 @@
 .status-bar {
-    display: flex;
-    align-items: center;
-    height: 40px;
-    border-bottom: 1px solid #858080;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  border-bottom: 1px solid #858080;
 }
 
 .status-bar > div {
-    padding: 0 10px;
+  padding: 0 10px;
 }
 
 .status-bar .stat {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .status-bar .fa-check {
-    color: var(--success-green);
+  color: var(--success-green);
 }
 
 .status-bar .fa-times {
-    color: var(--failed-red);
+  color: var(--failed-red);
+}
+
+.server-connection-status.connected {
+  color: var(--success-green);
+}
+
+.server-connection-status.disconnected {
+  color: var(--failed-red);
 }
 
 .runner-status {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    margin-left: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-left: 10px;
 }
 
 .runner-status.running {
-    background-color: var(--success-green);
-    animation: status-fade 2s infinite;
+  background-color: var(--success-green);
+  animation: status-fade 2s infinite;
 }
 
 .runner-status.stopped {
-    background-color: var(--failed-red);
-    animation: none;
+  background-color: var(--failed-red);
+  animation: none;
 }
