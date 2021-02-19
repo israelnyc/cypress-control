@@ -21,9 +21,12 @@ try {
     console.log('spec pattern:', specPattern)
     console.log('cwd:', process.cwd())
 
-    const globPattern = `{${specPattern.join(',')}}`
+    const globPattern = specPattern.length > 1 ? `{${specPattern.join(',')}}` : specPattern[0]
+
+    console.log('globPattern:', globPattern)
 
     glob(globPattern, { nodir: true }, (err, matches) => {
+        console.log('globPattern specs found:', matches.length)
         process.send({
             type: events.CYPRESS_DASHBOARD_BEFORE_RUN,
             data: {
