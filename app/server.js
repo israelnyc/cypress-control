@@ -62,6 +62,11 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
+    if(data.isRootSuite) {
+      setStatus({
+        currentSuiteFailures: {}
+      })
+    }
     io.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data)
   })
   
@@ -91,9 +96,17 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-    setStatus({
-      failed: getStatus().failed + 1
-    })
+    const { currentSuiteFailures } = getStatus()
+
+    if(!currentSuiteFailures.hasOwnProperty(data.id)) {
+      setStatus({
+        failed: getStatus().failed + 1,
+        currentSuiteFailures: {
+          [data.id]: true,
+          ...currentSuiteFailures
+        }
+      })
+    }
 
     io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getStatus() })
   })

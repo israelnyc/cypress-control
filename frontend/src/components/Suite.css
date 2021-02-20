@@ -1,0 +1,7 @@
+li {
+    list-style-type: none;
+}
+
+.suite .test.current {
+    color: var(--success-green);
+}

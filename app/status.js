@@ -6,7 +6,8 @@ const status = {
     "failed": 0,
     "passed": 0,
     "totalSpecs": 0,
-    "totalSpecsRan": 0
+    "totalSpecsRan": 0,
+    "currentSuiteFailures": {}
 }
 
 function broadcastStatus() {

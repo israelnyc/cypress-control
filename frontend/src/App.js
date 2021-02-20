@@ -16,7 +16,10 @@ class App extends React.Component {
             cypressIsRunning: false,
             isConnectedToServer: false,
             isSocketDisconnected: false,
-            currentSuite: {}
+            currentSuite: {
+                suites: []
+            },
+            currentTestId: 0
         }
 
         this.pageTitle = '%customValues Cypress Dashboard'
@@ -53,10 +56,18 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
             console.log('suite end: ', data)
+            if(data.isRootSuite) {
+                this.setState({
+                    currentSuite: {
+                        suites: []
+                    }
+                })
+            }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
             console.log('test begin: ', data)
+            this.setState({currentTestId: data.id})
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
@@ -87,7 +98,7 @@ class App extends React.Component {
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
-            console.log('Run completed')
+            console.log('Run completed', data)
             this.updateTestStats(data)
         })
 
@@ -135,7 +146,7 @@ class App extends React.Component {
                     isSocketDisconnected = {this.state.isSocketDisconnected}
                 />
 
-                <Suite rootSuite={this.state.currentSuite}/>
+                <Suite rootSuite={this.state.currentSuite} currentTestId={this.state.currentTestId}/>
             </div>
         )
     }

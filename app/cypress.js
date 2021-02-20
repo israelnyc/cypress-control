@@ -41,6 +41,7 @@ try {
         },
         spec: specPattern
     }).then(results => {
+        console.log('cypress:run:completed')
         process.send({
             type: events.CYPRESS_DASHBOARD_RUN_COMPLETED,
             data: results
