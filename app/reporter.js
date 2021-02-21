@@ -9,6 +9,7 @@ const {
     EVENT_RUN_END,
     EVENT_TEST_FAIL,
     EVENT_TEST_PASS,
+    EVENT_TEST_END,
     EVENT_SUITE_BEGIN,
     EVENT_SUITE_END,
     EVENT_TEST_BEGIN,
@@ -37,6 +38,7 @@ class CypressDashboardReporter {
                             title: suite.title,
                             id: suite.id,
                             file: data.file,
+                            isParentRootSuite: suite.parent && suite.parent.root,
                             tests: suite.tests.map(test => {
                                 return {
                                     title: test.title,
@@ -99,6 +101,14 @@ class CypressDashboardReporter {
                 id: data.id,
                 title: data.title,
                 error: data.err
+            })
+        })
+
+        runner.on(EVENT_TEST_END, data => {
+            socket.emit(events.CYPRESS_DASHBOARD_TEST_END, {
+                id: data.id,
+                title: data.title,
+                status: data.state
             })
         })
     }

@@ -19,7 +19,7 @@ class App extends React.Component {
             currentSuite: {
                 suites: []
             },
-            currentTestId: 0
+            currentTest: {}
         }
 
         this.pageTitle = '%customValues Cypress Dashboard'
@@ -56,18 +56,11 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
             console.log('suite end: ', data)
-            if(data.isRootSuite) {
-                this.setState({
-                    currentSuite: {
-                        suites: []
-                    }
-                })
-            }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
             console.log('test begin: ', data)
-            this.setState({currentTestId: data.id})
+            this.setState({currentTest: data})
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
@@ -95,6 +88,23 @@ class App extends React.Component {
             console.log('test failed', data)
             this.setState({ failedCount: data.failed })
             this.updatePageTitlePassedFailedStatus(data)
+        })
+
+        this.socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
+            console.log('test end', data)
+
+            const currentSuiteCopy = JSON.parse(JSON.stringify(this.state.currentSuite))
+
+            const currentSuiteTest = currentSuiteCopy.suites.reduce((prev, curr) => {
+                return prev.concat(curr.tests)
+            }, []).filter(test => test.id === data.id)[0]
+
+            if(currentSuiteTest) {
+                currentSuiteTest.hasCompleted = true
+                currentSuiteTest.status = data.status
+
+                this.setState({currentSuite: currentSuiteCopy})
+            }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
@@ -146,7 +156,7 @@ class App extends React.Component {
                     isSocketDisconnected = {this.state.isSocketDisconnected}
                 />
 
-                <Suite rootSuite={this.state.currentSuite} currentTestId={this.state.currentTestId}/>
+                <Suite rootSuite={this.state.currentSuite} currentTest={this.state.currentTest}/>
             </div>
         )
     }

@@ -3,6 +3,7 @@
   --success-green: #88ea88;
   --failed-red: #ea88a6;
   --progress-bar-default: #7ac082;
+  --light-gray: #ccc;
 }
 
 * {
@@ -20,6 +21,10 @@ body {
 
 .pointer {
   cursor: pointer;
+}
+
+.invisible {
+  visibility: hidden;
 }
 
 @keyframes status-fade {

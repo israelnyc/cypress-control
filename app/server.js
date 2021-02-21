@@ -111,6 +111,10 @@ io.on('connection', socket => {
     io.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, { ...data, ...getStatus() })
   })
 
+  socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
+    io.emit(events.CYPRESS_DASHBOARD_TEST_END, { ...data, ...getStatus() })
+  })
+
   socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
     console.log('server:run:completed', getStatus())
     io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...getStatus() })

@@ -14,6 +14,7 @@ module.exports.events = {
     CYPRESS_DASHBOARD_SUITE_END: 'cypress_dashboard_suite_end',
     CYPRESS_DASHBOARD_TEST_BEGIN: 'cypress_dashboard_test_begin',
     CYPRESS_DASHBOARD_TEST_PENDING: 'cypress_dashboard_test_pending',
+    CYPRESS_DASHBOARD_TEST_END: 'cypress_dashboard_test_end',
     CYPRESS_DASHBOARD_RESET_PROCESS_STATUS: 'cypress_dashboard_reset_process_status',
     CYPRESS_DASHBOARD_RESET_TEST_STATUS: 'cypress_dashboard_reset_test_status'
 }
