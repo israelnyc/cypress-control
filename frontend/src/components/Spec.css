@@ -1,0 +1,15 @@
+.suites-root-container {
+    border: 1px solid var(--light-gray);
+    margin-top: 10px;
+}
+
+.suites-root-container .meta {
+    padding: 10px;
+    border-bottom: 1px solid var(--light-gray);
+    margin-bottom: 5px;
+}
+
+.suites {
+    padding: 0;
+    margin: 0;
+}

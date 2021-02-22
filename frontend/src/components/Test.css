@@ -1,0 +1,26 @@
+.suite .test {
+    display: flex;
+    gap: 5px;
+    padding: 4px;
+}
+
+.suite .test .status {
+    width: 16px;
+    min-width: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.suite .test .status.passed {
+    font-size: 13px;
+    color: var(--success-green);
+}
+
+.suite .test .status.failed {
+    color: var(--failed-red);
+}
+
+.suite .test.current {
+    color: var(--success-green);
+}

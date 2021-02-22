@@ -3,7 +3,9 @@ import './App.css'
 import events from './status-events'
 import { getSocket } from './utils'
 import StatusBar from './components/StatusBar'
-import Suite from './components/Suite'
+import Spec from './components/Spec'
+import CurrentTestContext from './CurrentTestContext'
+
 class App extends React.Component {
     constructor() {
         super()
@@ -156,7 +158,9 @@ class App extends React.Component {
                     isSocketDisconnected = {this.state.isSocketDisconnected}
                 />
 
-                <Suite rootSuite={this.state.currentSuite} currentTest={this.state.currentTest}/>
+                <CurrentTestContext.Provider value={this.state.currentTest}>        
+                    <Spec rootSuite={this.state.currentSuite} currentTest={this.state.currentTest}/>
+                </CurrentTestContext.Provider>
             </div>
         )
     }
