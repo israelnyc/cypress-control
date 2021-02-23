@@ -14,11 +14,18 @@ class Suite extends React.Component {
                 `${this.props.suite.isParentRootSuite ? 'root' : ''}`
                 }>
 
-                <div className="title">{this.props.suite.title}</div>
+                <div className="title-bar">
+                    <div className="title">{this.props.suite.title}</div>
+                    {!this.props.suite.isParentRootSuite ? 
+                        <div className="meta" title={`${tests.length} tests`}>{tests.length}</div>
+                    : ''}                    
+                </div>
 
-                <ul className="tests">
-                    {tests}
-                </ul>
+                {tests.length ? 
+                    <ul className="tests">
+                        {tests}
+                    </ul>
+                : ''}
             </li>
         )
     }

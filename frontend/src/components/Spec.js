@@ -10,10 +10,10 @@ class Spec extends React.Component {
 
         return (
             <div className="suites-root-container">
-                <div className="meta">
-                    <div className="filename">File: {this.props.rootSuite.file}</div>
-                    <div className="suites-amount">Suites: {this.props.rootSuite.suites.length}</div>
-                    <div className="tests-amount">Tests: {this.props.rootSuite.totalTests}</div>
+                <div className="meta">                    
+                        <div className="suites-amount">Suites: {this.props.rootSuite.suites.length}</div>
+                        <div className="tests-amount">Tests: {this.props.rootSuite.totalTests}</div>
+                    <div className="filename">{this.props.rootSuite.file}</div>
                 </div>
 
                 <ul className="suites">

@@ -1,12 +1,17 @@
 .suites-root-container {
-    border: 1px solid var(--light-gray);
     margin-top: 10px;
 }
 
-.suites-root-container .meta {
+.suites-root-container > .meta {
     padding: 10px;
-    border-bottom: 1px solid var(--light-gray);
     margin-bottom: 5px;
+    font-weight: bold;
+    display: flex;
+    gap: 10px;
+}
+
+.suites-root-container > .meta .tests-amount {
+    flex-grow: 1;
 }
 
 .suites {
