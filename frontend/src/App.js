@@ -18,10 +18,11 @@ class App extends React.Component {
             cypressIsRunning: false,
             isConnectedToServer: false,
             isSocketDisconnected: false,
-            currentSuite: {
+            currentSpec: {
                 suites: []
             },
-            currentTest: {}
+            currentTest: {},
+            completedSpecs: []
         }
 
         this.pageTitle = '%customValues Cypress Dashboard'
@@ -51,13 +52,18 @@ class App extends React.Component {
             console.log('suite begin: ', data)
             if(data.isRootSuite) {
                 this.setState({ 
-                    currentSuite: data
+                    currentSpec: data
                 })
             }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
             console.log('suite end: ', data)
+            if(data.isRootSuite) {
+                this.setState({
+                    completedSpecs: [...this.state.completedSpecs, this.state.currentSpec]
+                })
+            }
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
@@ -95,17 +101,17 @@ class App extends React.Component {
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
             console.log('test end', data)
 
-            const currentSuiteCopy = JSON.parse(JSON.stringify(this.state.currentSuite))
+            const currentSpecCopy = JSON.parse(JSON.stringify(this.state.currentSpec))
 
-            const currentSuiteTest = currentSuiteCopy.suites.reduce((prev, curr) => {
+            const currentSpecTest = currentSpecCopy.suites.reduce((prev, curr) => {
                 return prev.concat(curr.tests)
             }, []).filter(test => test.id === data.id)[0]
 
-            if(currentSuiteTest) {
-                currentSuiteTest.hasCompleted = true
-                currentSuiteTest.status = data.status
+            if(currentSpecTest) {
+                currentSpecTest.hasCompleted = true
+                currentSpecTest.status = data.status
 
-                this.setState({currentSuite: currentSuiteCopy})
+                this.setState({currentSpec: currentSpecCopy})
             }
         })
 
@@ -159,7 +165,7 @@ class App extends React.Component {
                 />
 
                 <CurrentTestContext.Provider value={this.state.currentTest}>        
-                    <Spec rootSuite={this.state.currentSuite} currentTest={this.state.currentTest}/>
+                    <Spec rootSuite={this.state.currentSpec} currentTest={this.state.currentTest}/>
                 </CurrentTestContext.Provider>
             </div>
         )
