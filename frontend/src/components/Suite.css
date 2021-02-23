@@ -2,6 +2,10 @@
     list-style-type: none;
 }
 
+.suite.root .tests {
+    display: none;
+}
+
 .suite > .title {
     background-color: var(--light-gray);
     color: var(--main-dark-color);

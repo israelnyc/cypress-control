@@ -28,12 +28,15 @@ class CypressDashboardReporter {
 
         runner.on(EVENT_SUITE_BEGIN, data => {
             let _suites = []
-
+            let testsCount = 0
+            
             if(data.root) {
                 getSuiteAndTestData(data.suites)
 
                 function getSuiteAndTestData(suites) {
                     suites.forEach(suite => {
+                        testsCount += suite.tests.length
+
                         _suites.push({
                             title: suite.title,
                             id: suite.id,
@@ -52,15 +55,17 @@ class CypressDashboardReporter {
                         if(suite.suites.length) getSuiteAndTestData(suite.suites)
                     })
                 }
+            } else {
+                testsCount += data.tests.length
             }
-            
-                
+               
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
                 title: data.title, 
                 id: data.id,
                 isRootSuite: data.root,
                 suites: _suites,
-                file: data.file
+                file: data.file,
+                totalTests: testsCount
             })
         })
 
