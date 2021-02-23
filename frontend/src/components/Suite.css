@@ -1,7 +1,3 @@
-.suite {
-    list-style-type: none;
-}
-
 .suite > .title-bar {
     background-color: var(--light-gray);
     color: var(--main-dark-color);

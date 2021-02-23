@@ -1,0 +1,7 @@
+.panel {
+    overflow: hidden;
+}
+
+.panel .title-bar.is-collapsible {
+    cursor: pointer;
+}

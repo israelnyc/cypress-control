@@ -13,7 +13,7 @@ class Test extends React.Component {
             <CurrentTestContext.Consumer>
                 {(data) => {
                     return (
-                        <li className={
+                        <div className={
                             `test` +
                             `${data.id === this.props.test.id ? ' current' : ''}`}>
                             
@@ -24,7 +24,7 @@ class Test extends React.Component {
                                 <FontAwesomeIcon icon={this.props.test.status === 'passed' ? faCheck : faTimes} />
                             </div>
                             <div className="title">{this.props.test.title}</div>
-                        </li>
+                        </div>
                     )
                 }}        
             </CurrentTestContext.Consumer>

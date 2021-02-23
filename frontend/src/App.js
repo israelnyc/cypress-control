@@ -19,7 +19,66 @@ class App extends React.Component {
             isConnectedToServer: false,
             isSocketDisconnected: false,
             currentSpec: {
-                suites: []
+                suites: [{
+                    id: 'r1',
+                    title: 'Suite One',
+                    tests: [
+                        {
+                            id: 'r2',
+                            title: 'test one',
+                            status: 'passed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r3',
+                            title: 'test two',
+                            status: 'failed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r4',
+                            title: 'test three',
+                            status: 'passed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r5',
+                            title: 'test four',
+                            status: 'passed',
+                            hasCompleted: true
+                        }
+                    ]
+                },
+                {
+                    id: 'r6',
+                    title: 'Suite two',
+                    tests: [
+                        {
+                            id: 'r7',
+                            title: 'test one',
+                            status: 'passed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r8',
+                            title: 'test two',
+                            status: 'failed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r9',
+                            title: 'test three',
+                            status: 'failed',
+                            hasCompleted: true
+                        },
+                        {
+                            id: 'r10',
+                            title: 'test four',
+                            status: 'failed',
+                            hasCompleted: true
+                        }
+                    ]
+                }]
             },
             currentTest: {},
             completedSpecs: []

@@ -16,9 +16,9 @@ class Spec extends React.Component {
                     <div className="filename">{this.props.rootSuite.file}</div>
                 </div>
 
-                <ul className="suites">
+                <div className="suites">
                     { suites }
-                </ul>
+                </div>
             </div>
         )
     }
