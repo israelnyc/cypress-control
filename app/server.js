@@ -64,7 +64,7 @@ io.on('connection', socket => {
   socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
     if(data.isRootSuite) {
       setStatus({
-        currentSuiteFailures: {}
+        currentSpecFailures: {}
       })
     }
     io.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data)
@@ -96,14 +96,14 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-    const { currentSuiteFailures } = getStatus()
+    const { currentSpecFailures } = getStatus()
 
-    if(!currentSuiteFailures.hasOwnProperty(data.id)) {
+    if(!currentSpecFailures.hasOwnProperty(data.id)) {
       setStatus({
         failed: getStatus().failed + 1,
-        currentSuiteFailures: {
+        currentSpecFailures: {
           [data.id]: true,
-          ...currentSuiteFailures
+          ...currentSpecFailures
         }
       })
     }
