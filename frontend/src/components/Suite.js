@@ -13,7 +13,7 @@ class Suite extends React.Component {
     get title() {
         let _title = [<div key="1" className="title">{this.props.suite.title}</div>]
 
-        if(!this.props.suite.isParentRootSuite) {
+        if(this.tests.length) {
             _title.push(<div key="2" className="meta" title={`${this.tests.length} tests`}>{this.tests.length}</div>)
         }
 
