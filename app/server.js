@@ -34,6 +34,7 @@ io.on('connection', socket => {
   socket.on(events.CYPRESS_DASHBOARD_RESET_PROCESS_STATUS, (data, callback) => {
     setStatus({
       cypressPID: null,
+      isStarting: false,
       isRunning: false
     })
 
@@ -55,9 +56,15 @@ io.on('connection', socket => {
       setStatus({
         totalSpecs: data.totalSpecs
       })
+
+      io.emit(events.CYPRESS_DASHBOARD_BEFORE_RUN)
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, () => {
+    setStatus({
+      isRunning: true,
+      isStarting: false
+    })
     io.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN, getStatus())
   })
 
@@ -116,7 +123,6 @@ io.on('connection', socket => {
   })
 
   socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
-    console.log('server:run:completed', getStatus())
     io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, { ...data, ...getStatus() })
   })
 

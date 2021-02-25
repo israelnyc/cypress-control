@@ -15,6 +15,7 @@ class App extends React.Component {
         this.state = {
             passedCount: 0,
             failedCount: 0,
+            cypressIsStarting: false,
             cypressIsRunning: false,
             isConnectedToServer: false,
             isSocketDisconnected: false,
@@ -102,9 +103,12 @@ class App extends React.Component {
             this.updateTestStats(status)
         })
 
+        this.socket.on(events.CYPRESS_DASHBOARD_BEFORE_RUN, () => {
+            console.log('before run')
+        })
+
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
             console.log('cypress run begin...', data)
-            this.updateTestStats(data)
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
@@ -136,13 +140,11 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
             console.log('Runner started...')
-            this.setState({ cypressIsRunning: true })
             this.updatePageTitlePassedFailedStatus()
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
             console.log('Runner stopped...')
-            this.setState({ cypressIsRunning: false })
         })
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
@@ -176,7 +178,6 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
             console.log('Run completed', data)
-            this.updateTestStats(data)
         })
 
         this.socket.on('connect', () => {
@@ -192,6 +193,7 @@ class App extends React.Component {
             this.setState({
                 passedCount: 0,
                 failedCount: 0,
+                cypressIsStarting: false,
                 cypressIsRunning: false,
                 isConnectedToServer: false
             })
@@ -217,6 +219,7 @@ class App extends React.Component {
                     testsFailed = {this.state.failedCount}
                     totalSpecsRan = {this.state.totalSpecsRan}
                     totalSpecs = {this.state.totalSpecs}
+                    cypressIsStarting = {this.state.cypressIsStarting}
                     cypressIsRunning = {this.state.cypressIsRunning}
                     isConnectedToServer = {this.state.isConnectedToServer}
                     reconnectCypressSocket = {this.reconnectCypressSocket}
@@ -244,6 +247,7 @@ class App extends React.Component {
             passed,
             failed,
             isRunning,
+            isStarting,
             totalSpecs,
             totalSpecsRan
         } = data
@@ -252,6 +256,7 @@ class App extends React.Component {
             passedCount: passed,
             failedCount: failed,
             cypressIsRunning: isRunning,
+            cypressIsStarting: isStarting,
             totalSpecs,
             totalSpecsRan
         })

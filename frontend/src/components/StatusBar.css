@@ -49,6 +49,11 @@
   border-radius: 50%;
 }
 
+.runner-status.pending {
+  background-color: var(--success-green);
+  animation: none;
+}
+
 .runner-status.running {
   background-color: var(--success-green);
   animation: status-fade 2s infinite;

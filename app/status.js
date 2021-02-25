@@ -2,6 +2,7 @@ const { events } = require('./status-events')
 const { socket } = require('./socket')
 const status = {
     "cypressPID": null,
+    "isStarting": false,
     "isRunning": false,
     "failed": 0,
     "passed": 0,

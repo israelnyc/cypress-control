@@ -2,6 +2,7 @@ import React from 'react'
 import './StatusBar.css'
 import { startCypressRunner, stopCypressRunner } from '../utils'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import classNames from 'classnames'
 import ProgressBar from './ProgressBar'
 import { 
     faCheck, 
@@ -43,7 +44,16 @@ class StatusBar extends React.Component {
                     <div className="control">
                         <div 
                             title="Start test runner"
-                            className={`start-runner-button ${this.props.cypressIsRunning ? 'hidden' : ''} pointer`}
+                            className={
+                                classNames(
+                                    'start-runner-button',
+                                    'pointer',
+                                    {
+                                        'hidden': this.props.cypressIsRunning || this.props.cypressIsStarting
+                                    }
+                                )
+                                
+                            }
                             onClick={startCypressRunner}
                         >
                             <FontAwesomeIcon icon={faPlay} />
@@ -51,13 +61,30 @@ class StatusBar extends React.Component {
                         
                         <div 
                             title="Stop test runner"
-                            className={`stop-runner-button ${this.props.cypressIsRunning ? '' : 'hidden'} pointer`}
+                            className={
+                                classNames(
+                                    'stop-runner-button',
+                                    'pointer',
+                                    {
+                                        'hidden': !this.props.cypressIsRunning && !this.props.cypressIsStarting
+                                    }
+                                )    
+                            }
                             onClick={stopCypressRunner}
                         >
                             <FontAwesomeIcon icon={faStop} />
                         </div>
 
-                        <div className={`runner-status ${this.props.cypressIsRunning ? "running" : "stopped"}`}></div>
+                        <div className={
+                            classNames(
+                                'runner-status',
+                                {
+                                    'running': this.props.cypressIsRunning,
+                                    'stopped': !this.props.cypressIsRunning && !this.props.cypressIsStarting,
+                                    'pending': this.props.cypressIsStarting
+                                }
+                            )
+                        }></div>
 
                         <div 
                             title={

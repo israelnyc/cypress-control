@@ -99,7 +99,6 @@ class CypressDashboardReporter {
         })
 
         runner.on(EVENT_TEST_FAIL, data => {
-            console.log('fail:', data)
             console.log('message:', data.err.message)
 
             socket.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, {

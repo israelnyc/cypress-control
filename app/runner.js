@@ -6,9 +6,9 @@ const { getStatus, setStatus, resetTestStatus, resetProcessStatus } = require('.
 
 module.exports = {
     start: function(runnerMessageCallback) {
-        const { isRunning } = getStatus()
+        const { isRunning, isStarting } = getStatus()
 
-        if(isRunning) {
+        if(isRunning || isStarting) {
             console.log('Cypress process is already running...')
             return
         }
@@ -19,7 +19,7 @@ module.exports = {
 
         setStatus({
             cypressPID: cypressProcess.pid,
-            isRunning: true
+            isStarting: true
         })
 
         cypressProcess.on('message', message => {
