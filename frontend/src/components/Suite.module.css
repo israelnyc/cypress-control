@@ -1,4 +1,4 @@
-.suite > .title-bar {
+.title_bar {
     background-color: var(--light-gray);
     color: var(--main-dark-color);
     padding: 5px;
@@ -7,11 +7,11 @@
     justify-content: space-between;
 }
 
-.suite.root > .title-bar {
+.root > .title_bar {
     border-bottom: 1px solid var(--main-dark-color);
 }
 
-.suite > .title-bar .meta {
+.meta {
     background-color: var(--main-dark-color);
     color: #fff;
     border-radius: 5px;
@@ -22,6 +22,6 @@
     padding: 2px 8px;
 }
 
-.suite > .tests {
+.tests {
     padding: 5px;
 }

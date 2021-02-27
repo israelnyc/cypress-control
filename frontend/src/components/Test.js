@@ -1,11 +1,12 @@
 import React from 'react'
-import './Test.css'
-import CurrentTestContext from '../CurrentTestContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
     faCheck, 
     faTimes
 } from '@fortawesome/free-solid-svg-icons'
+import classNames from 'classnames'
+import CurrentTestContext from '../CurrentTestContext'
+import styles from './Test.module.css'
 
 class Test extends React.Component {
     render() {
@@ -13,14 +14,20 @@ class Test extends React.Component {
             <CurrentTestContext.Consumer>
                 {(data) => {
                     return (
-                        <div className={
-                            `test` +
-                            `${data.id === this.props.test.id ? ' current' : ''}`}>
+                        <div className={classNames(
+                                styles.container,
+                                {
+                                    [styles.current]: data.id === this.props.test.id
+                                }
+                            )}>
                             
-                            <div className={
-                                `status ` +
-                                `${this.props.test.status} ` +
-                                `${this.props.test.hasCompleted ? '' : 'invisible'}`}>
+                            <div className={classNames(
+                                styles.status,
+                                styles[this.props.test.status],
+                                {
+                                    'invisible': !this.props.test.hasCompleted
+                                }
+                            )}>
                                 <FontAwesomeIcon icon={this.props.test.status === 'passed' ? faCheck : faTimes} />
                             </div>
                             <div className="title">{this.props.test.title}</div>

@@ -1,27 +1,29 @@
-import React from 'react'
-import './Spec.css'
-import Suite from './Suite'
+import React from 'react';
+import Suite from './Suite';
+import styles from './Spec.module.css';
 
 class Spec extends React.Component {
     render() {
         const suites = this.props.rootSuite.suites.map((suite, suiteIndex) => {
-            return <Suite key={suiteIndex} suite={suite} />
-        })
+            return <Suite key={suiteIndex} suite={suite} />;
+        });
 
         return (
-            <div className="suites-root-container">
-                <div className="meta">                    
-                        <div className="suites-amount">Suites: {this.props.rootSuite.suites.length}</div>
-                        <div className="tests-amount">Tests: {this.props.rootSuite.totalTests}</div>
-                    <div className="filename">{this.props.rootSuite.file}</div>
+            <div className={styles.container}>
+                <div className={styles.meta}>
+                    <div className='suites_count'>
+                        Suites: {this.props.rootSuite.suites.length}
+                    </div>
+                    <div className={styles.tests_count}>
+                        Tests: {this.props.rootSuite.totalTests}
+                    </div>
+                    <div className='filename'>{this.props.rootSuite.file}</div>
                 </div>
 
-                <div className="suites">
-                    { suites }
-                </div>
+                <div className='suites'>{suites}</div>
             </div>
-        )
+        );
     }
 }
 
-export default Spec
+export default Spec;

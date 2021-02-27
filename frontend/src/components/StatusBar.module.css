@@ -1,0 +1,77 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    border-bottom: 1px solid #858080;
+}
+
+.results {
+    display: flex;
+    align-items: center;
+}
+
+.control {
+    display: flex;
+    align-items: center;
+}
+
+.results > div,
+.control > div {
+    padding: 0 10px;
+}
+
+.result {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fa_check {
+    color: var(--success-green);
+}
+
+.fa_times {
+    color: var(--failed-red);
+}
+
+.server_connected {
+    color: var(--success-green);
+}
+
+.server_disconnected {
+    color: var(--failed-red);
+}
+
+.runner_status {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.runner_status.starting {
+    background-color: var(--success-green);
+    animation: none;
+}
+
+.runner_status.running {
+    background-color: var(--success-green);
+    animation: status-fade 2s infinite;
+}
+
+.runner_status.stopped {
+    background-color: var(--failed-red);
+    animation: none;
+}
+
+@keyframes status-fade {
+    from {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
+}
