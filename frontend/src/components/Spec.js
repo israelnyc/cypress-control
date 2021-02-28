@@ -1,26 +1,33 @@
 import React from 'react';
+import classNames from 'classnames';
 import Suite from './Suite';
 import styles from './Spec.module.css';
 
 class Spec extends React.Component {
     render() {
-        const suites = this.props.rootSuite.suites.map((suite, suiteIndex) => {
+        const { spec } = this.props;
+
+        const suites = spec.suites.map((suite, suiteIndex) => {
             return <Suite key={suiteIndex} suite={suite} />;
         });
 
         return (
-            <div className={styles.container}>
+            <div
+                className={classNames({
+                    [styles.container]: true,
+                    [styles.has_completed]: spec.hasCompleted,
+                })}>
                 <div className={styles.meta}>
                     <div className='suites_count'>
-                        Suites: {this.props.rootSuite.suites.length}
+                        Suites: {spec.suites.length}
                     </div>
                     <div className={styles.tests_count}>
-                        Tests: {this.props.rootSuite.totalTests}
+                        Tests: {spec.totalTests}
                     </div>
-                    <div className='filename'>{this.props.rootSuite.file}</div>
+                    <div className='filename'>{spec.file}</div>
                 </div>
 
-                <div className='suites'>{suites}</div>
+                <div className={styles.suites}>{suites}</div>
             </div>
         );
     }

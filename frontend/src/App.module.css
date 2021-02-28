@@ -1,0 +1,18 @@
+.content {
+    padding: 20px;
+    display: flex;
+    gap: 25px;
+    height: calc(100vh - var(--progress-bar-height) - var(--status-bar-height));
+}
+
+.section {
+    width: 100%;
+    border: 1px solid var(--light-gray);
+}
+
+.current_spec {
+}
+
+.completed_specs {
+    overflow: auto;
+}

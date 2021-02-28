@@ -1,5 +1,7 @@
 .container {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .meta {
@@ -15,6 +17,9 @@
 }
 
 .suites {
-    padding: 0;
-    margin: 0;
+    overflow: auto;
+}
+
+.container.has_completed {
+    height: auto;
 }

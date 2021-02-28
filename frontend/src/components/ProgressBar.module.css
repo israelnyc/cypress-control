@@ -1,6 +1,6 @@
 .container {
     width: 100%;
-    height: 5px;
+    height: var(--progress-bar-height);
 }
 
 .track {
@@ -13,5 +13,5 @@
 }
 
 .theme_default .track {
-    background-color: var(--progress-bar-default)
+    background-color: var(--progress-bar-default);
 }

@@ -1,10 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
 import Spec from './components/Spec';
 import CurrentTestContext from './CurrentTestContext';
-
+import styles from './App.module.css';
 class App extends React.Component {
     constructor() {
         super();
@@ -19,6 +20,8 @@ class App extends React.Component {
             isConnectedToServer: false,
             isSocketDisconnected: false,
             currentSpec: {
+                file: 'cypress/integration/test.js',
+                totalTests: 8,
                 suites: [
                     {
                         id: 'r1',
@@ -84,7 +87,146 @@ class App extends React.Component {
                 ],
             },
             currentTest: {},
-            completedSpecs: [],
+            completedSpecs: [
+                {
+                    file: 'cypress/integration/test.js',
+                    totalTests: 8,
+                    hasCompleted: true,
+                    suites: [
+                        {
+                            id: 'r1',
+                            title: 'Suite One',
+                            isParentRootSuite: true,
+                            tests: [
+                                {
+                                    id: 'r2',
+                                    title: 'test one',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r3',
+                                    title: 'test two',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r4',
+                                    title: 'test three',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r5',
+                                    title: 'test four',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                            ],
+                        },
+                        {
+                            id: 'r6',
+                            title: 'Suite two',
+                            tests: [
+                                {
+                                    id: 'r7',
+                                    title: 'test one',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r8',
+                                    title: 'test two',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r9',
+                                    title: 'test three',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r10',
+                                    title: 'test four',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    file: 'cypress/integration/test.js',
+                    totalTests: 8,
+                    hasCompleted: true,
+                    suites: [
+                        {
+                            id: 'r1',
+                            title: 'Suite One',
+                            isParentRootSuite: true,
+                            tests: [
+                                {
+                                    id: 'r2',
+                                    title: 'test one',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r3',
+                                    title: 'test two',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r4',
+                                    title: 'test three',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r5',
+                                    title: 'test four',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                            ],
+                        },
+                        {
+                            id: 'r6',
+                            title: 'Suite two',
+                            tests: [
+                                {
+                                    id: 'r7',
+                                    title: 'test one',
+                                    status: 'passed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r8',
+                                    title: 'test two',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r9',
+                                    title: 'test three',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                                {
+                                    id: 'r10',
+                                    title: 'test four',
+                                    status: 'failed',
+                                    hasCompleted: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+            totalSpecs: 0,
+            totalSpecsRan: 0,
         };
 
         this.pageTitle = '%customValues Cypress Dashboard';
@@ -128,7 +270,10 @@ class App extends React.Component {
                 this.setState({
                     completedSpecs: [
                         ...this.state.completedSpecs,
-                        this.state.currentSpec,
+                        {
+                            ...this.state.currentSpec,
+                            hasCompleted: true,
+                        },
                     ],
                 });
             }
@@ -219,31 +364,6 @@ class App extends React.Component {
         }, 2 * 60 * 1000);
     }
 
-    render() {
-        return (
-            <div role='application'>
-                <StatusBar
-                    testsPassed={this.state.passedCount}
-                    testsFailed={this.state.failedCount}
-                    totalSpecsRan={this.state.totalSpecsRan}
-                    totalSpecs={this.state.totalSpecs}
-                    cypressIsStarting={this.state.cypressIsStarting}
-                    cypressIsRunning={this.state.cypressIsRunning}
-                    isConnectedToServer={this.state.isConnectedToServer}
-                    reconnectCypressSocket={this.reconnectCypressSocket}
-                    isSocketDisconnected={this.state.isSocketDisconnected}
-                />
-
-                <CurrentTestContext.Provider value={this.state.currentTest}>
-                    <Spec
-                        rootSuite={this.state.currentSpec}
-                        currentTest={this.state.currentTest}
-                    />
-                </CurrentTestContext.Provider>
-            </div>
-        );
-    }
-
     reconnectCypressSocket() {
         if (this.socket.disconnected) {
             console.log('socket reconnected');
@@ -284,6 +404,47 @@ class App extends React.Component {
 
     setPageTitle(customValues = '') {
         document.title = this.pageTitle.replace('%customValues', customValues);
+    }
+
+    render() {
+        return (
+            <div role='application'>
+                <StatusBar
+                    testsPassed={this.state.passedCount}
+                    testsFailed={this.state.failedCount}
+                    totalSpecsRan={this.state.totalSpecsRan}
+                    totalSpecs={this.state.totalSpecs}
+                    cypressIsStarting={this.state.cypressIsStarting}
+                    cypressIsRunning={this.state.cypressIsRunning}
+                    isConnectedToServer={this.state.isConnectedToServer}
+                    reconnectCypressSocket={this.reconnectCypressSocket}
+                    isSocketDisconnected={this.state.isSocketDisconnected}
+                />
+
+                <div className={styles.content}>
+                    <div
+                        className={classNames(
+                            styles.section,
+                            styles.current_spec
+                        )}>
+                        <CurrentTestContext.Provider
+                            value={this.state.currentTest}>
+                            <Spec spec={this.state.currentSpec} />
+                        </CurrentTestContext.Provider>
+                    </div>
+
+                    <div
+                        className={classNames(
+                            styles.section,
+                            styles.completed_specs
+                        )}>
+                        {this.state.completedSpecs.map((spec, index) => (
+                            <Spec key={index} spec={spec} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
     }
 }
 
