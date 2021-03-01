@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretRight, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import styles from './Panel.module.css';
 
 class Panel extends Component {
@@ -56,11 +58,31 @@ class Panel extends Component {
                 <div
                     ref={this.titleBar}
                     className={classNames(
-                        'title-bar',
+                        styles.title_bar,
                         { [styles.is_collapsible]: this.props.isCollapsible },
-                        this.props.classNames.title || ''
+                        this.props.classNames.titleBar || ''
                     )}>
-                    {this.props.title}
+                    <div
+                        className={classNames(
+                            styles.toggle_icon_container,
+                            this.props.classNames.toggleIconContainer
+                        )}>
+                        <FontAwesomeIcon
+                            className={styles.toggle_icon}
+                            icon={
+                                this.state.isCollapsed
+                                    ? faCaretRight
+                                    : faCaretDown
+                            }
+                        />
+                    </div>
+                    <div
+                        className={classNames(
+                            styles.title_bar_content,
+                            this.props.classNames.title || ''
+                        )}>
+                        {this.props.title}
+                    </div>
                 </div>
 
                 <div

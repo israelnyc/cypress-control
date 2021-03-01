@@ -19,7 +19,7 @@ class Spec extends React.Component {
                         [styles.container]: true,
                         [styles.has_completed]: spec.hasCompleted,
                     }),
-                    title: styles.title_bar,
+                    titleBar: styles.title_bar,
                 }}
                 rendersCollapsed={spec.hasCompleted}
                 title={
