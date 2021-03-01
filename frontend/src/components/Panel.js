@@ -33,14 +33,14 @@ class Panel extends Component {
     }
 
     collapse() {
-        this.container.current.style.height =
+        this.container.current.style.maxHeight =
             this.titleBar.current.offsetHeight + 'px';
 
         this.setState({ isCollapsed: true });
     }
 
     expand() {
-        this.container.current.style.height = 'auto';
+        this.container.current.style.maxHeight = '';
 
         this.setState({ isCollapsed: false });
     }
