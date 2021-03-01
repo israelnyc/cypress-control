@@ -2,6 +2,10 @@
     overflow: hidden;
 }
 
+.content {
+    overflow: auto;
+}
+
 .is_collapsible {
     cursor: pointer;
 }

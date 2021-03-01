@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Panel from './Panel';
 import Suite from './Suite';
 import styles from './Spec.module.css';
 
@@ -12,23 +13,27 @@ class Spec extends React.Component {
         });
 
         return (
-            <div
-                className={classNames({
-                    [styles.container]: true,
-                    [styles.has_completed]: spec.hasCompleted,
-                })}>
-                <div className={styles.meta}>
-                    <div className='suites_count'>
-                        Suites: {spec.suites.length}
+            <Panel
+                classNames={{
+                    panel: classNames({
+                        [styles.container]: true,
+                        [styles.has_completed]: spec.hasCompleted,
+                    }),
+                }}
+                rendersCollapsed={spec.hasCompleted}
+                title={
+                    <div className={styles.meta}>
+                        <div className={styles.filename}>{spec.file}</div>
+                        <div className='suites_count'>
+                            Suites: {spec.suites.length}
+                        </div>
+                        <div className={styles.tests_count}>
+                            Tests: {spec.totalTests}
+                        </div>
                     </div>
-                    <div className={styles.tests_count}>
-                        Tests: {spec.totalTests}
-                    </div>
-                    <div className='filename'>{spec.file}</div>
-                </div>
-
-                <div className={styles.suites}>{suites}</div>
-            </div>
+                }
+                content={<div className={styles.suites}>{suites}</div>}
+            />
         );
     }
 }

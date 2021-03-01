@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import styles from './Panel.module.css';
+
 class Panel extends Component {
     static defaultProps = {
         classNames: {},
         isCollapsible: true,
+        rendersCollapsed: false,
     };
 
     state = {
@@ -15,24 +17,32 @@ class Panel extends Component {
         super(props);
 
         this.container = React.createRef();
+        this.titleBar = React.createRef();
     }
 
     componentDidMount() {
-        const panel = this.container.current;
-        const titleBar = panel.querySelector('.title-bar');
-        const titleBarHeight = titleBar.offsetHeight;
-
         if (this.props.isCollapsible) {
-            titleBar.addEventListener('click', () => {
-                panel.style.height = this.state.isCollapsed
-                    ? 'auto'
-                    : titleBarHeight + 'px';
-
-                this.setState({
-                    isCollapsed: !this.state.isCollapsed,
-                });
+            this.titleBar.current.addEventListener('click', () => {
+                this.state.isCollapsed ? this.expand() : this.collapse();
             });
+
+            if (this.props.rendersCollapsed) {
+                this.collapse();
+            }
         }
+    }
+
+    collapse() {
+        this.container.current.style.height =
+            this.titleBar.current.offsetHeight + 'px';
+
+        this.setState({ isCollapsed: true });
+    }
+
+    expand() {
+        this.container.current.style.height = 'auto';
+
+        this.setState({ isCollapsed: false });
     }
 
     render() {
@@ -44,6 +54,7 @@ class Panel extends Component {
                     this.props.classNames.panel || ''
                 )}>
                 <div
+                    ref={this.titleBar}
                     className={classNames(
                         'title-bar',
                         { [styles.is_collapsible]: this.props.isCollapsible },
@@ -54,7 +65,7 @@ class Panel extends Component {
 
                 <div
                     className={classNames(
-                        'content',
+                        styles.content,
                         this.props.classNames.content || ''
                     )}>
                     {this.props.content}
