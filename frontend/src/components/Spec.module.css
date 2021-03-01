@@ -4,6 +4,10 @@
     height: 100%;
 }
 
+.title_bar {
+    border-bottom: 1px solid var(--light-gray-border);
+}
+
 .meta {
     padding: 10px;
     margin-bottom: 5px;
