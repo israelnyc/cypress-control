@@ -51,6 +51,7 @@ class Panel extends Component {
         return (
             <div
                 ref={this.container}
+                data-is-collapsed={this.state.isCollapsed}
                 className={classNames(
                     styles.container,
                     this.props.classNames.panel || ''

@@ -38,7 +38,7 @@ class Suite extends React.Component {
                 title={this.title}
                 content={this.tests}
                 classNames={{
-                    panel: classNames('Suite', {
+                    panel: classNames(styles.container, {
                         [styles.root]: this.props.suite.isParentRootSuite,
                     }),
                     titleBar: styles.title_bar,

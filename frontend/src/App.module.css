@@ -7,7 +7,7 @@
 
 .section {
     width: 100%;
-    border: 1px solid var(--light-gray);
+    background-color: var(--secondary-dark-color);
 }
 
 .current_spec {

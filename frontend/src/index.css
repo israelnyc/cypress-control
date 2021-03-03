@@ -1,12 +1,14 @@
 :root {
+    --main-font-color: #dadbdc;
     --main-dark-color: #282c34;
+    --secondary-dark-color: #3e4451;
     --success-green: #88ea88;
     --failed-red: #ea88a6;
     --progress-bar-default: #7ac082;
-    --light-gray: #ccc;
-    --light-gray-border: #858080;
     --progress-bar-height: 5px;
     --status-bar-height: 40px;
+    --light-gray: #ccc;
+    --light-gray-border: #858080;
 }
 
 * {
@@ -20,7 +22,7 @@ body {
 
 body {
     background-color: var(--main-dark-color);
-    color: white;
+    color: var(--main-font-color);
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
         'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',

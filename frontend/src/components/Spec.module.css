@@ -1,12 +1,14 @@
 .container {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    max-height: 100%;
+}
+
+.container:is(:not(:last-child), :only-child:not([data-is-collapsed='false'])) {
+    border-bottom: 1px solid var(--light-gray-border);
 }
 
 .title_bar {
-    border-top: 1px solid var(--light-gray-border);
-    border-bottom: 1px solid var(--light-gray-border);
     height: 40px;
 }
 
@@ -29,5 +31,5 @@
 }
 
 .container.has_completed {
-    height: auto;
+    max-height: none;
 }

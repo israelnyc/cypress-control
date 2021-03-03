@@ -11,12 +11,12 @@
     justify-content: space-between;
 }
 
-.root > .title_bar {
-    border-bottom: 1px solid var(--main-dark-color);
+.container:not(:last-child) .title_bar {
+    border-bottom: 1px solid var(--secondary-dark-color);
 }
 
 .meta {
-    background-color: var(--main-dark-color);
+    background-color: var(--secondary-dark-color);
     color: #fff;
     border-radius: 5px;
     font-size: 14px;
