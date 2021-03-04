@@ -257,26 +257,10 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
             console.log('suite begin: ', data);
-            if (data.isRootSuite) {
-                this.setState({
-                    currentSpec: data,
-                });
-            }
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
             console.log('suite end: ', data);
-            if (data.isRootSuite) {
-                this.setState({
-                    completedSpecs: [
-                        ...this.state.completedSpecs,
-                        {
-                            ...this.state.currentSpec,
-                            hasCompleted: true,
-                        },
-                    ],
-                });
-            }
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
@@ -312,22 +296,7 @@ class App extends React.Component {
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
             console.log('test end', data);
 
-            const currentSpecCopy = JSON.parse(
-                JSON.stringify(this.state.currentSpec)
-            );
-
-            const currentSpecTest = currentSpecCopy.suites
-                .reduce((prev, curr) => {
-                    return prev.concat(curr.tests);
-                }, [])
-                .filter(test => test.id === data.id)[0];
-
-            if (currentSpecTest) {
-                currentSpecTest.hasCompleted = true;
-                currentSpecTest.status = data.status;
-
-                this.setState({ currentSpec: currentSpecCopy });
-            }
+            this.updateTestStats(data);
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
@@ -381,6 +350,8 @@ class App extends React.Component {
             isStarting,
             totalSpecs,
             totalSpecsRan,
+            currentSpec,
+            completedSpecs,
         } = data;
 
         this.setState({
@@ -390,6 +361,8 @@ class App extends React.Component {
             cypressIsStarting: isStarting,
             totalSpecs,
             totalSpecsRan,
+            currentSpec,
+            completedSpecs,
         });
 
         this.updatePageTitlePassedFailedStatus(data);
@@ -427,10 +400,12 @@ class App extends React.Component {
                             styles.section,
                             styles.current_spec
                         )}>
-                        <CurrentTestContext.Provider
-                            value={this.state.currentTest}>
-                            <Spec spec={this.state.currentSpec} />
-                        </CurrentTestContext.Provider>
+                        {this.state.currentSpec.suites && (
+                            <CurrentTestContext.Provider
+                                value={this.state.currentTest}>
+                                <Spec spec={this.state.currentSpec} />
+                            </CurrentTestContext.Provider>
+                        )}
                     </div>
 
                     <div
