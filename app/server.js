@@ -56,6 +56,8 @@ io.on('connection', socket => {
             passed: 0,
             totalSpecs: 0,
             totalSpecsRan: 0,
+            completedSpecs: [],
+            currentSpec: {},
         });
 
         if (callback) callback();
