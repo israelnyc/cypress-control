@@ -6,6 +6,7 @@
 
 .content {
     overflow: auto;
+    height: 100%;
 }
 
 .tabs_wrapper {
@@ -41,4 +42,5 @@
 
 .tab_panel {
     overflow: auto;
+    height: 100%;
 }

@@ -4,6 +4,7 @@ import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
 import TabNavigator from './components/TabNavigator';
 import Spec from './components/Spec';
+import ComponentPlaceholder from './components/ComponentPlaceholder';
 import CurrentTestContext from './CurrentTestContext';
 import styles from './App.module.css';
 
@@ -380,6 +381,28 @@ class App extends React.Component {
         document.title = this.pageTitle.replace('%customValues', customValues);
     }
 
+    get currentSpecDisplay() {
+        if (this.state.currentSpec.suites) {
+            return (
+                <CurrentTestContext.Provider value={this.state.currentTest}>
+                    <Spec spec={this.state.currentSpec} />
+                </CurrentTestContext.Provider>
+            );
+        }
+
+        return <ComponentPlaceholder message='No spec currently running' />;
+    }
+
+    get completedSpecsDisplay() {
+        if (this.state.completedSpecs.length) {
+            return this.state.completedSpecs.map((spec, index) => (
+                <Spec key={index} spec={spec} />
+            ));
+        }
+
+        return <ComponentPlaceholder message='No completed specs yet' />;
+    }
+
     render() {
         return (
             <div role='application'>
@@ -404,40 +427,13 @@ class App extends React.Component {
                             {
                                 label: 'Current Spec',
                                 render: () => {
-                                    return (
-                                        <div>
-                                            {this.state.currentSpec.suites && (
-                                                <CurrentTestContext.Provider
-                                                    value={
-                                                        this.state.currentTest
-                                                    }>
-                                                    <Spec
-                                                        spec={
-                                                            this.state
-                                                                .currentSpec
-                                                        }
-                                                    />
-                                                </CurrentTestContext.Provider>
-                                            )}
-                                        </div>
-                                    );
+                                    return <>{this.currentSpecDisplay}</>;
                                 },
                             },
                             {
                                 label: 'Completed Specs',
                                 render: () => {
-                                    return (
-                                        <div>
-                                            {this.state.completedSpecs.map(
-                                                (spec, index) => (
-                                                    <Spec
-                                                        key={index}
-                                                        spec={spec}
-                                                    />
-                                                )
-                                            )}
-                                        </div>
-                                    );
+                                    return <>{this.completedSpecsDisplay}</>;
                                 },
                             },
                         ]}
