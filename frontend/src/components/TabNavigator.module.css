@@ -1,0 +1,44 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content {
+    overflow: auto;
+}
+
+.tabs_wrapper {
+    position: relative;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 2px solid var(--light-gray-border);
+}
+
+.active_tab_indicator {
+    height: 2px;
+    position: absolute;
+    bottom: 0px;
+    transition: left 300ms, width 300ms;
+    background-color: var(--active-tab-indicator-color);
+}
+
+.tab {
+    padding: 8px;
+    cursor: pointer;
+    background-color: var(--main-dark-color);
+}
+
+.tab:hover {
+    background-color: var(--secondary-dark-color);
+}
+
+.tab ~ .tab {
+    margin-left: 4px;
+}
+
+.tab_panel {
+    overflow: auto;
+}

@@ -1,16 +1,20 @@
 .content {
     padding: 20px;
-    display: flex;
-    gap: 25px;
     height: calc(100vh - var(--progress-bar-height) - var(--status-bar-height));
 }
 
 .section {
     width: 100%;
+    padding: 5px;
     background-color: var(--secondary-dark-color);
+    box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
 }
 
-.current_spec {
+.results_navigator {
+    margin: 0 auto;
+    max-width: 1000px;
+    height: 100%;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
 }
 
 .completed_specs {

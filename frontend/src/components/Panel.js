@@ -11,15 +11,21 @@ class Panel extends Component {
         rendersCollapsed: false,
     };
 
-    state = {
-        isCollapsed: false,
-    };
-
     constructor(props) {
         super(props);
 
+        this.state = {
+            isCollapsed: false,
+        };
+
         this.container = React.createRef();
         this.titleBar = React.createRef();
+    }
+
+    componentDidUpdate() {
+        this.container.current.style.maxHeight = this.state.isCollapsed
+            ? this.titleBar.current.offsetHeight + 'px'
+            : '';
     }
 
     componentDidMount() {
@@ -35,15 +41,10 @@ class Panel extends Component {
     }
 
     collapse() {
-        this.container.current.style.maxHeight =
-            this.titleBar.current.offsetHeight + 'px';
-
         this.setState({ isCollapsed: true });
     }
 
     expand() {
-        this.container.current.style.maxHeight = '';
-
         this.setState({ isCollapsed: false });
     }
 

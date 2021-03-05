@@ -1,11 +1,12 @@
 import React from 'react';
-import classNames from 'classnames';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
+import TabNavigator from './components/TabNavigator';
 import Spec from './components/Spec';
 import CurrentTestContext from './CurrentTestContext';
 import styles from './App.module.css';
+
 class App extends React.Component {
     constructor() {
         super();
@@ -395,28 +396,52 @@ class App extends React.Component {
                 />
 
                 <div className={styles.content}>
-                    <div
-                        className={classNames(
-                            styles.section,
-                            styles.current_spec
-                        )}>
-                        {this.state.currentSpec.suites && (
-                            <CurrentTestContext.Provider
-                                value={this.state.currentTest}>
-                                <Spec spec={this.state.currentSpec} />
-                            </CurrentTestContext.Provider>
-                        )}
-                    </div>
-
-                    <div
-                        className={classNames(
-                            styles.section,
-                            styles.completed_specs
-                        )}>
-                        {this.state.completedSpecs.map((spec, index) => (
-                            <Spec key={index} spec={spec} />
-                        ))}
-                    </div>
+                    <TabNavigator
+                        classNames={{
+                            container: styles.results_navigator,
+                        }}
+                        sections={[
+                            {
+                                label: 'Current Spec',
+                                render: () => {
+                                    return (
+                                        <div>
+                                            {this.state.currentSpec.suites && (
+                                                <CurrentTestContext.Provider
+                                                    value={
+                                                        this.state.currentTest
+                                                    }>
+                                                    <Spec
+                                                        spec={
+                                                            this.state
+                                                                .currentSpec
+                                                        }
+                                                    />
+                                                </CurrentTestContext.Provider>
+                                            )}
+                                        </div>
+                                    );
+                                },
+                            },
+                            {
+                                label: 'Completed Specs',
+                                render: () => {
+                                    return (
+                                        <div>
+                                            {this.state.completedSpecs.map(
+                                                (spec, index) => (
+                                                    <Spec
+                                                        key={index}
+                                                        spec={spec}
+                                                    />
+                                                )
+                                            )}
+                                        </div>
+                                    );
+                                },
+                            },
+                        ]}
+                    />
                 </div>
             </div>
         );
