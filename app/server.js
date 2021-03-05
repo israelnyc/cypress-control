@@ -153,6 +153,10 @@ io.on('connection', socket => {
     });
 
     socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
+        setStatus({
+            currentSpec: {},
+        });
+
         io.emit(events.CYPRESS_DASHBOARD_RUN_COMPLETED, {
             ...data,
             ...getStatus(),
