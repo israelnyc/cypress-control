@@ -58,6 +58,12 @@ class TabNavigator extends React.Component {
                     onClick={this.onClickHandler}
                     role='tab'>
                     {section.label}
+
+                    {section.badge > 0 && (
+                        <span className={classNames('badge', styles.tab_badge)}>
+                            {section.badge}
+                        </span>
+                    )}
                 </div>
             );
         });

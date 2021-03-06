@@ -18,12 +18,6 @@
 .meta {
     background-color: var(--secondary-dark-color);
     color: #fff;
-    border-radius: 5px;
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2px 8px;
 }
 
 .tests {

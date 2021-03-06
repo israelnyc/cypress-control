@@ -48,3 +48,12 @@ code {
 .invisible {
     visibility: hidden;
 }
+
+.badge {
+    border-radius: 5px;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 8px;
+}

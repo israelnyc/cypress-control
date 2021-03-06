@@ -22,7 +22,7 @@ class Suite extends React.Component {
             _title.push(
                 <div
                     key='2'
-                    className={styles.meta}
+                    className={classNames(styles.meta, 'badge')}
                     title={`${this.tests.length} tests`}>
                     {this.tests.length}
                 </div>

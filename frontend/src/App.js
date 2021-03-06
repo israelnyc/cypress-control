@@ -451,6 +451,7 @@ class App extends React.Component {
                             },
                             {
                                 label: 'Completed Specs',
+                                badge: this.state.completedSpecs.length,
                                 render: () => {
                                     return <>{this.completedSpecsDisplay}</>;
                                 },

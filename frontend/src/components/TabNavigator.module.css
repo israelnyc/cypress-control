@@ -29,6 +29,7 @@
 .tab {
     padding: 8px;
     cursor: pointer;
+    display: flex;
     background-color: var(--main-dark-color);
 }
 
@@ -43,4 +44,11 @@
 .tab_panel {
     overflow: auto;
     height: 100%;
+}
+
+.tab_badge {
+    margin-left: 6px;
+    font-weight: bold;
+    color: var(--secondary-dark-color);
+    background-color: var(--light-gray);
 }
