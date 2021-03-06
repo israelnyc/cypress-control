@@ -16,14 +16,6 @@ class TabNavigator extends React.Component {
 
         this.tabs = React.createRef();
         this.activeTabIndicator = React.createRef();
-
-        this.onClickHandler = this.onClickHandler.bind(this);
-    }
-
-    onClickHandler(e) {
-        this.setState({
-            currentIndex: e.target.dataset.index * 1,
-        });
     }
 
     updateActiveTabIndicator() {
@@ -55,7 +47,9 @@ class TabNavigator extends React.Component {
                         [styles.tab]: true,
                         [styles.active]: index === this.state.currentIndex,
                     })}
-                    onClick={this.onClickHandler}
+                    onClick={() => {
+                        this.setState({ currentIndex: index });
+                    }}
                     role='tab'>
                     {section.label}
 
