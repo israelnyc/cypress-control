@@ -263,6 +263,9 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
             console.log('suite end: ', data);
+            if (data.isRootSuite) {
+                this.updateCypressLog();
+            }
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
@@ -303,6 +306,7 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
             console.log('Run completed', data);
+            this.updateCypressLog();
         });
 
         this.socket.on('connect', () => {
@@ -325,6 +329,12 @@ class App extends React.Component {
 
             this.startSocketDisconnectionTimer();
         });
+
+        this.updateCypressLog();
+    }
+
+    componentWillUnmount() {
+        this.socket.removeAllListeners();
     }
 
     startSocketDisconnectionTimer() {
@@ -403,6 +413,15 @@ class App extends React.Component {
         return <ComponentPlaceholder message='No completed specs yet' />;
     }
 
+    async updateCypressLog() {
+        const cypressLogFile = await fetch('http://localhost:8686/cypress-log');
+        const cypressLogFileText = await cypressLogFile.text();
+
+        this.setState({
+            cypressLog: cypressLogFileText,
+        });
+    }
+
     render() {
         return (
             <div role='application'>
@@ -434,6 +453,12 @@ class App extends React.Component {
                                 label: 'Completed Specs',
                                 render: () => {
                                     return <>{this.completedSpecsDisplay}</>;
+                                },
+                            },
+                            {
+                                label: 'Cypress Output',
+                                render: () => {
+                                    return <pre>{this.state.cypressLog}</pre>;
                                 },
                             },
                         ]}

@@ -12,6 +12,8 @@ const {
     updateCurrentSpecTestStatus,
     broadcastStatus,
 } = require('./status');
+const fs = require('fs');
+const cors = require('cors');
 const io = require('socket.io')(http, {
     cors: {
         origin: ['http://localhost:3000'],
@@ -20,8 +22,22 @@ const io = require('socket.io')(http, {
 
 app.use(express.static(path.join(__dirname, '../frontend/build/')));
 
+app.use(
+    cors({
+        origin: ['http://localhost:3000'],
+    })
+);
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build/', 'index.html'));
+});
+
+app.get('/cypress-log', (req, res) => {
+    fs.readFile(path.join(__dirname, 'cypress.log'), 'utf8', (err, data) => {
+        if (err) throw err;
+
+        res.send(data);
+    });
 });
 
 io.on('connection', socket => {

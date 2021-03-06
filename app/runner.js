@@ -1,4 +1,3 @@
-const childProcess = require('child_process');
 const processManager = require('./process-manager');
 const { socket } = require('./socket');
 const { events } = require('./status-events');
@@ -8,6 +7,9 @@ const {
     resetTestStatus,
     resetProcessStatus,
 } = require('./status');
+const execa = require('execa');
+const fs = require('fs');
+const path = require('path');
 
 module.exports = {
     start: function (runnerMessageCallback) {
@@ -18,7 +20,12 @@ module.exports = {
             return;
         }
 
-        let cypressProcess = childProcess.fork(`${__dirname}/cypress`);
+        const cypressProcess = execa.node(path.join(__dirname, 'cypress'));
+
+        cypressProcess.stdout.pipe(process.stdout);
+        cypressProcess.stdout.pipe(
+            fs.createWriteStream(path.join(__dirname, 'cypress.log'))
+        );
 
         resetTestStatus();
 
