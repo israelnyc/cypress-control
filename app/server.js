@@ -190,6 +190,10 @@ io.on('connection', socket => {
     socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
         console.log('Stopping runner...');
 
+        setStatus({
+            currentSpec: {},
+        });
+
         io.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER, getStatus());
 
         runner.stop();
