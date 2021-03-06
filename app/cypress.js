@@ -1,14 +1,19 @@
-const { handleSIGINT } = require('./process-manager');
-const { events } = require('./status-events');
 const glob = require('glob');
 const path = require('path');
+const { handleSIGINT } = require('./process-manager');
+const { events } = require('./status-events');
 
 try {
-    const cypress = require(process.cwd() + '\\node_modules\\cypress');
+    const cypress = require(path.join(
+        process.cwd(),
+        'node_modules',
+        'cypress'
+    ));
+
     const {
         componentFolder,
         integrationFolder = 'cypress/integration/',
-    } = require(process.cwd() + '\\cypress.json');
+    } = require(path.join(process.cwd(), 'cypress.json'));
 
     const specPattern = [path.normalize(`./${integrationFolder}/**/**`)];
 
@@ -19,7 +24,6 @@ try {
     console.log('config componentFolder:', componentFolder);
     console.log('config integrationFolder:', integrationFolder);
     console.log('spec pattern:', specPattern);
-    console.log('cwd:', process.cwd());
 
     const globPattern =
         specPattern.length > 1 ? `{${specPattern.join(',')}}` : specPattern[0];
@@ -39,12 +43,11 @@ try {
     cypress
         .run({
             config: {
-                reporter: __dirname + '/reporter.js',
+                reporter: path.join(__dirname, 'reporter.js'),
             },
             spec: specPattern,
         })
         .then(results => {
-            console.log('cypress:run:completed');
             process.send({
                 type: events.CYPRESS_DASHBOARD_RUN_COMPLETED,
                 data: results,

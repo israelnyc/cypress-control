@@ -5,6 +5,7 @@ const http = require('http').createServer(app);
 const { events } = require('./status-events');
 const { handleSIGINT } = require('./process-manager');
 const path = require('path');
+const directoryTree = require('directory-tree');
 const {
     getStatus,
     setStatus,
@@ -38,6 +39,23 @@ app.get('/cypress-log', (req, res) => {
 
         res.send(data);
     });
+});
+
+app.get('/cypress-spec-directories', (req, res) => {
+    const {
+        componentFolder = '',
+        integrationFolder = 'cypress/integration/',
+    } = require(path.join(process.cwd(), 'cypress.json'));
+
+    const combinedTrees = [];
+
+    if (componentFolder) {
+        combinedTrees.push(directoryTree(componentFolder));
+    }
+
+    combinedTrees.push(directoryTree(integrationFolder));
+
+    res.send(combinedTrees);
 });
 
 io.on('connection', socket => {
