@@ -65,10 +65,11 @@ class Panel extends Component {
                         this.props.classNames.titleBar || ''
                     )}>
                     <div
-                        className={classNames(
-                            styles.toggle_icon_container,
-                            this.props.classNames.toggleIconContainer
-                        )}>
+                        className={classNames({
+                            hidden: !this.props.isCollapsible,
+                            [styles.toggle_icon_container]: true,
+                            [this.props.classNames.toggleIconContainer]: true,
+                        })}>
                         <FontAwesomeIcon
                             className={styles.toggle_icon}
                             icon={

@@ -4,6 +4,7 @@ import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
 import TabNavigator from './components/TabNavigator';
 import Spec from './components/Spec';
+import DirectoryTree from './components/DirectoryTree';
 import ComponentPlaceholder from './components/ComponentPlaceholder';
 import CurrentTestContext from './CurrentTestContext';
 import styles from './App.module.css';
@@ -460,6 +461,18 @@ class App extends React.Component {
                                 label: 'Cypress Output',
                                 render: () => {
                                     return <pre>{this.state.cypressLog}</pre>;
+                                },
+                            },
+                            {
+                                label: 'Directories',
+                                render: () => {
+                                    return (
+                                        <DirectoryTree
+                                            dataURL='http://localhost:8686/cypress-spec-directories/'
+                                            rendersCollapsed={false}
+                                            isCaseSensitive={false}
+                                        />
+                                    );
                                 },
                             },
                         ]}
