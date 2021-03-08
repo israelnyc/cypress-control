@@ -1,5 +1,7 @@
 .container {
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .title_bar {

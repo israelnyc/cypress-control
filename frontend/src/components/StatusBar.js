@@ -7,9 +7,10 @@ import {
     faPlay,
     faStop,
     faWifi,
+    faCog,
 } from '@fortawesome/free-solid-svg-icons';
 import { startCypressRunner, stopCypressRunner } from '../utils';
-import ProgressBar from './ProgressBar';
+import ProgressBar from './UI/ProgressBar';
 import styles from './StatusBar.module.css';
 
 class StatusBar extends React.Component {
@@ -142,6 +143,13 @@ class StatusBar extends React.Component {
                                 onClick: this.props.reconnectCypressSocket,
                             })}>
                             <FontAwesomeIcon icon={faWifi} />
+                        </div>
+                        <div
+                            onClick={this.props.openSettingsDialog}
+                            className={classNames({
+                                pointer: true,
+                            })}>
+                            <FontAwesomeIcon icon={faCog} />
                         </div>
                     </div>
                 </div>

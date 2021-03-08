@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import Panel from './Panel';
+import Panel from './UI/Panel';
 import styles from './DirectoryTree.module.css';
 import classNames from 'classnames';
 
@@ -115,7 +115,7 @@ class DirectoryTree extends Component {
                                 hidden: !matchesFilter,
                                 [styles.directory]: true,
                             }),
-                            content: styles.content,
+                            content: styles.directory_content,
                         }}
                         key={key}
                         rendersCollapsed={isTreeCollapsed}
@@ -200,6 +200,7 @@ class DirectoryTree extends Component {
 
         return (
             <Panel
+                classNames={{ panel: classNames(styles.container) }}
                 isCollapsible={false}
                 title={controlBar()}
                 content={directories}

@@ -1,5 +1,5 @@
 .container {
-    padding: 20px;
+    height: 100%;
 }
 
 .control_bar {
@@ -42,7 +42,7 @@
     background-color: var(--light-gray-border);
 }
 
-.content {
+.directory_content {
     border-left: 1px solid var(--light-gray-border);
 }
 

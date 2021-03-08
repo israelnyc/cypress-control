@@ -2,11 +2,12 @@ import React from 'react';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
-import TabNavigator from './components/TabNavigator';
-import Spec from './components/Spec';
+import TabNavigator from './components/UI/TabNavigator';
+import Spec from './components/cypress/Spec';
 import DirectoryTree from './components/DirectoryTree';
-import ComponentPlaceholder from './components/ComponentPlaceholder';
+import ComponentPlaceholder from './components/UI/ComponentPlaceholder';
 import CurrentTestContext from './CurrentTestContext';
+import Modal from './components/UI/Modal';
 import styles from './App.module.css';
 
 class App extends React.Component {
@@ -230,6 +231,7 @@ class App extends React.Component {
             ],
             totalSpecs: 0,
             totalSpecsRan: 0,
+            showSettingsDialog: false,
         };
 
         this.pageTitle = '%customValues Cypress Dashboard';
@@ -381,6 +383,18 @@ class App extends React.Component {
         this.updatePageTitlePassedFailedStatus(data);
     }
 
+    openSettingsDialog = () => {
+        this.setState({
+            showSettingsDialog: true,
+        });
+    };
+
+    closeSettingsDialog = e => {
+        this.setState({
+            showSettingsDialog: false,
+        });
+    };
+
     updatePageTitlePassedFailedStatus(data) {
         const passed = data?.passed || 0;
         const failed = data?.failed || 0;
@@ -426,6 +440,15 @@ class App extends React.Component {
     render() {
         return (
             <div role='application'>
+                <Modal
+                    isVisible={this.state.showSettingsDialog}
+                    closeModal={this.closeSettingsDialog}>
+                    <DirectoryTree
+                        dataURL='http://localhost:8686/cypress-spec-directories/'
+                        rendersCollapsed={false}
+                        isCaseSensitive={false}
+                    />
+                </Modal>
                 <StatusBar
                     testsPassed={this.state.passedCount}
                     testsFailed={this.state.failedCount}
@@ -436,6 +459,7 @@ class App extends React.Component {
                     isConnectedToServer={this.state.isConnectedToServer}
                     reconnectCypressSocket={this.reconnectCypressSocket}
                     isSocketDisconnected={this.state.isSocketDisconnected}
+                    openSettingsDialog={this.openSettingsDialog}
                 />
 
                 <div className={styles.content}>
@@ -461,18 +485,6 @@ class App extends React.Component {
                                 label: 'Cypress Output',
                                 render: () => {
                                     return <pre>{this.state.cypressLog}</pre>;
-                                },
-                            },
-                            {
-                                label: 'Directories',
-                                render: () => {
-                                    return (
-                                        <DirectoryTree
-                                            dataURL='http://localhost:8686/cypress-spec-directories/'
-                                            rendersCollapsed={false}
-                                            isCaseSensitive={false}
-                                        />
-                                    );
                                 },
                             },
                         ]}

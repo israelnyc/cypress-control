@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import Panel from './Panel';
+import Panel from '../UI/Panel';
 import Suite from './Suite';
 import styles from './Spec.module.css';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import Test from './Test';
-import Panel from './Panel';
+import Panel from '../UI/Panel';
 import styles from './Suite.module.css';
 
 class Suite extends React.Component {

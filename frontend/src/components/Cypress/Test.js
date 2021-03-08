@@ -2,7 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
-import CurrentTestContext from '../CurrentTestContext';
+import CurrentTestContext from '../../CurrentTestContext';
 import styles from './Test.module.css';
 
 class Test extends React.Component {
