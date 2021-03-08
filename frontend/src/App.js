@@ -441,12 +441,28 @@ class App extends React.Component {
         return (
             <div role='application'>
                 <Modal
+                    classNames={{ modal: styles.modal }}
                     isVisible={this.state.showSettingsDialog}
                     closeModal={this.closeSettingsDialog}>
-                    <DirectoryTree
-                        dataURL='http://localhost:8686/cypress-spec-directories/'
-                        rendersCollapsed={false}
-                        isCaseSensitive={false}
+                    <TabNavigator
+                        classNames={{
+                            container: styles.tab_navigator,
+                            tabs_wrapper: styles.settings_tabs_wrapper,
+                        }}
+                        sections={[
+                            {
+                                label: 'Spec Selection',
+                                render: () => {
+                                    return (
+                                        <DirectoryTree
+                                            dataURL='http://localhost:8686/cypress-spec-directories/'
+                                            rendersCollapsed={false}
+                                            isCaseSensitive={false}
+                                        />
+                                    );
+                                },
+                            },
+                        ]}
                     />
                 </Modal>
                 <StatusBar
@@ -465,7 +481,7 @@ class App extends React.Component {
                 <div className={styles.content}>
                     <TabNavigator
                         classNames={{
-                            container: styles.results_navigator,
+                            container: styles.tab_navigator,
                         }}
                         sections={[
                             {

@@ -4,6 +4,7 @@ import styles from './TabNavigator.module.css';
 
 class TabNavigator extends React.Component {
     static defaultProps = {
+        classNames: {},
         sections: [],
     };
 
@@ -81,9 +82,13 @@ class TabNavigator extends React.Component {
             <div
                 className={classNames(
                     styles.container,
-                    this.props.classNames.container || ''
+                    this.props.classNames.container
                 )}>
-                <div className={styles.tabs_wrapper}>
+                <div
+                    className={classNames(
+                        styles.tabs_wrapper,
+                        this.props.classNames.tabs_wrapper
+                    )}>
                     <div ref={this.tabs} className={styles.tabs} role='tablist'>
                         {tabs}
                     </div>

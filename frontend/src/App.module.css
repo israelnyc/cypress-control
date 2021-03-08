@@ -10,11 +10,19 @@
     box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
 }
 
-.results_navigator {
+.tab_navigator {
     margin: 0 auto;
     max-width: 1000px;
     height: 100%;
     box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
+}
+
+.modal {
+    max-width: 1000px;
+}
+
+.settings_tabs_wrapper {
+    background-color: var(--main-dark-color);
 }
 
 .completed_specs {

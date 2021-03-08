@@ -3,6 +3,10 @@ import classNames from 'classnames';
 import styles from './Modal.module.css';
 
 class Modal extends Component {
+    static defaultProps = {
+        classNames: {},
+    };
+
     modalClickHandler = e => {
         e.stopPropagation();
     };
@@ -15,7 +19,12 @@ class Modal extends Component {
                     [styles.container]: true,
                     hidden: !this.props.isVisible,
                 })}>
-                <div onClick={this.modalClickHandler} className={styles.modal}>
+                <div
+                    onClick={this.modalClickHandler}
+                    className={classNames(
+                        styles.modal,
+                        this.props.classNames.modal
+                    )}>
                     {this.props.children}
                 </div>
             </div>
