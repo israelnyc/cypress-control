@@ -11,6 +11,7 @@ class DirectoryTree extends Component {
         dataURL: '',
         rendersCollapsed: false,
         isCaseSensitive: true,
+        itemsHaveCheckboxes: false,
     };
 
     constructor(props) {
@@ -21,24 +22,21 @@ class DirectoryTree extends Component {
             filterQuery: '',
             filteredFilesOrDirectories: [],
             isTreeCollapsed: false,
+            selectedItems: [],
         };
-
-        this.collapseAll = this.collapseAll.bind(this);
-        this.expandAll = this.expandAll.bind(this);
-        this.searchHandler = this.searchHandler.bind(this);
     }
 
-    collapseAll() {
+    collapseAll = () => {
         this.setState({
             isTreeCollapsed: true,
         });
-    }
+    };
 
-    expandAll() {
+    expandAll = () => {
         this.setState({
             isTreeCollapsed: false,
         });
-    }
+    };
 
     filter(data, query, parentDirectory = '') {
         data.forEach(item => {
@@ -75,7 +73,7 @@ class DirectoryTree extends Component {
         });
     }
 
-    searchHandler(e) {
+    searchHandler = e => {
         const query = e.target.value;
 
         this.setState(
@@ -89,9 +87,135 @@ class DirectoryTree extends Component {
                 }
             }
         );
+    };
+
+    getDirectoryItemByPath(directory, path) {
+        let foundItem = null;
+
+        for (let i = 0; i < directory.length; i++) {
+            if (directory[i].path === path) {
+                foundItem = directory[i];
+                break;
+            }
+
+            if (!foundItem && directory[i].children) {
+                foundItem = this.getDirectoryItemByPath(
+                    directory[i].children,
+                    path
+                );
+            }
+        }
+
+        return foundItem;
     }
 
-    buildDirectoryBlock(directory, isRootDirectory) {
+    flattenDirectoryItem(directoryItem) {
+        let items = [];
+
+        if (Array.isArray(directoryItem)) {
+            directoryItem.forEach(item => {
+                items.push(item);
+
+                if (item.children) {
+                    items = items.concat(
+                        this.flattenDirectoryItem(item.children)
+                    );
+                }
+            });
+        } else {
+            items.push(directoryItem);
+        }
+
+        if (directoryItem.children) {
+            items = items.concat(
+                this.flattenDirectoryItem(directoryItem.children)
+            );
+        }
+
+        return items;
+    }
+
+    itemCheckboxClickHandler = e => {
+        const { name, path, type } = e.target.dataset;
+        let directoryChildren = [];
+
+        if (type === 'directory') {
+            directoryChildren = this.flattenDirectoryItem(
+                this.getDirectoryItemByPath(this.state.directories, path)
+            ).map(directoryChild => directoryChild.path);
+        }
+
+        if (e.target.checked) {
+            if (!this.state.selectedItems.includes(path)) {
+                this.setState(state => {
+                    return {
+                        selectedItems: [
+                            ...state.selectedItems,
+                            ...directoryChildren.filter(
+                                path => !this.state.selectedItems.includes(path)
+                            ),
+                        ],
+                    };
+                });
+
+                if (type === 'file') {
+                    this.setState(state => {
+                        return {
+                            selectedItems: [...state.selectedItems, path],
+                        };
+                    });
+                }
+            }
+        } else {
+            const selectedItems = [...this.state.selectedItems];
+            const pathIndex = selectedItems.indexOf(path);
+            const parentDirectory = path.replace(`\\${name}`, '');
+
+            if (type === 'directory') {
+                directoryChildren.forEach(directoryChild => {
+                    const pathIndex = selectedItems.indexOf(
+                        directoryChild.path
+                    );
+
+                    selectedItems.splice(pathIndex, 1);
+                });
+            } else {
+                selectedItems.splice(pathIndex, 1);
+            }
+
+            const parentDirectoryIndex = selectedItems.indexOf(parentDirectory);
+
+            if (type === 'file' && parentDirectoryIndex > -1) {
+                selectedItems.splice(parentDirectoryIndex, 1);
+            }
+
+            this.setState({
+                selectedItems,
+            });
+        }
+
+        e.stopPropagation();
+    };
+
+    renderTreeItem = item => {
+        return (
+            <div className={styles.tree_item_wrapper}>
+                {this.props.itemsHaveCheckboxes && (
+                    <input
+                        type='checkbox'
+                        checked={this.state.selectedItems.includes(item.path)}
+                        onChange={this.itemCheckboxClickHandler}
+                        data-name={item.name}
+                        data-path={item.path}
+                        data-type={item.type}
+                    />
+                )}
+                <div>{item.name}</div>
+            </div>
+        );
+    };
+
+    buildDirectoryBlock(directory, isRootDirectory = false) {
         return directory.map(item => {
             const tree = [];
             const key = Math.floor(Math.random() * 10000);
@@ -119,12 +243,8 @@ class DirectoryTree extends Component {
                         }}
                         key={key}
                         rendersCollapsed={isTreeCollapsed}
-                        title={item.name}
-                        content={this.buildDirectoryBlock(
-                            item.children,
-                            false,
-                            item.name
-                        )}
+                        title={this.renderTreeItem(item)}
+                        content={this.buildDirectoryBlock(item.children)}
                     />
                 );
             }
@@ -137,7 +257,7 @@ class DirectoryTree extends Component {
                             [styles.file]: true,
                             hidden: !matchesFilter,
                         })}>
-                        {item.name}
+                        {this.renderTreeItem(item)}
                     </div>
                 );
             }

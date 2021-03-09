@@ -1,5 +1,6 @@
 .container {
     height: 100%;
+    font-size: 1.1em;
 }
 
 .control_bar {
@@ -42,8 +43,20 @@
     background-color: var(--light-gray-border);
 }
 
+.tree_item_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.container input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+}
+
 .directory_content {
     border-left: 1px solid var(--light-gray-border);
+    margin-left: 10px;
 }
 
 .directory {
@@ -56,5 +69,6 @@
 
 .file {
     font-weight: normal;
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-bottom: 3px;
 }

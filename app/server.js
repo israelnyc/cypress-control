@@ -44,7 +44,7 @@ app.get('/cypress-log', (req, res) => {
 app.get('/cypress-spec-directories', (req, res) => {
     const {
         componentFolder = '',
-        integrationFolder = 'cypress/integration/',
+        integrationFolder = path.join('cypress', 'integration'),
     } = require(path.join(process.cwd(), 'cypress.json'));
 
     const combinedTrees = [];

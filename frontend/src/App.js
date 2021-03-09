@@ -231,7 +231,7 @@ class App extends React.Component {
             ],
             totalSpecs: 0,
             totalSpecsRan: 0,
-            showSettingsDialog: false,
+            showSettingsDialog: true,
         };
 
         this.pageTitle = '%customValues Cypress Dashboard';
@@ -458,6 +458,7 @@ class App extends React.Component {
                                             dataURL='http://localhost:8686/cypress-spec-directories/'
                                             rendersCollapsed={false}
                                             isCaseSensitive={false}
+                                            itemsHaveCheckboxes={true}
                                         />
                                     );
                                 },
