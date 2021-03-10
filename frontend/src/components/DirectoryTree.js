@@ -78,8 +78,8 @@ class DirectoryTree extends Component {
 
         this.setState(
             {
-                filteredFilesOrDirectories: [],
                 filterQuery: query,
+                filteredFilesOrDirectories: [],
             },
             () => {
                 if (query) {
@@ -147,46 +147,49 @@ class DirectoryTree extends Component {
 
         if (e.target.checked) {
             if (!this.state.selectedItems.includes(path)) {
-                this.setState(state => {
-                    return {
-                        selectedItems: [
-                            ...state.selectedItems,
-                            ...directoryChildren.filter(
-                                path => !this.state.selectedItems.includes(path)
-                            ),
-                        ],
-                    };
-                });
+                let selectedItemsUpdate = [...this.state.selectedItems];
+
+                if (type === 'directory') {
+                    selectedItemsUpdate.push(
+                        ...directoryChildren.filter(
+                            path => !this.state.selectedItems.includes(path)
+                        )
+                    );
+                }
 
                 if (type === 'file') {
-                    this.setState(state => {
-                        return {
-                            selectedItems: [...state.selectedItems, path],
-                        };
-                    });
+                    selectedItemsUpdate.push(path);
                 }
+
+                this.setState({
+                    selectedItems: selectedItemsUpdate,
+                });
             }
         } else {
             const selectedItems = [...this.state.selectedItems];
             const pathIndex = selectedItems.indexOf(path);
             const parentDirectory = path.replace(`\\${name}`, '');
 
+            selectedItems.splice(pathIndex, 1);
+
             if (type === 'directory') {
                 directoryChildren.forEach(directoryChild => {
-                    const pathIndex = selectedItems.indexOf(
-                        directoryChild.path
+                    const directoryChildPathIndex = selectedItems.indexOf(
+                        directoryChild
                     );
 
-                    selectedItems.splice(pathIndex, 1);
+                    if (directoryChildPathIndex > -1) {
+                        selectedItems.splice(directoryChildPathIndex, 1);
+                    }
                 });
             } else {
-                selectedItems.splice(pathIndex, 1);
-            }
+                const parentDirectoryIndex = selectedItems.indexOf(
+                    parentDirectory
+                );
 
-            const parentDirectoryIndex = selectedItems.indexOf(parentDirectory);
-
-            if (type === 'file' && parentDirectoryIndex > -1) {
-                selectedItems.splice(parentDirectoryIndex, 1);
+                if (parentDirectoryIndex > -1) {
+                    selectedItems.splice(parentDirectoryIndex, 1);
+                }
             }
 
             this.setState({
