@@ -406,6 +406,10 @@ class App extends React.Component {
         document.title = this.pageTitle.replace('%customValues', customValues);
     }
 
+    onCypressFileSelectionChange() {
+        console.log('App.js: cypress file selection change:', this);
+    }
+
     get currentSpecDisplay() {
         if (this.state.currentSpec.suites) {
             return (
@@ -426,6 +430,18 @@ class App extends React.Component {
         }
 
         return <ComponentPlaceholder message='No completed specs yet' />;
+    }
+
+    get specSelectionTree() {
+        return (
+            <DirectoryTree
+                dataURL='http://localhost:8686/cypress-spec-directories/'
+                rendersCollapsed={false}
+                isCaseSensitive={false}
+                itemsHaveCheckboxes={true}
+                onSelectionChange={this.onCypressFileSelectionChange}
+            />
+        );
     }
 
     async updateCypressLog() {
@@ -452,16 +468,7 @@ class App extends React.Component {
                         sections={[
                             {
                                 label: 'Spec Selection',
-                                render: () => {
-                                    return (
-                                        <DirectoryTree
-                                            dataURL='http://localhost:8686/cypress-spec-directories/'
-                                            rendersCollapsed={false}
-                                            isCaseSensitive={false}
-                                            itemsHaveCheckboxes={true}
-                                        />
-                                    );
-                                },
+                                render: () => this.specSelectionTree,
                             },
                         ]}
                     />

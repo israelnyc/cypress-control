@@ -9,6 +9,7 @@ class DirectoryTree extends Component {
     static defaultProps = {
         data: [],
         dataURL: '',
+        onselectionchange: () => {},
         rendersCollapsed: false,
         isCaseSensitive: true,
         itemsHaveCheckboxes: false,
@@ -137,6 +138,8 @@ class DirectoryTree extends Component {
 
     itemCheckboxClickHandler = e => {
         const { name, path, type } = e.target.dataset;
+        const selectedItems = [...this.state.selectedItems];
+
         let directoryChildren = [];
 
         if (type === 'directory') {
@@ -147,10 +150,8 @@ class DirectoryTree extends Component {
 
         if (e.target.checked) {
             if (!this.state.selectedItems.includes(path)) {
-                let selectedItemsUpdate = [...this.state.selectedItems];
-
                 if (type === 'directory') {
-                    selectedItemsUpdate.push(
+                    selectedItems.push(
                         ...directoryChildren.filter(
                             path => !this.state.selectedItems.includes(path)
                         )
@@ -158,15 +159,14 @@ class DirectoryTree extends Component {
                 }
 
                 if (type === 'file') {
-                    selectedItemsUpdate.push(path);
+                    selectedItems.push(path);
                 }
 
-                this.setState({
-                    selectedItems: selectedItemsUpdate,
-                });
+                this.setState({ selectedItems });
+
+                this.props.onSelectionChange.call(this);
             }
         } else {
-            const selectedItems = [...this.state.selectedItems];
             const pathIndex = selectedItems.indexOf(path);
             const parentDirectory = path.replace(`\\${name}`, '');
 
@@ -192,9 +192,9 @@ class DirectoryTree extends Component {
                 }
             }
 
-            this.setState({
-                selectedItems,
-            });
+            this.setState({ selectedItems });
+
+            this.props.onSelectionChange.call(this);
         }
 
         e.stopPropagation();
