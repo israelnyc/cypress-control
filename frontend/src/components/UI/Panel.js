@@ -30,15 +30,17 @@ class Panel extends Component {
 
     componentDidMount() {
         if (this.props.isCollapsible) {
-            this.titleBar.current.addEventListener('click', () => {
-                this.state.isCollapsed ? this.expand() : this.collapse();
-            });
-
             if (this.props.rendersCollapsed) {
                 this.collapse();
             }
         }
     }
+
+    titleBarClickHandler = e => {
+        if (this.props.isCollapsible) {
+            this.state.isCollapsed ? this.expand() : this.collapse();
+        }
+    };
 
     collapse() {
         this.setState({ isCollapsed: true });
@@ -59,6 +61,7 @@ class Panel extends Component {
                 )}>
                 <div
                     ref={this.titleBar}
+                    onClick={this.titleBarClickHandler}
                     className={classNames(
                         styles.title_bar,
                         { [styles.is_collapsible]: this.props.isCollapsible },

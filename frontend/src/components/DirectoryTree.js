@@ -136,7 +136,7 @@ class DirectoryTree extends Component {
         return items;
     }
 
-    itemCheckboxClickHandler = e => {
+    itemCheckboxChangeHandler = e => {
         const { name, path, type } = e.target.dataset;
         const selectedItems = [...this.state.selectedItems];
 
@@ -196,8 +196,6 @@ class DirectoryTree extends Component {
 
             this.props.onSelectionChange.call(this);
         }
-
-        e.stopPropagation();
     };
 
     renderTreeItem = item => {
@@ -207,7 +205,8 @@ class DirectoryTree extends Component {
                     <input
                         type='checkbox'
                         checked={this.state.selectedItems.includes(item.path)}
-                        onChange={this.itemCheckboxClickHandler}
+                        onClick={e => e.stopPropagation()}
+                        onChange={this.itemCheckboxChangeHandler}
                         data-name={item.name}
                         data-path={item.path}
                         data-type={item.type}
@@ -219,9 +218,8 @@ class DirectoryTree extends Component {
     };
 
     buildDirectoryBlock(directory, isRootDirectory = false) {
-        return directory.map(item => {
+        return directory.map((item, index) => {
             const tree = [];
-            const key = Math.floor(Math.random() * 10000);
 
             const {
                 filterQuery,
@@ -244,7 +242,7 @@ class DirectoryTree extends Component {
                             }),
                             content: styles.directory_content,
                         }}
-                        key={key}
+                        key={index}
                         rendersCollapsed={isTreeCollapsed}
                         title={this.renderTreeItem(item)}
                         content={this.buildDirectoryBlock(item.children)}
@@ -255,7 +253,7 @@ class DirectoryTree extends Component {
             if (item.type === 'file') {
                 tree.push(
                     <div
-                        key={key}
+                        key={index}
                         className={classNames({
                             [styles.file]: true,
                             hidden: !matchesFilter,
