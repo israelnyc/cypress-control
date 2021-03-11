@@ -9,7 +9,7 @@ class DirectoryTree extends Component {
     static defaultProps = {
         data: [],
         dataURL: '',
-        onselectionchange: () => {},
+        onSelectionChange: () => {},
         rendersCollapsed: false,
         isCaseSensitive: true,
         itemsHaveCheckboxes: false,
@@ -25,17 +25,19 @@ class DirectoryTree extends Component {
             isTreeCollapsed: false,
             selectedItems: [],
         };
+
+        this.directoryPanels = {};
     }
 
     collapseAll = () => {
-        this.setState({
-            isTreeCollapsed: true,
+        Object.keys(this.directoryPanels).forEach(key => {
+            this.directoryPanels[key].collapse();
         });
     };
 
     expandAll = () => {
-        this.setState({
-            isTreeCollapsed: false,
+        Object.keys(this.directoryPanels).forEach(key => {
+            this.directoryPanels[key].expand();
         });
     };
 
@@ -218,14 +220,11 @@ class DirectoryTree extends Component {
     };
 
     buildDirectoryBlock(directory, isRootDirectory = false) {
-        return directory.map((item, index) => {
+        return directory.map(item => {
             const tree = [];
+            const key = item.path;
 
-            const {
-                filterQuery,
-                filteredFilesOrDirectories,
-                isTreeCollapsed,
-            } = this.state;
+            const { filterQuery, filteredFilesOrDirectories } = this.state;
 
             const matchesFilter =
                 !filterQuery ||
@@ -235,6 +234,7 @@ class DirectoryTree extends Component {
             if (item.type === 'directory') {
                 tree.push(
                     <Panel
+                        ref={panel => (this.directoryPanels[key] = panel)}
                         classNames={{
                             panel: classNames({
                                 hidden: !matchesFilter,
@@ -242,8 +242,7 @@ class DirectoryTree extends Component {
                             }),
                             content: styles.directory_content,
                         }}
-                        key={index}
-                        rendersCollapsed={isTreeCollapsed}
+                        key={key}
                         title={this.renderTreeItem(item)}
                         content={this.buildDirectoryBlock(item.children)}
                     />
@@ -253,7 +252,7 @@ class DirectoryTree extends Component {
             if (item.type === 'file') {
                 tree.push(
                     <div
-                        key={index}
+                        key={key}
                         className={classNames({
                             [styles.file]: true,
                             hidden: !matchesFilter,
@@ -271,15 +270,17 @@ class DirectoryTree extends Component {
         if (this.props.dataURL) {
             fetch(this.props.dataURL)
                 .then(response => response.json())
-                .then(data => this.setState({ directories: data }));
+                .then(data =>
+                    this.setState({ directories: data }, onDataReady)
+                );
         } else {
-            this.setState({ directories: this.props.data });
+            this.setState({ directories: this.props.data }, onDataReady);
         }
 
-        if (this.props.rendersCollapsed) {
-            this.setState({
-                isTreeCollapsed: true,
-            });
+        function onDataReady() {
+            if (this.props.rendersCollapsed) {
+                this.collapseAll();
+            }
         }
     }
 

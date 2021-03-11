@@ -29,10 +29,8 @@ class Panel extends Component {
     }
 
     componentDidMount() {
-        if (this.props.isCollapsible) {
-            if (this.props.rendersCollapsed) {
-                this.collapse();
-            }
+        if (this.props.isCollapsible && this.props.rendersCollapsed) {
+            this.collapse();
         }
     }
 
