@@ -317,7 +317,7 @@ class App extends React.Component {
                 isConnectedToServer: true,
                 isSocketDisconnected: false,
             });
-            console.log('resetting disconnectTimer');
+
             clearInterval(this.socketDisconnectTimer);
         });
 
@@ -445,6 +445,8 @@ class App extends React.Component {
     }
 
     async updateCypressLog() {
+        if (!this.state.isConnectedToServer) return;
+
         const cypressLogFile = await fetch('http://localhost:8686/cypress-log');
         const cypressLogFileText = await cypressLogFile.text();
 

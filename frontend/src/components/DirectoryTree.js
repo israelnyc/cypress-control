@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faSync } from '@fortawesome/free-solid-svg-icons';
 import Panel from './UI/Panel';
 import styles from './DirectoryTree.module.css';
 import classNames from 'classnames';
@@ -266,13 +266,12 @@ class DirectoryTree extends Component {
         });
     }
 
-    componentDidMount() {
+    refreshData = () => {
         if (this.props.dataURL) {
             fetch(this.props.dataURL)
                 .then(response => response.json())
-                .then(data =>
-                    this.setState({ directories: data }, onDataReady)
-                );
+                .then(data => this.setState({ directories: data }, onDataReady))
+                .catch(e => console.error(e));
         } else {
             this.setState({ directories: this.props.data }, onDataReady);
         }
@@ -282,6 +281,10 @@ class DirectoryTree extends Component {
                 this.collapseAll();
             }
         }
+    };
+
+    componentDidMount() {
+        this.refreshData();
     }
 
     render() {
@@ -303,6 +306,12 @@ class DirectoryTree extends Component {
                     </div>
 
                     <div className={styles.buttons}>
+                        <div
+                            className={styles.button}
+                            title='Refresh'
+                            onClick={this.refreshData}>
+                            <FontAwesomeIcon icon={faSync} />
+                        </div>
                         <div
                             className={styles.button}
                             title='Collapse All'
