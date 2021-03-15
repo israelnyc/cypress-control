@@ -37,10 +37,11 @@
     background-color: var(--light-gray);
     color: var(--secondary-dark-color);
     border-radius: 5px;
+    font-size: 0.8em;
 }
 
 .button:hover {
-    background-color: var(--light-gray-border);
+    background-color: var(--light-blue);
 }
 
 .tree_item_wrapper {

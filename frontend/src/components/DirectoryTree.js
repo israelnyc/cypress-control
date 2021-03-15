@@ -20,9 +20,11 @@ class DirectoryTree extends Component {
 
         this.state = {
             directories: [],
+            directoriesFlattened: [],
+            directoryCount: 0,
+            fileCount: 0,
             filterQuery: '',
             filteredFilesOrDirectories: [],
-            isTreeCollapsed: false,
             selectedItems: [],
         };
 
@@ -165,8 +167,6 @@ class DirectoryTree extends Component {
                 }
 
                 this.setState({ selectedItems });
-
-                this.props.onSelectionChange.call(this);
             }
         } else {
             const pathIndex = selectedItems.indexOf(path);
@@ -195,9 +195,9 @@ class DirectoryTree extends Component {
             }
 
             this.setState({ selectedItems });
-
-            this.props.onSelectionChange.call(this);
         }
+
+        this.props.onSelectionChange.call(this);
     };
 
     renderTreeItem = item => {
@@ -266,25 +266,38 @@ class DirectoryTree extends Component {
         });
     }
 
+    onDataReady = data => {
+        const directoriesFlattened = this.flattenDirectoryItem(data);
+        const directories = directoriesFlattened.filter(
+            item => item.type === 'directory'
+        );
+        const files = directoriesFlattened.filter(item => item.type === 'file');
+
+        this.setState({
+            directories: data,
+            directoriesFlattened,
+            directoryCount: directories.length,
+            fileCount: files.length,
+        });
+    };
+
     refreshData = () => {
         if (this.props.dataURL) {
             fetch(this.props.dataURL)
                 .then(response => response.json())
-                .then(data => this.setState({ directories: data }, onDataReady))
+                .then(data => this.onDataReady(data))
                 .catch(e => console.error(e));
         } else {
-            this.setState({ directories: this.props.data }, onDataReady);
-        }
-
-        function onDataReady() {
-            if (this.props.rendersCollapsed) {
-                this.collapseAll();
-            }
+            this.onDataReady(this.props.data);
         }
     };
 
     componentDidMount() {
         this.refreshData();
+
+        if (this.props.rendersCollapsed) {
+            this.collapseAll();
+        }
     }
 
     render() {
@@ -293,47 +306,45 @@ class DirectoryTree extends Component {
             true
         );
 
-        const controlBar = () => {
-            return (
-                <header className={styles.control_bar}>
-                    <div className={styles.search_bar_wrapper}>
-                        <input
-                            placeholder='Search'
-                            type='text'
-                            className={styles.search_bar}
-                            onKeyUp={this.searchHandler}
-                        />
-                    </div>
+        const controlBar = (
+            <header className={styles.control_bar}>
+                <div className={styles.search_bar_wrapper}>
+                    <input
+                        placeholder='Search'
+                        type='text'
+                        className={styles.search_bar}
+                        onKeyUp={this.searchHandler}
+                    />
+                </div>
 
-                    <div className={styles.buttons}>
-                        <div
-                            className={styles.button}
-                            title='Refresh'
-                            onClick={this.refreshData}>
-                            <FontAwesomeIcon icon={faSync} />
-                        </div>
-                        <div
-                            className={styles.button}
-                            title='Collapse All'
-                            onClick={this.collapseAll}>
-                            <FontAwesomeIcon icon={faMinus} />
-                        </div>
-                        <div
-                            className={styles.button}
-                            title='Expand All'
-                            onClick={this.expandAll}>
-                            <FontAwesomeIcon icon={faPlus} />
-                        </div>
+                <div className={styles.buttons}>
+                    <div
+                        className={styles.button}
+                        title='Expand All'
+                        onClick={this.expandAll}>
+                        <FontAwesomeIcon icon={faPlus} />
                     </div>
-                </header>
-            );
-        };
+                    <div
+                        className={styles.button}
+                        title='Collapse All'
+                        onClick={this.collapseAll}>
+                        <FontAwesomeIcon icon={faMinus} />
+                    </div>
+                    <div
+                        className={styles.button}
+                        title='Refresh'
+                        onClick={this.refreshData}>
+                        <FontAwesomeIcon icon={faSync} />
+                    </div>
+                </div>
+            </header>
+        );
 
         return (
             <Panel
                 classNames={{ panel: classNames(styles.container) }}
                 isCollapsible={false}
-                title={controlBar()}
+                title={controlBar}
                 content={directories}
             />
         );
