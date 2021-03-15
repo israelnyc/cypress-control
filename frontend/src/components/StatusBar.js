@@ -8,6 +8,7 @@ import {
     faStop,
     faWifi,
     faCog,
+    faFilter,
 } from '@fortawesome/free-solid-svg-icons';
 import { startCypressRunner, stopCypressRunner } from '../utils';
 import ProgressBar from './UI/ProgressBar';
@@ -15,6 +16,8 @@ import styles from './StatusBar.module.css';
 
 class StatusBar extends React.Component {
     render() {
+        const cypressIsRunningOrStarting =
+            this.props.cypressIsRunning || this.props.cypressIsStarting;
         const specsProgress = `Specs: ${this.props.totalSpecsRan} / ${this.props.totalSpecs}`;
 
         const totalTests = `Tests: ${
@@ -91,48 +94,54 @@ class StatusBar extends React.Component {
 
                     <div className={styles.control}>
                         <div
-                            title='Start test runner'
-                            className={classNames(
-                                'start_runner_button',
-                                'pointer',
-                                {
-                                    hidden:
-                                        this.props.cypressIsRunning ||
-                                        this.props.cypressIsStarting,
+                            title={
+                                cypressIsRunningOrStarting
+                                    ? 'Stop test runner'
+                                    : 'Start test runner'
+                            }
+                            className={classNames({
+                                pointer: true,
+                                [styles.control_icon]: true,
+                                [styles.start_stop_button]: true,
+                            })}
+                            onClick={
+                                cypressIsRunningOrStarting
+                                    ? stopCypressRunner
+                                    : startCypressRunner
+                            }>
+                            <FontAwesomeIcon
+                                icon={
+                                    cypressIsRunningOrStarting ? faStop : faPlay
                                 }
-                            )}
-                            onClick={startCypressRunner}>
-                            <FontAwesomeIcon icon={faPlay} />
+                            />
+                            <div
+                                title='Only selected specs will run'
+                                className={classNames({
+                                    [styles.filtered_specs_icon]: true,
+                                    [styles.control_icon]: true,
+                                    hidden: !this.props.isSpecSelectionFiltered,
+                                })}>
+                                <FontAwesomeIcon icon={faFilter} />
+                            </div>
                         </div>
 
-                        <div
-                            title='Stop test runner'
-                            className={classNames(
-                                'stop_runner_button',
-                                'pointer',
-                                {
-                                    hidden:
+                        <div className={styles.control_icon}>
+                            <div
+                                className={classNames({
+                                    [styles.runner_status]: true,
+                                    [styles.running]: this.props
+                                        .cypressIsRunning,
+                                    [styles.stopped]:
                                         !this.props.cypressIsRunning &&
                                         !this.props.cypressIsStarting,
-                                }
-                            )}
-                            onClick={stopCypressRunner}>
-                            <FontAwesomeIcon icon={faStop} />
+                                    [styles.starting]: this.props
+                                        .cypressIsStarting,
+                                })}></div>
                         </div>
-
-                        <div
-                            className={classNames({
-                                [styles.runner_status]: true,
-                                [styles.running]: this.props.cypressIsRunning,
-                                [styles.stopped]:
-                                    !this.props.cypressIsRunning &&
-                                    !this.props.cypressIsStarting,
-                                [styles.starting]: this.props.cypressIsStarting,
-                            })}></div>
-
                         <div
                             title={serverConnectionTitle.join(' ')}
                             className={classNames({
+                                [styles.control_icon]: true,
                                 [styles.server_connected]: this.props
                                     .isConnectedToServer,
                                 [styles.server_disconnected]: !this.props
@@ -147,6 +156,7 @@ class StatusBar extends React.Component {
                         <div
                             onClick={this.props.openSettingsDialog}
                             className={classNames({
+                                [styles.control_icon]: true,
                                 pointer: true,
                             })}>
                             <FontAwesomeIcon icon={faCog} />

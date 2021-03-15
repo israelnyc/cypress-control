@@ -166,7 +166,7 @@ class DirectoryTree extends Component {
                     selectedItems.push(path);
                 }
 
-                this.setState({ selectedItems });
+                this.setState({ selectedItems }, this.onSelectionChange);
             }
         } else {
             const pathIndex = selectedItems.indexOf(path);
@@ -194,10 +194,12 @@ class DirectoryTree extends Component {
                 }
             }
 
-            this.setState({ selectedItems });
+            this.setState({ selectedItems }, this.onSelectionChange);
         }
+    };
 
-        this.props.onSelectionChange.call(this);
+    onSelectionChange = () => {
+        this.props.onSelectionChange(this);
     };
 
     renderTreeItem = item => {

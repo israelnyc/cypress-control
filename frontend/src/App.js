@@ -23,6 +23,7 @@ class App extends React.Component {
             cypressIsRunning: false,
             isConnectedToServer: false,
             isSocketDisconnected: false,
+            isSpecSelectionFiltered: false,
             currentSpec: {
                 file: 'cypress/integration/test.js',
                 totalTests: 8,
@@ -406,9 +407,19 @@ class App extends React.Component {
         document.title = this.pageTitle.replace('%customValues', customValues);
     }
 
-    onCypressFileSelectionChange() {
-        console.log('App.js: cypress file selection change:', this);
-    }
+    onCypressFileSelectionChange = directoryTree => {
+        const {
+            directoryCount,
+            fileCount,
+            selectedItems,
+        } = directoryTree.state;
+
+        this.setState({
+            isSpecSelectionFiltered:
+                selectedItems.length &&
+                directoryCount + fileCount !== selectedItems.length,
+        });
+    };
 
     get currentSpecDisplay() {
         if (this.state.currentSpec.suites) {
@@ -486,6 +497,7 @@ class App extends React.Component {
                     reconnectCypressSocket={this.reconnectCypressSocket}
                     isSocketDisconnected={this.state.isSocketDisconnected}
                     openSettingsDialog={this.openSettingsDialog}
+                    isSpecSelectionFiltered={this.state.isSpecSelectionFiltered}
                 />
 
                 <div className={styles.content}>
