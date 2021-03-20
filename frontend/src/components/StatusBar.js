@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,12 +17,15 @@ import styles from './StatusBar.module.css';
 
 class StatusBar extends React.Component {
     render() {
+        const { cypressStatus } = this.props;
+
         const cypressIsRunningOrStarting =
-            this.props.cypressIsRunning || this.props.cypressIsStarting;
-        const specsProgress = `Specs: ${this.props.totalSpecsRan} / ${this.props.totalSpecs}`;
+            cypressStatus.isRunning || cypressStatus.isStarting;
+
+        const specsProgress = `Specs: ${cypressStatus.totalSpecsRan} / ${cypressStatus.totalSpecs}`;
 
         const totalTests = `Tests: ${
-            this.props.testsFailed + this.props.testsPassed
+            cypressStatus.passed + cypressStatus.failed
         }`;
 
         const serverConnectionTitle = [];
@@ -41,8 +45,8 @@ class StatusBar extends React.Component {
         return (
             <header>
                 <ProgressBar
-                    value={this.props.totalSpecsRan}
-                    max={this.props.totalSpecs}
+                    value={cypressStatus.totalSpecsRan}
+                    max={cypressStatus.totalSpecs}
                 />
 
                 <div className={styles.container}>
@@ -56,9 +60,7 @@ class StatusBar extends React.Component {
                                 className={styles.fa_check}
                                 icon={faCheck}
                             />
-                            <div className='value'>
-                                {this.props.testsPassed}
-                            </div>
+                            <div className='value'>{cypressStatus.passed}</div>
                         </div>
 
                         <div
@@ -70,9 +72,7 @@ class StatusBar extends React.Component {
                                 className={styles.fa_times}
                                 icon={faTimes}
                             />
-                            <div className='value'>
-                                {this.props.testsFailed}
-                            </div>
+                            <div className='value'>{cypressStatus.failed}</div>
                         </div>
 
                         <div
@@ -129,13 +129,11 @@ class StatusBar extends React.Component {
                             <div
                                 className={classNames({
                                     [styles.runner_status]: true,
-                                    [styles.running]: this.props
-                                        .cypressIsRunning,
+                                    [styles.running]: cypressStatus.isRunning,
                                     [styles.stopped]:
-                                        !this.props.cypressIsRunning &&
-                                        !this.props.cypressIsStarting,
-                                    [styles.starting]: this.props
-                                        .cypressIsStarting,
+                                        !cypressStatus.isRunning &&
+                                        !cypressStatus.isStarting,
+                                    [styles.starting]: cypressStatus.isStarting,
                                 })}></div>
                         </div>
                         <div
@@ -168,4 +166,8 @@ class StatusBar extends React.Component {
     }
 }
 
-export default StatusBar;
+const mapStateToProps = state => ({
+    cypressStatus: state.cypressStatus,
+});
+
+export default connect(mapStateToProps)(StatusBar);
