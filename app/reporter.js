@@ -3,6 +3,7 @@ const Mocha = require('mocha');
 const Base = Mocha.reporters.Base;
 const { events } = require('./status-events');
 const { socket } = require('./socket');
+const { v4: uuidv4 } = require('uuid');
 
 const {
     EVENT_RUN_BEGIN,
@@ -37,16 +38,22 @@ class CypressDashboardReporter {
                     suites.forEach(suite => {
                         testsCount += suite.tests.length;
 
+                        suite.uuid = uuidv4();
+
                         _suites.push({
                             title: suite.title,
                             id: suite.id,
+                            uuid: suite.uuid,
                             file: data.file,
                             isParentRootSuite:
                                 suite.parent && suite.parent.root,
                             tests: suite.tests.map(test => {
+                                test.uuid = uuidv4();
+
                                 return {
                                     title: test.title,
                                     id: test.id,
+                                    uuid: test.uuid,
                                     body: test.body,
                                     file: data.file,
                                 };
@@ -62,61 +69,65 @@ class CypressDashboardReporter {
             }
 
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
-                title: data.title,
-                id: data.id,
-                isRootSuite: data.root,
+                ...this.getEventDataObject(data),
                 suites: _suites,
-                file: data.file,
                 totalTests: testsCount,
             });
         });
 
         runner.on(EVENT_SUITE_END, data => {
             socket.emit(events.CYPRESS_DASHBOARD_SUITE_END, {
-                title: data.title,
-                id: data.id,
+                ...this.getEventDataObject(data),
                 isRootSuite: data.root,
             });
         });
 
         runner.on(EVENT_TEST_BEGIN, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_TEST_BEGIN, {
-                id: data.id,
-                title: data.title,
-            });
+            socket.emit(
+                events.CYPRESS_DASHBOARD_TEST_BEGIN,
+                this.getEventDataObject(data)
+            );
         });
 
         runner.on(EVENT_TEST_PENDING, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_TEST_PENDING, {
-                id: data.id,
-                title: data.title,
-            });
+            socket.emit(
+                events.CYPRESS_DASHBOARD_TEST_PENDING,
+                this.getEventDataObject(data)
+            );
         });
 
         runner.on(EVENT_TEST_PASS, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, {
-                id: data.id,
-                title: data.title,
-            });
+            socket.emit(
+                events.CYPRESS_DASHBOARD_TEST_PASSED,
+                this.getEventDataObject(data)
+            );
         });
 
         runner.on(EVENT_TEST_FAIL, data => {
-            console.log('message:', data.err.message);
-
-            socket.emit(events.CYPRESS_DASHBOARD_TEST_FAILED, {
-                id: data.id,
-                title: data.title,
-                error: data.err,
-            });
+            socket.emit(
+                events.CYPRESS_DASHBOARD_TEST_FAILED,
+                this.getEventDataObject(data)
+            );
         });
 
         runner.on(EVENT_TEST_END, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_TEST_END, {
-                id: data.id,
-                title: data.title,
-                status: data.state,
-            });
+            socket.emit(
+                events.CYPRESS_DASHBOARD_TEST_END,
+                this.getEventDataObject(data)
+            );
         });
+    }
+
+    getEventDataObject(data) {
+        return {
+            id: data.id,
+            title: data.title,
+            ...(data.uuid && { uuid: data.uuid }),
+            ...(data.state && { status: data.state }),
+            ...(data.error && { error: data.error }),
+            ...(data.root && { isRootSuite: data.root }),
+            ...(data.file && { file: data.file }),
+        };
     }
 }
 

@@ -8,7 +8,6 @@ import TabNavigator from './components/UI/TabNavigator';
 import Spec from './components/cypress/Spec';
 import DirectoryTree from './components/DirectoryTree';
 import ComponentPlaceholder from './components/UI/ComponentPlaceholder';
-import CurrentTestContext from './CurrentTestContext';
 import Modal from './components/UI/Modal';
 import styles from './App.module.css';
 
@@ -65,7 +64,6 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
             console.log('test begin: ', data);
-            this.setState({ currentTest: data });
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
@@ -83,20 +81,16 @@ class App extends React.Component {
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
             console.log('test passed', data);
-            this.setState({ passedCount: data.passed });
             this.updatePageTitlePassedFailedStatus(data);
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
             console.log('test failed', data);
-            this.setState({ failedCount: data.failed });
             this.updatePageTitlePassedFailedStatus(data);
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
             console.log('test end', data);
-
-            this.updateTestStats(data);
         });
 
         this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
@@ -194,11 +188,7 @@ class App extends React.Component {
 
     get currentSpecDisplay() {
         if (this.props.cypressStatus.currentSpec.suites) {
-            return (
-                <CurrentTestContext.Provider value={this.state.currentTest}>
-                    <Spec spec={this.props.cypressStatus.currentSpec} />
-                </CurrentTestContext.Provider>
-            );
+            return <Spec spec={this.props.cypressStatus.currentSpec} />;
         }
 
         return <ComponentPlaceholder message='No spec currently running' />;

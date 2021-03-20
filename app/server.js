@@ -143,6 +143,9 @@ io.on('connection', socket => {
     });
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
+        setStatus({
+            currentTest: data,
+        });
         io.emit(events.CYPRESS_DASHBOARD_TEST_BEGIN, data);
     });
 
@@ -151,8 +154,10 @@ io.on('connection', socket => {
     });
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
+        const { passed } = getStatus();
+
         setStatus({
-            passed: getStatus().passed + 1,
+            passed: passed + 1,
         });
 
         io.emit(events.CYPRESS_DASHBOARD_TEST_PASSED, {
@@ -162,11 +167,11 @@ io.on('connection', socket => {
     });
 
     socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-        const { currentSpecFailures } = getStatus();
+        const { currentSpecFailures, failed } = getStatus();
 
         if (!currentSpecFailures.hasOwnProperty(data.id)) {
             setStatus({
-                failed: getStatus().failed + 1,
+                failed: failed + 1,
                 currentSpecFailures: {
                     [data.id]: true,
                     ...currentSpecFailures,

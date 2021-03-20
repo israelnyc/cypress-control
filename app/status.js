@@ -11,6 +11,7 @@ const status = {
     completedSpecs: [],
     currentSpec: {},
     currentSpecFailures: {},
+    currentTest: {},
 };
 
 function broadcastStatus() {
