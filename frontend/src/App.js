@@ -21,7 +21,6 @@ class App extends React.Component {
             isConnectedToServer: false,
             isSocketDisconnected: false,
             isSpecSelectionFiltered: false,
-            currentTest: {},
             showSettingsDialog: true,
         };
 
@@ -38,64 +37,23 @@ class App extends React.Component {
             this.startSocketDisconnectionTimer();
         }
 
-        this.socket.on(events.CYPRESS_DASHBOARD_STATUS, status => {
-            console.log('receiving status update from server', status);
-            this.updateTestStats(status);
-        });
+        this.socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
+            const { eventType, payload, status } = data;
 
-        this.socket.on(events.CYPRESS_DASHBOARD_BEFORE_RUN, () => {
-            console.log('before run');
-        });
+            console.log(events.CYPRESS_DASHBOARD_STATUS, data);
 
-        this.socket.on(events.CYPRESS_DASHBOARD_RUN_BEGIN, data => {
-            console.log('cypress run begin...', data);
-        });
+            this.updateCypressStatus(status);
 
-        this.socket.on(events.CYPRESS_DASHBOARD_SUITE_BEGIN, data => {
-            console.log('suite begin: ', data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_SUITE_END, data => {
-            console.log('suite end: ', data);
-            if (data.isRootSuite) {
-                this.updateCypressLog();
+            switch (eventType) {
+                case events.CYPRESS_DASHBOARD_SUITE_END:
+                case events.CYPRESS_DASHBOARD_RUN_COMPLETED:
+                    if (payload.isRootSuite) {
+                        this.updateCypressLog();
+                    }
+                    break;
+                default:
+                    return;
             }
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_TEST_BEGIN, data => {
-            console.log('test begin: ', data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_TEST_PENDING, data => {
-            console.log('test pending: ', data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
-            console.log('Runner started...');
-            this.updatePageTitlePassedFailedStatus();
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_STOP_RUNNER, () => {
-            console.log('Runner stopped...');
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_TEST_PASSED, data => {
-            console.log('test passed', data);
-            this.updatePageTitlePassedFailedStatus(data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_TEST_FAILED, data => {
-            console.log('test failed', data);
-            this.updatePageTitlePassedFailedStatus(data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_TEST_END, data => {
-            console.log('test end', data);
-        });
-
-        this.socket.on(events.CYPRESS_DASHBOARD_RUN_COMPLETED, data => {
-            console.log('Run completed', data);
-            this.updateCypressLog();
         });
 
         this.socket.on('connect', () => {
@@ -143,7 +101,7 @@ class App extends React.Component {
         }
     }
 
-    updateTestStats(data) {
+    updateCypressStatus(data) {
         this.props.updateCypressStatus(data);
 
         this.updatePageTitlePassedFailedStatus(data);

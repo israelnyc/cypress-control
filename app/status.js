@@ -14,21 +14,23 @@ const status = {
     currentTest: {},
 };
 
-function broadcastStatus() {
+function broadcastStatus(eventType, payload = {}) {
     return new Promise(resolve => {
-        socket.emit(events.CYPRESS_DASHBOARD_STATUS, {}, status =>
-            resolve(status)
+        socket.emit(
+            events.CYPRESS_DASHBOARD_STATUS,
+            { eventType, payload },
+            status => resolve(status)
         );
     });
 }
 
-function setStatus(newStatus) {
+function setStatus(newStatus, eventType, payload) {
     Object.assign(status, newStatus);
 
-    broadcastStatus();
+    broadcastStatus(eventType, payload);
 }
 
-function updateCurrentSpecTestStatus(testId, testStatus) {
+function updateCurrentSpecTestStatus(testId, testStatus, eventType) {
     const currentSpecTest = status.currentSpec.suites
         .reduce((prev, curr) => {
             return prev.concat(curr.tests);
@@ -39,6 +41,8 @@ function updateCurrentSpecTestStatus(testId, testStatus) {
         currentSpecTest.hasCompleted = true;
         currentSpecTest.status = testStatus;
     }
+
+    broadcastStatus(eventType, currentSpecTest);
 }
 
 function getStatus() {
