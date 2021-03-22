@@ -5,7 +5,6 @@
   "author": "Israel Schulman <israel.schulman@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "cors": "^2.8.5",
     "directory-tree": "^2.2.7",
     "execa": "^5.0.0",
     "express": "^4.17.1",

@@ -14,20 +14,9 @@ const {
     broadcastStatus,
 } = require('./status');
 const fs = require('fs');
-const cors = require('cors');
-const io = require('socket.io')(http, {
-    cors: {
-        origin: ['http://localhost:3000'],
-    },
-});
+const io = require('socket.io')(http);
 
 app.use(express.static(path.join(__dirname, '../frontend/build/')));
-
-app.use(
-    cors({
-        origin: ['http://localhost:3000'],
-    })
-);
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../frontend/build/', 'index.html'));

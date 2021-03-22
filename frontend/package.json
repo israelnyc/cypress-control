@@ -2,6 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8686",
   "dependencies": {
     "@cypress/react": "^4.16.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",

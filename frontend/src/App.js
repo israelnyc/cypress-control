@@ -156,7 +156,7 @@ class App extends React.Component {
     get specSelectionTree() {
         return (
             <DirectoryTree
-                dataURL='http://localhost:8686/cypress-spec-directories/'
+                dataURL='/cypress-spec-directories/'
                 rendersCollapsed={false}
                 isCaseSensitive={false}
                 itemsHaveCheckboxes={true}
@@ -168,7 +168,7 @@ class App extends React.Component {
     async updateCypressLog() {
         if (!this.props.connectionStatus.isServerConnected) return;
 
-        const cypressLogFile = await fetch('http://localhost:8686/cypress-log');
+        const cypressLogFile = await fetch('/cypress-log');
         const cypressLogFileText = await cypressLogFile.text();
 
         this.setState({

@@ -2,10 +2,7 @@ import io from 'socket.io-client';
 import events from './status-events';
 
 export function getSocket() {
-    const socketURL = `http://${window.location.hostname}:8686`;
-
-    window.cypressDashboardSocket =
-        window.cypressDashboardSocket || io(socketURL);
+    window.cypressDashboardSocket = window.cypressDashboardSocket || io();
 
     if (process.env.NODE_ENV === 'test') {
         window.cypressDashboardSocket.disconnect();
