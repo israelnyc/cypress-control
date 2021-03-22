@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as cypressStatus from './reducers/cypressStatus';
 import * as connectionStatus from './reducers/connectionStatus';
+import * as specSelections from './reducers/specSelections';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
@@ -19,8 +20,7 @@ class App extends React.Component {
         this.socket = getSocket();
 
         this.state = {
-            isSpecSelectionFiltered: false,
-            showSettingsDialog: true,
+            showSettingsDialog: false,
         };
 
         this.pageTitle = '%customValues Cypress Dashboard';
@@ -122,17 +122,7 @@ class App extends React.Component {
     }
 
     onCypressFileSelectionChange = directoryTree => {
-        const {
-            directoryCount,
-            fileCount,
-            selectedItems,
-        } = directoryTree.state;
-
-        this.setState({
-            isSpecSelectionFiltered:
-                selectedItems.length &&
-                directoryCount + fileCount !== selectedItems.length,
-        });
+        this.props.updateSpecSelections(directoryTree.state);
     };
 
     get currentSpecDisplay() {
@@ -199,7 +189,6 @@ class App extends React.Component {
                 <StatusBar
                     reconnectCypressSocket={this.reconnectCypressSocket}
                     openSettingsDialog={this.openSettingsDialog}
-                    isSpecSelectionFiltered={this.state.isSpecSelectionFiltered}
                 />
 
                 <div className={styles.content}>
@@ -239,12 +228,14 @@ class App extends React.Component {
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
     connectionStatus: state.connectionStatus,
+    specSelections: state.specSelections,
 });
 
 const mapDispatchToProps = {
     updateCypressStatus: cypressStatus.update,
     setServerConnected: connectionStatus.setServerConnected,
     setSocketConnected: connectionStatus.setSocketConnected,
+    updateSpecSelections: specSelections.update,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

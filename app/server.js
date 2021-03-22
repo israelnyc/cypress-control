@@ -212,10 +212,12 @@ io.on('connection', socket => {
         );
     });
 
-    socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, () => {
+    socket.on(events.CYPRESS_DASHBOARD_START_RUNNER, specSelections => {
         console.log('Attempting to start runner...');
 
-        runner.start();
+        runner.start(
+            specSelections.isFiltered ? specSelections.selectedSpecs : []
+        );
 
         broadcastStatus(events.CYPRESS_DASHBOARD_START_RUNNER);
     });

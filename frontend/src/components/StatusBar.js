@@ -127,7 +127,8 @@ class StatusBar extends React.Component {
                                 className={classNames({
                                     [styles.filtered_specs_icon]: true,
                                     [styles.control_icon]: true,
-                                    hidden: !this.props.isSpecSelectionFiltered,
+                                    hidden: !this.props.specSelections
+                                        .isFiltered,
                                 })}>
                                 <FontAwesomeIcon icon={faFilter} />
                             </div>
@@ -176,6 +177,7 @@ class StatusBar extends React.Component {
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
     connectionStatus: state.connectionStatus,
+    specSelections: state.specSelections,
 });
 
 export default connect(mapStateToProps)(StatusBar);

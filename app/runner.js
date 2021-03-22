@@ -12,7 +12,7 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
-    start: function (runnerMessageCallback) {
+    start: function (specs = [], runnerMessageCallback) {
         const { isRunning, isStarting } = getStatus();
 
         if (isRunning || isStarting) {
@@ -20,7 +20,9 @@ module.exports = {
             return;
         }
 
-        const cypressProcess = execa.node(path.join(__dirname, 'cypress'));
+        const cypressProcess = execa.node(path.join(__dirname, 'cypress'), [
+            specs.join(','),
+        ]);
 
         cypressProcess.stdout.pipe(process.stdout);
         cypressProcess.stdout.pipe(

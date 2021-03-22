@@ -15,14 +15,23 @@ try {
         integrationFolder = 'cypress/integration/',
     } = require(path.join(process.cwd(), 'cypress.json'));
 
-    const specPattern = [path.normalize(`./${integrationFolder}/**/**`)];
+    const specSelections = process.argv[2]
+        ? process.argv[2].split(',').map(spec => path.normalize(spec))
+        : null;
 
-    if (componentFolder) {
-        specPattern.push(path.normalize(`./${componentFolder}/**/**`));
+    const specPattern = specSelections ? specSelections : [];
+
+    if (!specSelections) {
+        specPattern.push(path.normalize(`./${integrationFolder}/**/**`));
+
+        if (componentFolder) {
+            specPattern.push(path.normalize(`./${componentFolder}/**/**`));
+        }
     }
 
     console.log('config componentFolder:', componentFolder);
     console.log('config integrationFolder:', integrationFolder);
+    console.log('spec selections:', specSelections);
     console.log('spec pattern:', specPattern);
 
     const globPattern =
