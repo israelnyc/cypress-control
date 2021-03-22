@@ -17,7 +17,7 @@ import styles from './StatusBar.module.css';
 
 class StatusBar extends React.Component {
     render() {
-        const { cypressStatus } = this.props;
+        const { cypressStatus, connectionStatus } = this.props;
 
         const cypressIsRunningOrStarting =
             cypressStatus.isRunning || cypressStatus.isStarting;
@@ -30,17 +30,25 @@ class StatusBar extends React.Component {
 
         const serverConnectionTitle = [];
 
-        this.props.isConnectedToServer
+        connectionStatus.isServerConnected
             ? serverConnectionTitle.push('Connected to server.')
             : serverConnectionTitle.push('Disconnected from server.');
 
-        if (!this.props.isConnectedToServer && this.props.isSocketDisconnected)
+        if (
+            !connectionStatus.isServerConnected &&
+            !connectionStatus.isSocketConnected
+        ) {
             serverConnectionTitle.push(
                 'Socket has also been disconnected, click to reconnect socket.'
             );
+        }
 
-        if (!this.props.isConnectedToServer && !this.props.isSocketDisconnected)
+        if (
+            !connectionStatus.isServerConnected &&
+            connectionStatus.isSocketConnected
+        ) {
             serverConnectionTitle.push('Waiting for server to be restarted.');
+        }
 
         return (
             <header>
@@ -140,13 +148,12 @@ class StatusBar extends React.Component {
                             title={serverConnectionTitle.join(' ')}
                             className={classNames({
                                 [styles.control_icon]: true,
-                                [styles.server_connected]: this.props
-                                    .isConnectedToServer,
-                                [styles.server_disconnected]: !this.props
-                                    .isConnectedToServer,
-                                pointer: this.props.isSocketDisconnected,
+                                [styles.server_connected]:
+                                    connectionStatus.isServerConnected,
+                                [styles.server_disconnected]: !connectionStatus.isServerConnected,
+                                pointer: !connectionStatus.isSocketConnected,
                             })}
-                            {...(this.props.isSocketDisconnected && {
+                            {...(!connectionStatus.isSocketConnected && {
                                 onClick: this.props.reconnectCypressSocket,
                             })}>
                             <FontAwesomeIcon icon={faWifi} />
@@ -168,6 +175,7 @@ class StatusBar extends React.Component {
 
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
+    connectionStatus: state.connectionStatus,
 });
 
 export default connect(mapStateToProps)(StatusBar);

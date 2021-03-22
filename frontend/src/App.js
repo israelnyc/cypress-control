@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import * as cypressStatus from './reducers/cypressStatus';
+import * as connectionStatus from './reducers/connectionStatus';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar';
@@ -18,8 +19,6 @@ class App extends React.Component {
         this.socket = getSocket();
 
         this.state = {
-            isConnectedToServer: false,
-            isSocketDisconnected: false,
             isSpecSelectionFiltered: false,
             showSettingsDialog: true,
         };
@@ -57,22 +56,14 @@ class App extends React.Component {
         });
 
         this.socket.on('connect', () => {
-            this.setState({
-                isConnectedToServer: true,
-                isSocketDisconnected: false,
-            });
+            this.props.setServerConnected(true);
+            this.props.setSocketConnected(true);
 
             clearInterval(this.socketDisconnectTimer);
         });
 
         this.socket.on('disconnect', () => {
-            this.setState({
-                passedCount: 0,
-                failedCount: 0,
-                cypressIsStarting: false,
-                cypressIsRunning: false,
-                isConnectedToServer: false,
-            });
+            this.props.setServerConnected(false);
 
             this.startSocketDisconnectionTimer();
         });
@@ -87,7 +78,7 @@ class App extends React.Component {
     startSocketDisconnectionTimer() {
         this.socketDisconnectTimer = setTimeout(() => {
             this.socket.disconnect();
-            this.setState({ isSocketDisconnected: true });
+            this.props.setSocketConnected(false);
             console.log('socket disconnected');
         }, 2 * 60 * 1000);
     }
@@ -96,7 +87,7 @@ class App extends React.Component {
         if (this.socket.disconnected) {
             console.log('socket reconnected');
             this.socket.connect();
-            this.setState({ isSocketDisconnected: false });
+            this.props.setSocketConnected(true);
             this.startSocketDisconnectionTimer();
         }
     }
@@ -175,7 +166,7 @@ class App extends React.Component {
     }
 
     async updateCypressLog() {
-        if (!this.state.isConnectedToServer) return;
+        if (!this.props.connectionStatus.isServerConnected) return;
 
         const cypressLogFile = await fetch('http://localhost:8686/cypress-log');
         const cypressLogFileText = await cypressLogFile.text();
@@ -206,9 +197,7 @@ class App extends React.Component {
                     />
                 </Modal>
                 <StatusBar
-                    isConnectedToServer={this.state.isConnectedToServer}
                     reconnectCypressSocket={this.reconnectCypressSocket}
-                    isSocketDisconnected={this.state.isSocketDisconnected}
                     openSettingsDialog={this.openSettingsDialog}
                     isSpecSelectionFiltered={this.state.isSpecSelectionFiltered}
                 />
@@ -249,10 +238,13 @@ class App extends React.Component {
 
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
+    connectionStatus: state.connectionStatus,
 });
 
 const mapDispatchToProps = {
     updateCypressStatus: cypressStatus.update,
+    setServerConnected: connectionStatus.setServerConnected,
+    setSocketConnected: connectionStatus.setSocketConnected,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
