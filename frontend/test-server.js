@@ -1,1 +1,1 @@
-require('cypress-dashboard')
+require('cypress-control');

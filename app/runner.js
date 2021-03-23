@@ -41,7 +41,7 @@ module.exports = {
                 runnerMessageCallback(message);
             }
 
-            if (message.type === events.CYPRESS_DASHBOARD_RUN_COMPLETED) {
+            if (message.type === events.CYPRESS_CONTROL_RUN_COMPLETED) {
                 console.log('runner:passed:', getStatus().passed);
                 resetProcessStatus();
             }

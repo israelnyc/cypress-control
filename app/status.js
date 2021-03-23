@@ -17,7 +17,7 @@ const status = {
 function broadcastStatus(eventType, payload = {}) {
     return new Promise(resolve => {
         socket.emit(
-            events.CYPRESS_DASHBOARD_STATUS,
+            events.CYPRESS_CONTROL_STATUS,
             { eventType, payload },
             status => resolve(status)
         );
@@ -51,7 +51,7 @@ function getStatus() {
 
 function getStatusFromServer() {
     return new Promise(resolve => {
-        socket.emit(events.CYPRESS_DASHBOARD_GET_STATUS, {}, status =>
+        socket.emit(events.CYPRESS_CONTROL_GET_STATUS, {}, status =>
             resolve(status)
         );
     });
@@ -60,7 +60,7 @@ function getStatusFromServer() {
 function resetProcessStatus() {
     console.log('resetting process status');
     return new Promise(resolve => {
-        socket.emit(events.CYPRESS_DASHBOARD_RESET_PROCESS_STATUS, {}, () =>
+        socket.emit(events.CYPRESS_CONTROL_RESET_PROCESS_STATUS, {}, () =>
             resolve()
         );
     });
@@ -68,7 +68,7 @@ function resetProcessStatus() {
 
 function resetTestStatus() {
     return new Promise(resolve => {
-        socket.emit(events.CYPRESS_DASHBOARD_RESET_TEST_STATUS, {}, () =>
+        socket.emit(events.CYPRESS_CONTROL_RESET_TEST_STATUS, {}, () =>
             resolve()
         );
     });

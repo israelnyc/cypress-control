@@ -17,14 +17,14 @@ const {
     EVENT_TEST_PENDING,
 } = Mocha.Runner.constants;
 
-class CypressDashboardReporter {
+class CypressControlReporter {
     constructor(runner) {
         createStatsCollector(runner);
 
         Base.call(this, runner);
 
         runner.on(EVENT_RUN_BEGIN, () => {
-            socket.emit(events.CYPRESS_DASHBOARD_RUN_BEGIN);
+            socket.emit(events.CYPRESS_CONTROL_RUN_BEGIN);
         });
 
         runner.on(EVENT_SUITE_BEGIN, data => {
@@ -68,7 +68,7 @@ class CypressDashboardReporter {
                 testsCount += data.tests.length;
             }
 
-            socket.emit(events.CYPRESS_DASHBOARD_SUITE_BEGIN, {
+            socket.emit(events.CYPRESS_CONTROL_SUITE_BEGIN, {
                 ...this.getEventDataObject(data),
                 suites: _suites,
                 totalTests: testsCount,
@@ -76,7 +76,7 @@ class CypressDashboardReporter {
         });
 
         runner.on(EVENT_SUITE_END, data => {
-            socket.emit(events.CYPRESS_DASHBOARD_SUITE_END, {
+            socket.emit(events.CYPRESS_CONTROL_SUITE_END, {
                 ...this.getEventDataObject(data),
                 isRootSuite: data.root,
             });
@@ -84,35 +84,35 @@ class CypressDashboardReporter {
 
         runner.on(EVENT_TEST_BEGIN, data => {
             socket.emit(
-                events.CYPRESS_DASHBOARD_TEST_BEGIN,
+                events.CYPRESS_CONTROL_TEST_BEGIN,
                 this.getEventDataObject(data)
             );
         });
 
         runner.on(EVENT_TEST_PENDING, data => {
             socket.emit(
-                events.CYPRESS_DASHBOARD_TEST_PENDING,
+                events.CYPRESS_CONTROL_TEST_PENDING,
                 this.getEventDataObject(data)
             );
         });
 
         runner.on(EVENT_TEST_PASS, data => {
             socket.emit(
-                events.CYPRESS_DASHBOARD_TEST_PASSED,
+                events.CYPRESS_CONTROL_TEST_PASSED,
                 this.getEventDataObject(data)
             );
         });
 
         runner.on(EVENT_TEST_FAIL, data => {
             socket.emit(
-                events.CYPRESS_DASHBOARD_TEST_FAILED,
+                events.CYPRESS_CONTROL_TEST_FAILED,
                 this.getEventDataObject(data)
             );
         });
 
         runner.on(EVENT_TEST_END, data => {
             socket.emit(
-                events.CYPRESS_DASHBOARD_TEST_END,
+                events.CYPRESS_CONTROL_TEST_END,
                 this.getEventDataObject(data)
             );
         });
@@ -131,4 +131,4 @@ class CypressDashboardReporter {
     }
 }
 
-module.exports = CypressDashboardReporter;
+module.exports = CypressControlReporter;

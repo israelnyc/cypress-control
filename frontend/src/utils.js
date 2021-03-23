@@ -3,13 +3,13 @@ import events from './status-events';
 import store from './store';
 
 export function getSocket() {
-    window.cypressDashboardSocket = window.cypressDashboardSocket || io();
+    window.cypressControlSocket = window.cypressControlSocket || io();
 
     if (process.env.NODE_ENV === 'test') {
-        window.cypressDashboardSocket.disconnect();
+        window.cypressControlSocket.disconnect();
     }
 
-    return window.cypressDashboardSocket;
+    return window.cypressControlSocket;
 }
 
 export function startCypressRunner() {
@@ -18,7 +18,7 @@ export function startCypressRunner() {
 
     console.log('Starting runner');
 
-    socket.emit(events.CYPRESS_DASHBOARD_START_RUNNER, {
+    socket.emit(events.CYPRESS_CONTROL_START_RUNNER, {
         isFiltered,
         selectedSpecs,
     });
@@ -27,5 +27,5 @@ export function startCypressRunner() {
 export function stopCypressRunner() {
     const socket = getSocket();
     console.log('Stopping runner');
-    socket.emit(events.CYPRESS_DASHBOARD_STOP_RUNNER);
+    socket.emit(events.CYPRESS_CONTROL_STOP_RUNNER);
 }

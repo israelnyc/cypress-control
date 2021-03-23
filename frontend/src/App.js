@@ -23,7 +23,7 @@ class App extends React.Component {
             showSettingsDialog: false,
         };
 
-        this.pageTitle = '%customValues Cypress Dashboard';
+        this.pageTitle = '%customValues Cypress Control';
         this.socketDisconnectTimer = null;
 
         this.setPageTitle();
@@ -36,16 +36,16 @@ class App extends React.Component {
             this.startSocketDisconnectionTimer();
         }
 
-        this.socket.on(events.CYPRESS_DASHBOARD_STATUS, data => {
+        this.socket.on(events.CYPRESS_CONTROL_STATUS, data => {
             const { eventType, payload, status } = data;
 
-            console.log(events.CYPRESS_DASHBOARD_STATUS, data);
+            console.log(events.CYPRESS_CONTROL_STATUS, data);
 
             this.updateCypressStatus(status);
 
             switch (eventType) {
-                case events.CYPRESS_DASHBOARD_SUITE_END:
-                case events.CYPRESS_DASHBOARD_RUN_COMPLETED:
+                case events.CYPRESS_CONTROL_SUITE_END:
+                case events.CYPRESS_CONTROL_RUN_COMPLETED:
                     if (payload.isRootSuite) {
                         this.updateCypressLog();
                     }

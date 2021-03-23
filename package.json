@@ -1,5 +1,5 @@
 {
-  "name": "cypress-dashboard",
+  "name": "cypress-control",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Israel Schulman <israel.schulman@gmail.com>",

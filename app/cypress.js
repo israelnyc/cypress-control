@@ -42,7 +42,7 @@ try {
     glob(globPattern, { nodir: true }, (err, matches) => {
         console.log('globPattern specs found:', matches.length);
         process.send({
-            type: events.CYPRESS_DASHBOARD_BEFORE_RUN,
+            type: events.CYPRESS_CONTROL_BEFORE_RUN,
             data: {
                 totalSpecs: matches.length,
             },
@@ -58,7 +58,7 @@ try {
         })
         .then(results => {
             process.send({
-                type: events.CYPRESS_DASHBOARD_RUN_COMPLETED,
+                type: events.CYPRESS_CONTROL_RUN_COMPLETED,
                 data: results,
             });
 
@@ -66,7 +66,7 @@ try {
         })
         .catch(error => {
             process.send({
-                type: events.CYPRESS_DASHBOARD_RUN_ERROR,
+                type: events.CYPRESS_CONTROL_RUN_ERROR,
                 data: error,
             });
 
@@ -74,7 +74,7 @@ try {
         });
 } catch (error) {
     process.send({
-        type: events.CYPRESS_DASHBOARD_MODULE_INCLUDE_ERROR,
+        type: events.CYPRESS_CONTROL_MODULE_INCLUDE_ERROR,
         data: error,
     });
 
