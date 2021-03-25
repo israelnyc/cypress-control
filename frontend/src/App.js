@@ -45,10 +45,13 @@ class App extends React.Component {
 
             switch (eventType) {
                 case events.CYPRESS_CONTROL_SUITE_END:
-                case events.CYPRESS_CONTROL_RUN_COMPLETED:
                     if (payload.isRootSuite) {
                         this.updateCypressLog();
                     }
+                    break;
+                case events.CYPRESS_CONTROL_BEFORE_RUN:
+                case events.CYPRESS_CONTROL_RUN_COMPLETED:
+                    this.updateCypressLog();
                     break;
                 default:
                     return;

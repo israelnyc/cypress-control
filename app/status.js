@@ -1,5 +1,5 @@
 const { events } = require('./status-events');
-const { socket } = require('./socket');
+const { socket } = require('./socket-client');
 const status = {
     cypressPID: null,
     isStarting: false,

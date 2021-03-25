@@ -1,1 +1,1 @@
-require('cypress-control');
+require('cypress-control')();

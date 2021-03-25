@@ -1,5 +1,5 @@
 const processManager = require('./process-manager');
-const { socket } = require('./socket');
+const { socket } = require('./socket-client');
 const { events } = require('./status-events');
 const {
     getStatus,

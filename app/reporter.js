@@ -2,7 +2,7 @@ const createStatsCollector = require('mocha/lib/stats-collector');
 const Mocha = require('mocha');
 const Base = Mocha.reporters.Base;
 const { events } = require('./status-events');
-const { socket } = require('./socket');
+const { socket } = require('./socket-client');
 const { v4: uuidv4 } = require('uuid');
 
 const {
