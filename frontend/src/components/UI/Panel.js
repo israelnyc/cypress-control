@@ -8,6 +8,7 @@ class Panel extends Component {
     static defaultProps = {
         classNames: {},
         isCollapsible: true,
+        hideToggleIcon: false,
         rendersCollapsed: false,
     };
 
@@ -17,15 +18,6 @@ class Panel extends Component {
         this.state = {
             isCollapsed: false,
         };
-
-        this.container = React.createRef();
-        this.titleBar = React.createRef();
-    }
-
-    componentDidUpdate() {
-        this.container.current.style.maxHeight = this.state.isCollapsed
-            ? this.titleBar.current.offsetHeight + 'px'
-            : '';
     }
 
     componentDidMount() {
@@ -49,46 +41,53 @@ class Panel extends Component {
     }
 
     render() {
-        return (
+        const toggleIcon = (
             <div
-                ref={this.container}
-                data-is-collapsed={this.state.isCollapsed}
-                className={classNames(
-                    styles.container,
-                    this.props.classNames.panel || ''
-                )}>
-                <div
-                    ref={this.titleBar}
-                    onClick={this.titleBarClickHandler}
-                    className={classNames(
-                        styles.title_bar,
-                        { [styles.is_collapsible]: this.props.isCollapsible },
-                        this.props.classNames.titleBar || ''
-                    )}>
-                    <div
-                        className={classNames({
-                            hidden: !this.props.isCollapsible,
-                            [styles.toggle_icon_container]: true,
-                            [this.props.classNames.toggleIconContainer]: true,
-                        })}>
-                        <FontAwesomeIcon
-                            className={styles.toggle_icon}
-                            icon={
-                                this.state.isCollapsed
-                                    ? faCaretRight
-                                    : faCaretDown
-                            }
-                        />
-                    </div>
-                    <div
-                        className={classNames(
-                            styles.title_bar_content,
-                            this.props.classNames.title || ''
-                        )}>
-                        {this.props.title}
-                    </div>
-                </div>
+                className={classNames({
+                    hidden:
+                        !this.props.isCollapsible || this.props.hideToggleIcon,
+                    [styles.toggle_icon_container]: true,
+                    [this.props.classNames.toggleIconContainer]: true,
+                })}>
+                <FontAwesomeIcon
+                    className={styles.toggle_icon}
+                    icon={this.state.isCollapsed ? faCaretRight : faCaretDown}
+                />
+            </div>
+        );
 
+        const titleBarValue = (
+            <div
+                className={classNames(
+                    styles.title_bar_content,
+                    this.props.classNames.title || ''
+                )}>
+                {this.props.title}
+            </div>
+        );
+
+        const titleBar = (
+            <div
+                onClick={this.titleBarClickHandler}
+                className={classNames(
+                    styles.title_bar,
+                    { [styles.is_collapsible]: this.props.isCollapsible },
+                    this.props.classNames.titleBar || ''
+                )}>
+                {toggleIcon}
+                {titleBarValue}
+            </div>
+        );
+
+        const content = (
+            <div
+                style={{
+                    height: this.state.isCollapsed ? '0' : 'auto',
+                }}
+                className={classNames({
+                    [styles.content_wrapper]: true,
+                    [styles.expanded]: !this.state.isCollapsed,
+                })}>
                 <div
                     className={classNames(
                         styles.content,
@@ -96,6 +95,18 @@ class Panel extends Component {
                     )}>
                     {this.props.content}
                 </div>
+            </div>
+        );
+
+        return (
+            <div
+                data-is-collapsed={this.state.isCollapsed}
+                className={classNames(
+                    styles.container,
+                    this.props.classNames.panel || ''
+                )}>
+                {titleBar}
+                {content}
             </div>
         );
     }
