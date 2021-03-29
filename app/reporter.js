@@ -1,13 +1,13 @@
 const createStatsCollector = require('mocha/lib/stats-collector');
 const Mocha = require('mocha');
 const Base = Mocha.reporters.Base;
+const Spec = require('mocha/lib/reporters/spec');
 const { events } = require('./status-events');
 const { socket } = require('./socket-client');
 const { v4: uuidv4 } = require('uuid');
 
 const {
     EVENT_RUN_BEGIN,
-    EVENT_RUN_END,
     EVENT_TEST_FAIL,
     EVENT_TEST_PASS,
     EVENT_TEST_END,
@@ -15,6 +15,7 @@ const {
     EVENT_SUITE_END,
     EVENT_TEST_BEGIN,
     EVENT_TEST_PENDING,
+    EVENT_HOOK_END,
 } = Mocha.Runner.constants;
 
 class CypressControlReporter {
@@ -22,6 +23,8 @@ class CypressControlReporter {
         createStatsCollector(runner);
 
         Base.call(this, runner);
+
+        new Spec(runner);
 
         runner.on(EVENT_RUN_BEGIN, () => {
             socket.emit(events.CYPRESS_CONTROL_RUN_BEGIN);
@@ -124,9 +127,11 @@ class CypressControlReporter {
             title: data.title,
             ...(data.uuid && { uuid: data.uuid }),
             ...(data.state && { status: data.state }),
-            ...(data.error && { error: data.error }),
+            ...(data.err && { error: data.err }),
             ...(data.root && { isRootSuite: data.root }),
             ...(data.file && { file: data.file }),
+            ...(data.duration && { duration: data.duration }),
+            ...(data.body && { body: data.body }),
         };
     }
 }

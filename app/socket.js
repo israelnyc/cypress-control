@@ -157,18 +157,17 @@ function onTestFailed(data) {
 }
 
 function onTestEnd(data) {
-    updateCurrentSpecTestStatus(
-        data.id,
-        data.status,
-        events.CYPRESS_CONTROL_TEST_END
-    );
+    updateCurrentSpecTestStatus(data, events.CYPRESS_CONTROL_TEST_END);
 }
 
 module.exports.init = _io => {
     io = _io;
 
     io.on('connection', socket => {
-        socket.emit(events.CYPRESS_CONTROL_STATUS, getStatus());
+        socket.emit(events.CYPRESS_CONTROL_STATUS, {
+            status: getStatus(),
+            eventType: events.CYPRESS_CONTROL_STATUS,
+        });
 
         socket.on(events.CYPRESS_CONTROL_STATUS, dispatchCypressStatus);
         socket.on(events.CYPRESS_CONTROL_GET_STATUS, getCypressStatus);

@@ -30,16 +30,19 @@ function setStatus(newStatus, eventType, payload) {
     broadcastStatus(eventType, payload);
 }
 
-function updateCurrentSpecTestStatus(testId, testStatus, eventType) {
-    const currentSpecTest = status.currentSpec.suites
+function updateCurrentSpecTestStatus(data, eventType) {
+    let currentSpecTest = status.currentSpec.suites
         .reduce((prev, curr) => {
             return prev.concat(curr.tests);
         }, [])
-        .filter(test => test.id === testId)[0];
+        .filter(test => test.id === data.id)[0];
 
     if (currentSpecTest) {
         currentSpecTest.hasCompleted = true;
-        currentSpecTest.status = testStatus;
+        currentSpecTest.status = data.status;
+        currentSpecTest.duration = data.duration;
+
+        if (data.error) currentSpecTest.error = data.error;
     }
 
     broadcastStatus(eventType, currentSpecTest);
