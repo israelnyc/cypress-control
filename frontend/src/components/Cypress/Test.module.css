@@ -4,6 +4,21 @@
     padding: 4px;
 }
 
+.title_bar {
+    padding: 2px;
+    border-left: 2px solid transparent;
+    border-bottom: 1px solid var(--light-gray-border);
+}
+
+.title_bar:hover,
+[data-is-collapsed='false'] > .title_bar {
+    border-left-color: var(--light-gray);
+}
+
+.content {
+    border-left: 2px solid var(--light-gray);
+}
+
 .current {
     color: var(--success-green);
 }

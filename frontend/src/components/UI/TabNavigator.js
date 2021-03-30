@@ -40,42 +40,53 @@ class TabNavigator extends React.Component {
         const { sections } = this.props;
 
         const tabs = sections.map((section, index) => {
-            return (
-                <div
-                    key={index}
-                    data-index={index}
-                    className={classNames({
-                        [styles.tab]: true,
-                        [styles.active]: index === this.state.currentIndex,
-                    })}
-                    onClick={() => {
-                        this.setState({ currentIndex: index });
-                    }}
-                    role='tab'>
-                    {section.label}
+            if (!section.hasOwnProperty('isDisplayed') || section.isDisplayed) {
+                return (
+                    <div
+                        key={index}
+                        data-index={index}
+                        className={classNames({
+                            [styles.tab]: true,
+                            [styles.active]: index === this.state.currentIndex,
+                        })}
+                        onClick={() => {
+                            this.setState({ currentIndex: index });
+                        }}
+                        role='tab'>
+                        {section.label}
 
-                    {section.badge > 0 && (
-                        <span className={classNames('badge', styles.tab_badge)}>
-                            {section.badge}
-                        </span>
-                    )}
-                </div>
-            );
+                        {section.badge > 0 && (
+                            <span
+                                className={classNames(
+                                    'badge',
+                                    styles.tab_badge
+                                )}>
+                                {section.badge}
+                            </span>
+                        )}
+                    </div>
+                );
+            }
+
+            return null;
         });
 
         const content = sections.map((section, index) => {
-            return (
-                <div
-                    key={index}
-                    data-index={index}
-                    className={classNames({
-                        [styles.tab_panel]: true,
-                        hidden: index !== this.state.currentIndex,
-                    })}
-                    role='tabpanel'>
-                    {section.render()}
-                </div>
-            );
+            if (!section.hasOwnProperty('isDisplayed') || section.isDisplayed) {
+                return (
+                    <div
+                        key={index}
+                        data-index={index}
+                        className={classNames({
+                            [styles.tab_panel]: true,
+                            hidden: index !== this.state.currentIndex,
+                        })}
+                        role='tabpanel'>
+                        {section.render()}
+                    </div>
+                );
+            }
+            return null;
         });
 
         return (

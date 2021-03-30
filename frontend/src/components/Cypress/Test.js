@@ -3,17 +3,15 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import Panel from '../UI/Panel';
+import TabNavigator from '../UI/TabNavigator';
+import CodeBlock from '../UI/CodeBlock';
 import styles from './Test.module.css';
 
 class Test extends React.Component {
     render() {
-        return (
-            <div
-                className={classNames(styles.container, {
-                    [styles.current]:
-                        this.props.cypressStatus.currentTest.uuid ===
-                        this.props.test.uuid,
-                })}>
+        const title = (
+            <>
                 <div
                     className={classNames(
                         styles.status,
@@ -31,7 +29,48 @@ class Test extends React.Component {
                     />
                 </div>
                 <div className='title'>{this.props.test.title}</div>
-            </div>
+            </>
+        );
+
+        const sections = [
+            {
+                label: 'Body',
+                render: () => <CodeBlock>{this.props.test.body}</CodeBlock>,
+            },
+            {
+                label: 'Error',
+                isDisplayed: this.props.test?.error,
+                render: () => {
+                    const errorMessage = this.props.test?.error?.message;
+                    const codeFrame = this.props.test?.error?.codeFrame?.frame;
+
+                    return (
+                        <>
+                            <pre>{errorMessage}</pre>
+                            <pre>{codeFrame}</pre>
+                        </>
+                    );
+                },
+            },
+        ];
+
+        return (
+            <Panel
+                hideToggleIcon={true}
+                rendersCollapsed={true}
+                title={title}
+                content={<TabNavigator sections={sections} />}
+                classNames={{
+                    titleBar: styles.title_bar,
+                    title: classNames({
+                        [styles.container]: true,
+                        [styles.current]:
+                            this.props.cypressStatus.currentTest.uuid ===
+                            this.props.test.uuid,
+                    }),
+                    content: styles.content,
+                }}
+            />
         );
     }
 }

@@ -62,6 +62,8 @@ class App extends React.Component {
             this.props.setServerConnected(true);
             this.props.setSocketConnected(true);
 
+            this.updateCypressLog();
+
             clearInterval(this.socketDisconnectTimer);
         });
 

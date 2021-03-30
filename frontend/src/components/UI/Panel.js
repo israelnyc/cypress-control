@@ -86,7 +86,6 @@ class Panel extends Component {
                 }}
                 className={classNames({
                     [styles.content_wrapper]: true,
-                    [styles.expanded]: !this.state.isCollapsed,
                 })}>
                 <div
                     className={classNames(

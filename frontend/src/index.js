@@ -4,8 +4,15 @@ import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import hljs from 'highlight.js/lib/core';
+import 'highlight.js/styles/night-owl.css';
 
 import store from './store';
+
+hljs.registerLanguage(
+    'javascript',
+    require('highlight.js/lib/languages/javascript')
+);
 
 ReactDOM.render(
     <React.StrictMode>

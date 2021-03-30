@@ -1,0 +1,8 @@
+.pre {
+    margin: 0;
+}
+
+.code {
+    padding-left: 1em;
+    background-color: var(--main-dark-color) !important;
+}

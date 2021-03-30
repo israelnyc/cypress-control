@@ -43,9 +43,6 @@ class Suite extends React.Component {
                     }),
                     titleBar: styles.title_bar,
                     title: styles.title,
-                    content: classNames({
-                        [styles.tests]: this.tests.length,
-                    }),
                 }}
             />
         );

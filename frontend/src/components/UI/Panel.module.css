@@ -36,6 +36,7 @@
 
 .content {
     overflow: auto;
+    height: 100%;
 }
 
 .is_collapsible {
