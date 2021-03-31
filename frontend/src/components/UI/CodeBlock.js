@@ -9,7 +9,7 @@ function CodeBlock(props) {
     useEffect(() => {
         const code = beautify(props.children);
 
-        codeBlock.current.innerText = code;
+        codeBlock.current.innerHTML = code;
 
         hljs.highlightElement(codeBlock.current);
     }, [props.children]);
