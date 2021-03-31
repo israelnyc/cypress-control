@@ -10,6 +10,7 @@ class Panel extends Component {
         isCollapsible: true,
         hideToggleIcon: false,
         rendersCollapsed: false,
+        onToggled: () => {},
     };
 
     constructor(props) {
@@ -33,11 +34,15 @@ class Panel extends Component {
     };
 
     collapse() {
-        this.setState({ isCollapsed: true });
+        this.setState({ isCollapsed: true }, this.onToggled);
     }
 
     expand() {
-        this.setState({ isCollapsed: false });
+        this.setState({ isCollapsed: false }, this.onToggled);
+    }
+
+    onToggled() {
+        this.props.onToggled(this);
     }
 
     render() {

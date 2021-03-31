@@ -9,6 +9,12 @@ import CodeBlock from '../UI/CodeBlock';
 import styles from './Test.module.css';
 
 class Test extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.tabNavigator = React.createRef();
+    }
+
     render() {
         const title = (
             <>
@@ -54,12 +60,21 @@ class Test extends React.Component {
             },
         ];
 
+        const onToggled = panel => {
+            if (!panel.state.isCollapsed) {
+                this.tabNavigator.current.updateActiveTabIndicator();
+            }
+        };
+
         return (
             <Panel
                 hideToggleIcon={true}
                 rendersCollapsed={true}
+                onToggled={onToggled}
                 title={title}
-                content={<TabNavigator sections={sections} />}
+                content={
+                    <TabNavigator ref={this.tabNavigator} sections={sections} />
+                }
                 classNames={{
                     titleBar: styles.title_bar,
                     title: classNames({
