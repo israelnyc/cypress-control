@@ -110,7 +110,7 @@ class Panel extends Component {
                     this.props.classNames.panel || ''
                 )}>
                 {titleBar}
-                {content}
+                {!this.state.isCollapsed && content}
             </div>
         );
     }
