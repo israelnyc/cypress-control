@@ -1,7 +1,6 @@
 .container {
     display: flex;
     flex-direction: column;
-    max-height: 100%;
 }
 
 .container:is(:not(:last-child), :only-child:not([data-is-collapsed='false'])) {
@@ -28,8 +27,4 @@
 
 .suites {
     overflow: auto;
-}
-
-.container.has_completed {
-    max-height: none;
 }
