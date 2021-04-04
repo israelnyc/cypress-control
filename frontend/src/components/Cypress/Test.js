@@ -78,12 +78,14 @@ class Test extends React.Component {
                 classNames={{
                     titleBar: styles.title_bar,
                     title: classNames({
-                        [styles.container]: true,
+                        [styles.title]: true,
                         [styles.current]:
                             this.props.cypressStatus.currentTest.uuid ===
-                            this.props.test.uuid,
+                                this.props.test.uuid &&
+                            this.props.cypressStatus.isRunning,
                     }),
                     content: styles.content,
+                    panel: styles.container,
                 }}
             />
         );
