@@ -19,3 +19,11 @@
     background-color: var(--secondary-dark-color);
     color: #fff;
 }
+
+.passed {
+    color: var(--success-green);
+}
+
+.failed {
+    color: var(--failed-red);
+}

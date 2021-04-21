@@ -1,5 +1,6 @@
 module.exports.events = {
-    CYPRESS_CONTROL_RUN_BEGIN: 'cypress_control_run_begin',
+    CYPRESS_CONTROL_SPEC_RUN_BEGIN: 'cypress_control_spec_run_begin',
+    CYPRESS_CONTROL_SPEC_RUN_END: 'cypress_control_spec_run_end',
     CYPRESS_CONTROL_TEST_PASSED: 'cypress_control_test_passed',
     CYPRESS_CONTROL_TEST_FAILED: 'cypress_control_test_failed',
     CYPRESS_CONTROL_BEFORE_RUN: 'cypress_control_before_run',

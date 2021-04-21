@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
+import prettyMilliseconds from 'pretty-ms';
 import Panel from '../UI/Panel';
 import TabNavigator from '../UI/TabNavigator';
 import CodeBlock from '../UI/CodeBlock';
@@ -34,7 +35,13 @@ class Test extends React.Component {
                         }
                     />
                 </div>
-                <div className='title'>{this.props.test.title}</div>
+                <div className={styles.title}>{this.props.test.title}</div>
+
+                {this.props.test.duration && (
+                    <div className={styles.duration}>
+                        {prettyMilliseconds(this.props.test.duration)}
+                    </div>
+                )}
             </>
         );
 
@@ -47,14 +54,15 @@ class Test extends React.Component {
                 label: 'Error',
                 isDisplayed: this.props.test?.error,
                 render: () => {
-                    const errorMessage = this.props.test?.error?.message;
+                    const errorMessage = this.props.test?.error
+                        ?.sourceMappedStack;
                     const codeFrame = this.props.test?.error?.codeFrame?.frame;
 
                     return (
-                        <>
+                        <div className={styles.error_container}>
                             <pre>{errorMessage}</pre>
                             <pre>{codeFrame}</pre>
-                        </>
+                        </div>
                     );
                 },
             },
@@ -82,7 +90,8 @@ class Test extends React.Component {
                         [styles.current]:
                             this.props.cypressStatus.currentTest.uuid ===
                                 this.props.test.uuid &&
-                            this.props.cypressStatus.isRunning,
+                            this.props.cypressStatus.isRunning &&
+                            !this.props.test.hasCompleted,
                     }),
                     content: styles.content,
                     panel: styles.container,

@@ -32,6 +32,10 @@
     justify-content: center;
 }
 
+.title {
+    flex-grow: 1;
+}
+
 .passed {
     font-size: 13px;
     color: var(--success-green);
@@ -39,4 +43,12 @@
 
 .failed {
     color: var(--failed-red);
+}
+
+.error_container {
+    padding: 10px;
+}
+
+.duration {
+    color: var(--light-blue);
 }

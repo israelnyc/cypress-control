@@ -15,7 +15,7 @@ const {
     EVENT_SUITE_END,
     EVENT_TEST_BEGIN,
     EVENT_TEST_PENDING,
-    EVENT_HOOK_END,
+    EVENT_RUN_END,
 } = Mocha.Runner.constants;
 
 class CypressControlReporter {
@@ -27,7 +27,7 @@ class CypressControlReporter {
         new Spec(runner);
 
         runner.on(EVENT_RUN_BEGIN, () => {
-            socket.emit(events.CYPRESS_CONTROL_RUN_BEGIN);
+            socket.emit(events.CYPRESS_CONTROL_SPEC_RUN_BEGIN);
         });
 
         runner.on(EVENT_SUITE_BEGIN, data => {
@@ -79,10 +79,10 @@ class CypressControlReporter {
         });
 
         runner.on(EVENT_SUITE_END, data => {
-            socket.emit(events.CYPRESS_CONTROL_SUITE_END, {
-                ...this.getEventDataObject(data),
-                isRootSuite: data.root,
-            });
+            socket.emit(
+                events.CYPRESS_CONTROL_SUITE_END,
+                this.getEventDataObject(data)
+            );
         });
 
         runner.on(EVENT_TEST_BEGIN, data => {
@@ -119,6 +119,10 @@ class CypressControlReporter {
                 this.getEventDataObject(data)
             );
         });
+
+        runner.on(EVENT_RUN_END, () => {
+            socket.emit(events.CYPRESS_CONTROL_SPEC_RUN_END, runner.stats);
+        });
     }
 
     getEventDataObject(data) {
@@ -126,6 +130,7 @@ class CypressControlReporter {
             id: data.id,
             title: data.title,
             ...(data.uuid && { uuid: data.uuid }),
+            ...(data.type && { type: data.type }),
             ...(data.state && { status: data.state }),
             ...(data.err && { error: data.err }),
             ...(data.root && { isRootSuite: data.root }),

@@ -4,7 +4,6 @@ const {
     getStatus,
     setStatus,
     updateCurrentSpecTestStatus,
-    broadcastStatus,
 } = require('./status');
 
 let io = null;
@@ -45,6 +44,8 @@ function resetTestStatus(data, callback) {
             totalSpecsRan: 0,
             completedSpecs: [],
             currentSpec: {},
+            currentSpecFailures: {},
+            currentTest: {},
         },
         events.CYPRESS_CONTROL_RESET_TEST_STATUS
     );
@@ -57,7 +58,7 @@ function startRunner(specSelections = {}) {
 
     runner.start(specSelections.isFiltered ? specSelections.selectedSpecs : []);
 
-    broadcastStatus(events.CYPRESS_CONTROL_START_RUNNER);
+    dispatchCypressStatus({ eventType: events.CYPRESS_CONTROL_START_RUNNER });
 }
 
 function stopRunner() {
@@ -76,18 +77,38 @@ function onBeforeRun(data) {
     );
 }
 
-function onRunBegin() {
+function onRunCompleted(data) {
+    setStatus({ currentSpec: {} }, events.CYPRESS_CONTROL_RUN_COMPLETED, data);
+}
+
+function onSpecRunBegin() {
     setStatus(
         {
             isRunning: true,
             isStarting: false,
         },
-        events.CYPRESS_CONTROL_RUN_BEGIN
+        events.CYPRESS_CONTROL_SPEC_RUN_BEGIN
     );
 }
 
-function onRunCompleted(data) {
-    setStatus({ currentSpec: {} }, events.CYPRESS_CONTROL_RUN_COMPLETED, data);
+function onSpecRunEnd(data) {
+    const { completedSpecs, currentSpec, totalSpecsRan } = getStatus();
+
+    setStatus(
+        {
+            totalSpecsRan: totalSpecsRan + 1,
+            completedSpecs: [
+                ...completedSpecs,
+                {
+                    ...currentSpec,
+                    hasCompleted: true,
+                    stats: data,
+                },
+            ],
+        },
+        events.CYPRESS_CONTROL_SPEC_RUN_END,
+        data
+    );
 }
 
 function onSuiteBegin(data) {
@@ -104,24 +125,10 @@ function onSuiteBegin(data) {
 }
 
 function onSuiteEnd(data) {
-    if (data.isRootSuite) {
-        const { totalSpecsRan, completedSpecs, currentSpec } = getStatus();
-
-        setStatus(
-            {
-                totalSpecsRan: totalSpecsRan + 1,
-                completedSpecs: [
-                    ...completedSpecs,
-                    {
-                        ...currentSpec,
-                        hasCompleted: true,
-                    },
-                ],
-            },
-            events.CYPRESS_CONTROL_SUITE_END,
-            data
-        );
-    }
+    dispatchCypressStatus({
+        eventType: events.CYPRESS_CONTROL_SUITE_END,
+        payload: data,
+    });
 }
 
 function onTestBegin(data) {
@@ -129,7 +136,10 @@ function onTestBegin(data) {
 }
 
 function onTestPending(data) {
-    broadcastStatus(events.CYPRESS_CONTROL_TEST_PENDING, data);
+    dispatchCypressStatus({
+        eventType: events.CYPRESS_CONTROL_TEST_PENDING,
+        payload: data,
+    });
 }
 
 function onTestPassed(data) {
@@ -181,8 +191,10 @@ module.exports.init = _io => {
         socket.on(events.CYPRESS_CONTROL_STOP_RUNNER, stopRunner);
 
         socket.on(events.CYPRESS_CONTROL_BEFORE_RUN, onBeforeRun);
-        socket.on(events.CYPRESS_CONTROL_RUN_BEGIN, onRunBegin);
         socket.on(events.CYPRESS_CONTROL_RUN_COMPLETED, onRunCompleted);
+
+        socket.on(events.CYPRESS_CONTROL_SPEC_RUN_BEGIN, onSpecRunBegin);
+        socket.on(events.CYPRESS_CONTROL_SPEC_RUN_END, onSpecRunEnd);
 
         socket.on(events.CYPRESS_CONTROL_SUITE_BEGIN, onSuiteBegin);
         socket.on(events.CYPRESS_CONTROL_SUITE_END, onSuiteEnd);

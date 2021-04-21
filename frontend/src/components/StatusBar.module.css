@@ -30,7 +30,7 @@
     position: absolute;
     top: -4px;
     right: -4px;
-    color: var(--success-green)
+    color: var(--success-green);
 }
 
 .result {
@@ -57,8 +57,8 @@
 }
 
 .runner_status {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     padding: 0;
 }

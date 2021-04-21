@@ -12,7 +12,7 @@
 }
 
 .meta {
-    font-weight: bold;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -27,4 +27,12 @@
 
 .suites {
     overflow: auto;
+}
+
+.passed {
+    color: var(--success-green);
+}
+
+.failed {
+    color: var(--failed-red);
 }
