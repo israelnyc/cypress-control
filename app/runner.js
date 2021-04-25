@@ -20,9 +20,11 @@ module.exports = {
             return;
         }
 
-        const cypressProcess = execa.node(path.join(__dirname, 'cypress'), [
-            specs.join(','),
-        ]);
+        const cypressProcess = execa.node(
+            path.join(__dirname, 'cypress'),
+            [specs.join(',')],
+            { detached: true }
+        );
 
         cypressProcess.stdout.pipe(process.stdout);
         cypressProcess.stdout.pipe(

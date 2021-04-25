@@ -4,7 +4,15 @@ async function killCypressProcess() {
     const status = await getStatusFromServer();
 
     if ((status.isRunning || status.isStarting) && status.cypressPID) {
-        process.kill(status.cypressPID);
+        // Use negative process id for non-windows so that the entire detached process group
+        // is killed; not just the initial cypress.js process but any processes it itself
+        // spawned when running cypress.run().
+        const cypressPID =
+            process.platform === 'win32'
+                ? status.cypressPID
+                : -status.cypressPID;
+
+        process.kill(cypressPID, 'SIGKILL');
 
         resetProcessStatus();
     }
