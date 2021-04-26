@@ -1,6 +1,6 @@
 {
   "name": "@israelnyc/cypress-control",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.js",
   "author": "Israel Schulman <israel.schulman@gmail.com>",
   "license": "MIT",
@@ -18,5 +18,15 @@
   "files": [
     "app/*.js",
     "client"
+  ],
+  "keywords": [
+    "cypress",
+    "control",
+    "test",
+    "testing",
+    "status",
+    "realtime",
+    "runner",
+    "automation"
   ]
 }
