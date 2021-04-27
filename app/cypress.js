@@ -1,6 +1,5 @@
 const glob = require('glob');
 const path = require('path');
-const { handleSIGINT } = require('./process-manager');
 const { events } = require('./status-events');
 
 try {
@@ -80,5 +79,3 @@ try {
 
     process.exit(1);
 }
-
-handleSIGINT();

@@ -12,6 +12,8 @@ async function killCypressProcess() {
                 ? status.cypressPID
                 : -status.cypressPID;
 
+        console.log('killing cypress process:', cypressPID);
+
         process.kill(cypressPID, 'SIGKILL');
 
         resetProcessStatus();
@@ -30,8 +32,9 @@ function handleSIGINT() {
         });
     }
 
-    process.on('SIGINT', function () {
-        resetProcessStatus();
+    process.on('SIGINT', async function () {
+        await killCypressProcess();
+
         process.exit();
     });
 }

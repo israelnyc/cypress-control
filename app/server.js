@@ -6,12 +6,17 @@ const fs = require('fs');
 const path = require('path');
 const directoryTree = require('directory-tree');
 
-const socket = require('./socket');
-const { handleSIGINT } = require('./process-manager');
+const DEFAULT_PORT = 8686;
 
-handleSIGINT();
+module.exports = ({ port = DEFAULT_PORT } = {}) => {
+    process.env['CYPRESS_CONTROL_PORT'] = port;
 
-module.exports = () => {
+    const socket = require('./socket');
+    const { handleSIGINT } = require('./process-manager');
+    const runner = require('./runner');
+    const { events } = require('./status-events');
+    const { socket: socketClient } = require('./socket-client');
+
     app.use(express.static(path.join(__dirname, '../client/')));
 
     app.get('/', (req, res) => {
@@ -53,7 +58,11 @@ module.exports = () => {
         fs.writeFileSync(path.join(__dirname, 'cypress.log'), '');
     }
 
-    http.listen(8686, () => {
-        console.log('listening on *:8686');
+    http.listen(port, () => {
+        console.log(`listening on *:${port}`);
     });
+
+    handleSIGINT();
+
+    return { events, runner, socket: socketClient };
 };

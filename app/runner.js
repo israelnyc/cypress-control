@@ -12,6 +12,10 @@ const fs = require('fs');
 const path = require('path');
 
 module.exports = {
+    /**
+     * @param {string[]} [specs] Array of spec paths to run
+     * @param {function} [runnerMessageCallback] Callback method called when the runner receives messages from the spawned cypress process.
+     */
     start: function (specs = [], runnerMessageCallback) {
         const { isRunning, isStarting } = getStatus();
 
@@ -23,7 +27,10 @@ module.exports = {
         const cypressProcess = execa.node(
             path.join(__dirname, 'cypress'),
             [specs.join(',')],
-            { detached: true }
+            {
+                detached: true,
+                env: process.env,
+            }
         );
 
         cypressProcess.stdout.pipe(process.stdout);
