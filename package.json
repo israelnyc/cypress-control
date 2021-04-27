@@ -3,6 +3,10 @@
   "version": "0.2.0",
   "main": "index.js",
   "author": "Israel Schulman <israel.schulman@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/israelnyc/cypress-control"
+  },
   "license": "MIT",
   "dependencies": {
     "directory-tree": "^2.2.7",
