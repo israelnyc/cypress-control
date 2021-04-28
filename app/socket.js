@@ -47,6 +47,7 @@ function resetTestStatus(data, callback) {
             currentSpec: {},
             currentSpecFailures: {},
             currentTest: {},
+            totalDuration: null,
         },
         events.CYPRESS_CONTROL_RESET_TEST_STATUS
     );
@@ -79,7 +80,14 @@ function onBeforeRun(data) {
 }
 
 function onRunCompleted(data) {
-    setStatus({ currentSpec: {} }, events.CYPRESS_CONTROL_RUN_COMPLETED, data);
+    setStatus(
+        {
+            currentSpec: {},
+            totalDuration: data.totalDuration,
+        },
+        events.CYPRESS_CONTROL_RUN_COMPLETED,
+        data
+    );
 }
 
 function onSpecRunBegin() {

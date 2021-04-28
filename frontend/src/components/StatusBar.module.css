@@ -11,6 +11,14 @@
     align-items: center;
 }
 
+.results_section {
+    display: flex;
+}
+
+.results_section:not(:last-child) {
+    border-right: 1px dotted var(--light-gray-border);
+}
+
 .control {
     display: flex;
     align-items: center;

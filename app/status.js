@@ -13,6 +13,7 @@ const status = {
     currentSpec: {},
     currentSpecFailures: {},
     currentTest: {},
+    totalDuration: null,
 };
 
 function broadcastStatus(eventType, payload = {}) {

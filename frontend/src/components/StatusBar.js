@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import prettyMilliseconds from 'pretty-ms';
 import {
     faCheck,
     faTimes,
@@ -11,6 +12,7 @@ import {
     faCog,
     faFilter,
     faCircleNotch,
+    faClock,
 } from '@fortawesome/free-solid-svg-icons';
 import { startCypressRunner, stopCypressRunner } from '../utils';
 import ProgressBar from './UI/ProgressBar';
@@ -28,6 +30,10 @@ class StatusBar extends React.Component {
         const totalTests = `Tests: ${
             cypressStatus.passed + cypressStatus.failed + cypressStatus.pending
         }`;
+
+        const totalDuration = cypressStatus.totalDuration
+            ? prettyMilliseconds(cypressStatus.totalDuration)
+            : '';
 
         const serverConnectionTitle = [];
 
@@ -60,45 +66,63 @@ class StatusBar extends React.Component {
 
                 <div className={styles.container}>
                     <div className={styles.results}>
-                        <div className={classNames(styles.result)}>
-                            <FontAwesomeIcon
-                                className={styles.fa_check}
-                                icon={faCheck}
-                            />
-                            <div className='value'>{cypressStatus.passed}</div>
+                        <div className={styles.results_section}>
+                            <div className={classNames(styles.result)}>
+                                <FontAwesomeIcon
+                                    className={styles.fa_check}
+                                    icon={faCheck}
+                                />
+                                <div className='value'>
+                                    {cypressStatus.passed}
+                                </div>
+                            </div>
+
+                            <div className={classNames(styles.result)}>
+                                <FontAwesomeIcon
+                                    className={styles.fa_times}
+                                    icon={faTimes}
+                                />
+                                <div className='value'>
+                                    {cypressStatus.failed}
+                                </div>
+                            </div>
+
+                            <div className={classNames(styles.result)}>
+                                <FontAwesomeIcon
+                                    className={styles.fa_circle_notch}
+                                    icon={faCircleNotch}
+                                />
+                                <div className='value'>
+                                    {cypressStatus.pending}
+                                </div>
+                            </div>
+                        </div>
+                        <div className={styles.results_section}>
+                            <div
+                                className={classNames(
+                                    'total_tests',
+                                    styles.result
+                                )}>
+                                <div className='value'>{totalTests}</div>
+                            </div>
+
+                            <div
+                                className={classNames(
+                                    'specs_progress',
+                                    styles.result
+                                )}>
+                                {specsProgress}
+                            </div>
                         </div>
 
-                        <div className={classNames(styles.result)}>
-                            <FontAwesomeIcon
-                                className={styles.fa_times}
-                                icon={faTimes}
-                            />
-                            <div className='value'>{cypressStatus.failed}</div>
-                        </div>
-
-                        <div className={classNames(styles.result)}>
-                            <FontAwesomeIcon
-                                className={styles.fa_circle_notch}
-                                icon={faCircleNotch}
-                            />
-                            <div className='value'>{cypressStatus.pending}</div>
-                        </div>
-
-                        <div
-                            className={classNames(
-                                'total_tests',
-                                styles.result
-                            )}>
-                            <div className='value'>{totalTests}</div>
-                        </div>
-
-                        <div
-                            className={classNames(
-                                'specs_progress',
-                                styles.result
-                            )}>
-                            {specsProgress}
-                        </div>
+                        {totalDuration && (
+                            <div className={styles.results_section}>
+                                <div className={styles.result}>
+                                    <FontAwesomeIcon icon={faClock} />
+                                    <div className='value'>{totalDuration}</div>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className={styles.control}>
