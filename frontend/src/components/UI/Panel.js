@@ -104,7 +104,10 @@ class Panel extends Component {
 
         return (
             <div
-                data-is-collapsed={this.state.isCollapsed}
+                data-is-collapsed={
+                    this.state.isCollapsed || !this.props.isCollapsible
+                }
+                data-is-collapsible={this.props.isCollapsible}
                 className={classNames(
                     styles.container,
                     this.props.classNames.panel || ''

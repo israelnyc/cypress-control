@@ -6,6 +6,7 @@ const status = {
     isRunning: false,
     failed: 0,
     passed: 0,
+    pending: 0,
     totalSpecs: 0,
     totalSpecsRan: 0,
     completedSpecs: [],

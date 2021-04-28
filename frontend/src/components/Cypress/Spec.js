@@ -20,8 +20,10 @@ class Spec extends React.Component {
             if (hasFailures) specHasFailures = true;
 
             const isPassing =
-                suite.tests.filter(test => test.status === 'passed').length ===
-                suite.tests.length;
+                suite.tests.filter(
+                    test =>
+                        test.status === 'passed' || test.status === 'pending'
+                ).length === suite.tests.length;
 
             const isCompleted =
                 suite.tests.filter(test => test.hasCompleted === true)

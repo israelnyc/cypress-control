@@ -10,6 +10,7 @@ import {
     faWifi,
     faCog,
     faFilter,
+    faCircleNotch,
 } from '@fortawesome/free-solid-svg-icons';
 import { startCypressRunner, stopCypressRunner } from '../utils';
 import ProgressBar from './UI/ProgressBar';
@@ -25,7 +26,7 @@ class StatusBar extends React.Component {
         const specsProgress = `Specs: ${cypressStatus.totalSpecsRan} / ${cypressStatus.totalSpecs}`;
 
         const totalTests = `Tests: ${
-            cypressStatus.passed + cypressStatus.failed
+            cypressStatus.passed + cypressStatus.failed + cypressStatus.pending
         }`;
 
         const serverConnectionTitle = [];
@@ -59,11 +60,7 @@ class StatusBar extends React.Component {
 
                 <div className={styles.container}>
                     <div className={styles.results}>
-                        <div
-                            className={classNames(
-                                'tests_passed',
-                                styles.result
-                            )}>
+                        <div className={classNames(styles.result)}>
                             <FontAwesomeIcon
                                 className={styles.fa_check}
                                 icon={faCheck}
@@ -71,16 +68,20 @@ class StatusBar extends React.Component {
                             <div className='value'>{cypressStatus.passed}</div>
                         </div>
 
-                        <div
-                            className={classNames(
-                                'tests-failed',
-                                styles.result
-                            )}>
+                        <div className={classNames(styles.result)}>
                             <FontAwesomeIcon
                                 className={styles.fa_times}
                                 icon={faTimes}
                             />
                             <div className='value'>{cypressStatus.failed}</div>
+                        </div>
+
+                        <div className={classNames(styles.result)}>
+                            <FontAwesomeIcon
+                                className={styles.fa_circle_notch}
+                                icon={faCircleNotch}
+                            />
+                            <div className='value'>{cypressStatus.pending}</div>
                         </div>
 
                         <div

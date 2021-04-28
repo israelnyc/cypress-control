@@ -40,6 +40,7 @@ function resetTestStatus(data, callback) {
         {
             failed: 0,
             passed: 0,
+            pending: 0,
             totalSpecs: 0,
             totalSpecsRan: 0,
             completedSpecs: [],
@@ -136,10 +137,11 @@ function onTestBegin(data) {
 }
 
 function onTestPending(data) {
-    dispatchCypressStatus({
-        eventType: events.CYPRESS_CONTROL_TEST_PENDING,
-        payload: data,
-    });
+    const { pending } = getStatus();
+
+    setStatus({ pending: pending + 1 }, events.CYPRESS_CONTROL_TEST_PENDING);
+
+    onTestEnd(data);
 }
 
 function onTestPassed(data) {

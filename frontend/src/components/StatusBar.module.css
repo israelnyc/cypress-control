@@ -48,6 +48,10 @@
     color: var(--failed-red);
 }
 
+.fa_circle_notch {
+    color: var(--light-blue);
+}
+
 .server_connected {
     color: var(--success-green);
 }

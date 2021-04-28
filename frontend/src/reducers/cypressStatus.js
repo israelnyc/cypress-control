@@ -6,6 +6,7 @@ const cypressStatusSlice = createSlice({
         cypressPID: null,
         failed: 0,
         passed: 0,
+        pending: 0,
         isRunning: false,
         isStarting: false,
         currentSpec: {},

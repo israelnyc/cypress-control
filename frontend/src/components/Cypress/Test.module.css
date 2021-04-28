@@ -11,7 +11,7 @@
     background-color: var(--secondary-dark-color);
 }
 
-.title_bar:hover,
+[data-is-collapsible='true'] > .title_bar:hover,
 [data-is-collapsed='false'] > .title_bar {
     border-left-color: var(--light-gray-border);
 }
@@ -43,6 +43,10 @@
 
 .failed {
     color: var(--failed-red);
+}
+
+.pending {
+    color: var(--light-blue);
 }
 
 .error_container {

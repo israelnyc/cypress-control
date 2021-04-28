@@ -1,7 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes } from '@fortawesome/free-solid-svg-icons';
+import {
+    faCheck,
+    faTimes,
+    faCircleNotch,
+} from '@fortawesome/free-solid-svg-icons';
 import classNames from 'classnames';
 import prettyMilliseconds from 'pretty-ms';
 import Panel from '../UI/Panel';
@@ -17,6 +21,16 @@ class Test extends React.Component {
     }
 
     render() {
+        const statusIconsMap = {
+            passed: faCheck,
+            failed: faTimes,
+            pending: faCircleNotch,
+        };
+
+        const statusIcon = statusIconsMap[this.props.test.status];
+
+        const isPending = this.props.test.status === 'pending';
+
         const title = (
             <>
                 <div
@@ -27,13 +41,12 @@ class Test extends React.Component {
                             invisible: !this.props.test.hasCompleted,
                         }
                     )}>
-                    <FontAwesomeIcon
-                        icon={
-                            this.props.test.status === 'passed'
-                                ? faCheck
-                                : faTimes
-                        }
-                    />
+                    {this.props.test.status && statusIcon && (
+                        <FontAwesomeIcon
+                            title={this.props.test.status}
+                            icon={statusIcon}
+                        />
+                    )}
                 </div>
                 <div className={styles.title}>{this.props.test.title}</div>
 
@@ -42,6 +55,8 @@ class Test extends React.Component {
                         {prettyMilliseconds(this.props.test.duration)}
                     </div>
                 )}
+
+                {isPending && <div className={styles.duration}>pending</div>}
             </>
         );
 
@@ -69,7 +84,7 @@ class Test extends React.Component {
         ];
 
         const onToggled = panel => {
-            if (!panel.state.isCollapsed) {
+            if (this.tabNavigator.current && !panel.state.isCollapsed) {
                 this.tabNavigator.current.updateActiveTabIndicator();
             }
         };
@@ -77,11 +92,17 @@ class Test extends React.Component {
         return (
             <Panel
                 hideToggleIcon={true}
+                isCollapsible={!isPending}
                 rendersCollapsed={true}
                 onToggled={onToggled}
                 title={title}
                 content={
-                    <TabNavigator ref={this.tabNavigator} sections={sections} />
+                    !isPending && (
+                        <TabNavigator
+                            ref={this.tabNavigator}
+                            sections={sections}
+                        />
+                    )
                 }
                 classNames={{
                     titleBar: styles.title_bar,
