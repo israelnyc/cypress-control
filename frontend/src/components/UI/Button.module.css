@@ -1,0 +1,15 @@
+.container {
+    background: inherit;
+    color: inherit;
+    font: inherit;
+    border: none;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+}
+
+.container[disabled] {
+    cursor: default;
+    color: var(--light-gray);
+}

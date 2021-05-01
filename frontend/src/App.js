@@ -5,7 +5,7 @@ import * as connectionStatus from './reducers/connectionStatus';
 import * as specSelections from './reducers/specSelections';
 import events from './status-events';
 import { getSocket } from './utils';
-import StatusBar from './components/StatusBar';
+import StatusBar from './components/StatusBar/StatusBar';
 import TabNavigator from './components/UI/TabNavigator';
 import Spec from './components/cypress/Spec';
 import DirectoryTree from './components/DirectoryTree';
@@ -81,6 +81,8 @@ class App extends React.Component {
     }
 
     startSocketDisconnectionTimer() {
+        this.props.setSocketConnected(true);
+
         this.socketDisconnectTimer = setTimeout(() => {
             this.socket.disconnect();
             this.props.setSocketConnected(false);

@@ -1,0 +1,17 @@
+.container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.container:not(:last-child) {
+    border-right: 1px dotted var(--light-gray-border);
+    padding-right: 10px;
+}
+
+@media (max-width: 700px) {
+    .container:not(:last-child) {
+        border-right: none;
+        padding-right: 0;
+    }
+}
