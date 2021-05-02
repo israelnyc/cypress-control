@@ -25,6 +25,10 @@
     src: url('./fonts/Roboto-Light.ttf');
 }
 
+html {
+    font-size: 18px;
+}
+
 html,
 body {
     min-height: 100vh;
@@ -34,7 +38,6 @@ body {
     background-color: var(--main-dark-color);
     color: var(--main-font-color);
     margin: 0;
-    font-size: 18px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-family: 'Roboto', sans-serif;

@@ -8,15 +8,13 @@ const StatusBarResult = ({ className = {}, icon, title, value }) => {
     return (
         <div className={styles.container} title={title}>
             <FontAwesomeIcon className={className.icon} icon={icon} />
-            {value && (
-                <div
-                    className={classNames({
-                        [className.value]: className.value,
-                        [styles.value]: styles.value,
-                    })}>
-                    {value}
-                </div>
-            )}
+            <div
+                className={classNames({
+                    [className.value]: className.value,
+                    [styles.value]: styles.value,
+                })}>
+                {value}
+            </div>
         </div>
     );
 };

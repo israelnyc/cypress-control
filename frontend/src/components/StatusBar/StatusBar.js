@@ -74,6 +74,9 @@ class StatusBar extends React.Component {
                 />
 
                 <div className={styles.container}>
+                    <StatusBarSection className={styles.title}>
+                        <div>Cypress Control</div>
+                    </StatusBarSection>
                     <StatusBarSection className={styles.test_type_results}>
                         <StatusBarResult
                             className={{
@@ -103,23 +106,31 @@ class StatusBar extends React.Component {
 
                     <StatusBarSection className={styles.test_summary_results}>
                         <StatusBarResult
+                            className={{
+                                icon: styles.default_result_icon,
+                            }}
                             icon={faClipboardList}
                             title={`${totalTests} total tests`}
                             value={totalTests}
                         />
                         <StatusBarResult
+                            className={{
+                                icon: styles.default_result_icon,
+                            }}
                             icon={faTasks}
                             title={`${specsProgress} specs completed`}
                             value={specsProgress}
                         />
-                    </StatusBarSection>
-
-                    <StatusBarSection className={styles.run_duration}>
-                        <StatusBarResult
-                            icon={faClock}
-                            title={`Total duration ${totalDuration}`}
-                            value={totalDuration}
-                        />
+                        {totalDuration && (
+                            <StatusBarResult
+                                className={{
+                                    icon: styles.default_result_icon,
+                                }}
+                                icon={faClock}
+                                title={`Total duration ${totalDuration}`}
+                                value={totalDuration}
+                            />
+                        )}
                     </StatusBarSection>
 
                     <StatusBarSection className={styles.status_and_control}>
