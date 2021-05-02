@@ -25,7 +25,8 @@ class TabNavigator extends React.Component {
 
         indicator.style.width = currentTab.getBoundingClientRect().width + 'px';
 
-        indicator.style.left = currentTab.offsetLeft + 'px';
+        indicator.style.left =
+            currentTab.offsetLeft - this.tabs.current.scrollLeft + 'px';
     }
 
     componentDidUpdate() {
@@ -33,6 +34,10 @@ class TabNavigator extends React.Component {
     }
 
     componentDidMount() {
+        this.updateActiveTabIndicator();
+    }
+
+    onTabsScroll() {
         this.updateActiveTabIndicator();
     }
 
@@ -100,7 +105,11 @@ class TabNavigator extends React.Component {
                         styles.tabs_wrapper,
                         this.props.classNames.tabs_wrapper
                     )}>
-                    <div ref={this.tabs} className={styles.tabs} role='tablist'>
+                    <div
+                        ref={this.tabs}
+                        className={styles.tabs}
+                        role='tablist'
+                        onScroll={this.onTabsScroll.bind(this)}>
                         {tabs}
                     </div>
                     <div

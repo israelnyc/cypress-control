@@ -15,6 +15,7 @@
 
 .tabs {
     display: flex;
+    overflow: auto;
     border-bottom: 2px solid var(--light-gray-border);
 }
 
@@ -30,6 +31,7 @@
     padding: 8px;
     cursor: pointer;
     display: flex;
+    white-space: nowrap;
     background-color: var(--main-dark-color);
 }
 
