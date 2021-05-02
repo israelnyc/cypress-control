@@ -137,7 +137,18 @@ class App extends React.Component {
             return <Spec spec={this.props.cypressStatus.currentSpec} />;
         }
 
-        return <ComponentPlaceholder message='No spec currently running' />;
+        // Display waiting message if the Cypress run is either starting
+        // or running if the first suite hasn't yet started
+        if (
+            this.props.cypressStatus.isStarting ||
+            this.props.cypressStatus.isRunning
+        ) {
+            return (
+                <ComponentPlaceholder message='Waiting for Cypress run to begin...' />
+            );
+        }
+
+        return <ComponentPlaceholder message='Runner is not started' />;
     }
 
     get completedSpecsDisplay() {
@@ -147,7 +158,16 @@ class App extends React.Component {
             );
         }
 
-        return <ComponentPlaceholder message='No completed specs yet' />;
+        if (
+            this.props.cypressStatus.isStarting ||
+            this.props.cypressStatus.isRunning
+        ) {
+            return (
+                <ComponentPlaceholder message='No specs have completed yet' />
+            );
+        }
+
+        return <ComponentPlaceholder message='Runner is not started' />;
     }
 
     get specSelectionTree() {
