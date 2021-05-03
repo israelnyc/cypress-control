@@ -103,6 +103,15 @@ function onSpecRunBegin() {
 function onSpecRunEnd(data) {
     const { completedSpecs, currentSpec, totalSpecsRan } = getStatus();
 
+    let specHasFailures = false;
+
+    currentSpec.suites.forEach(suite => {
+        const hasFailures = suite.tests.filter(test => test.status === 'failed')
+            .length;
+
+        if (hasFailures) specHasFailures = true;
+    });
+
     setStatus(
         {
             totalSpecsRan: totalSpecsRan + 1,
@@ -111,6 +120,7 @@ function onSpecRunEnd(data) {
                 {
                     ...currentSpec,
                     hasCompleted: true,
+                    hasFailures: specHasFailures,
                     stats: data,
                 },
             ],

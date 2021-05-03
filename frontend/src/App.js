@@ -12,6 +12,7 @@ import DirectoryTree from './components/DirectoryTree';
 import ComponentPlaceholder from './components/UI/ComponentPlaceholder';
 import Modal from './components/UI/Modal';
 import styles from './App.module.css';
+import CompletedSpecFilterBar from './components/CompletedSpecFilterBar';
 
 class App extends React.Component {
     constructor() {
@@ -153,9 +154,18 @@ class App extends React.Component {
 
     get completedSpecsDisplay() {
         if (this.props.cypressStatus.completedSpecs.length) {
-            return this.props.cypressStatus.completedSpecs.map(
-                (spec, index) => <Spec key={index} spec={spec} />
+            const completedSpecs = this.props.cypressStatus.completedSpecs.filter(
+                spec => {
+                    return (
+                        (spec.hasFailures && this.props.specFilters.failing) ||
+                        (!spec.hasFailures && this.props.specFilters.passing)
+                    );
+                }
             );
+
+            return completedSpecs.map((spec, index) => (
+                <Spec key={index} spec={spec} />
+            ));
         }
 
         if (
@@ -219,6 +229,7 @@ class App extends React.Component {
                 />
 
                 <div className={styles.content}>
+                    <CompletedSpecFilterBar />
                     <TabNavigator
                         classNames={{
                             container: styles.tab_navigator,
@@ -256,6 +267,7 @@ const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
     connectionStatus: state.connectionStatus,
     specSelections: state.specSelections,
+    specFilters: state.specFilters,
 });
 
 const mapDispatchToProps = {

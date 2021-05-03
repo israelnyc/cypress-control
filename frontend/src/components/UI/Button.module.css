@@ -7,6 +7,13 @@
     padding: 0;
     outline: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.container[data-has-value='true'] {
+    padding: 2px 15px;
 }
 
 .container[disabled] {

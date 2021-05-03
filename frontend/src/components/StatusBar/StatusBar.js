@@ -141,9 +141,9 @@ class StatusBar extends React.Component {
                                         ? 'Stop test runner'
                                         : 'Start test runner'
                                 }
-                                className={classNames({
-                                    [styles.button]: true,
-                                })}
+                                className={{
+                                    container: styles.button,
+                                }}
                                 onClick={
                                     cypressIsRunningOrStarting
                                         ? stopCypressRunner
@@ -155,9 +155,9 @@ class StatusBar extends React.Component {
                             />
                             <Button
                                 title='Settings'
-                                className={classNames({
-                                    [styles.button]: true,
-                                })}
+                                className={{
+                                    container: styles.button,
+                                }}
                                 icon={faCog}
                                 onClick={this.props.openSettingsDialog}
                             />

@@ -1,0 +1,21 @@
+.container {
+    background-color: var(--secondary-dark-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.container .button {
+    background-color: var(--main-dark-color);
+    border-radius: 15px;
+    font-size: 16px;
+}
+
+.container .button.selected {
+    background-color: #80ecfe;
+    color: var(--main-dark-color);
+}
