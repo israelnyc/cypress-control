@@ -1,6 +1,17 @@
+.container {
+    display: grid;
+    min-height: 100vh;
+    height: -webkit-fill-available;
+    height: stretch;
+    grid-template-rows: auto 1fr;
+}
 .content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    margin: 0 auto;
     padding: 20px;
-    height: calc(100vh - var(--progress-bar-height) - var(--status-bar-height));
+    width: 100%;
+    max-width: 1000px;
 }
 
 .section {
@@ -11,8 +22,6 @@
 }
 
 .tab_navigator {
-    margin: 0 auto;
-    max-width: 1000px;
     height: 100%;
     box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
 }

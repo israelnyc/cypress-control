@@ -15,7 +15,7 @@ function CompletedSpecFilterBar() {
 
     return (
         <div className={classNames({ [styles.container]: true })}>
-            <div>Filter</div>
+            <div>Completed Specs</div>
             <ButtonBar>
                 <Button
                     title='Click to toggle filter'

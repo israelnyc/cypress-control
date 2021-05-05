@@ -21,6 +21,7 @@ class App extends React.Component {
         this.socket = getSocket();
 
         this.state = {
+            contentHeight: '',
             showSettingsDialog: false,
         };
 
@@ -29,10 +30,17 @@ class App extends React.Component {
 
         this.setPageTitle();
 
+        this.isWindowResizing = false;
+
         this.reconnectCypressSocket = this.reconnectCypressSocket.bind(this);
+        this.windowResizeHandler = this.windowResizeHandler.bind(this);
     }
 
     componentDidMount() {
+        this.setContentHeight();
+
+        window.addEventListener('resize', this.windowResizeHandler);
+
         if (this.socket.disconnected) {
             this.startSocketDisconnectionTimer();
         }
@@ -79,6 +87,29 @@ class App extends React.Component {
 
     componentWillUnmount() {
         this.socket.removeAllListeners();
+        window.removeEventListener('resize', this.windowResizeHandler);
+    }
+
+    windowResizeHandler() {
+        if (!this.isWindowResizing) {
+            this.isWindowResizing = true;
+
+            setTimeout(() => {
+                console.log('windowResizeHandler');
+
+                this.setContentHeight();
+
+                this.isWindowResizing = false;
+            }, 500);
+        }
+    }
+
+    setContentHeight() {
+        const pageHeader = document.querySelector('.page-header');
+
+        this.setState({
+            contentHeight: window.innerHeight - pageHeader.offsetHeight + 'px',
+        });
     }
 
     startSocketDisconnectionTimer() {
@@ -205,7 +236,7 @@ class App extends React.Component {
 
     render() {
         return (
-            <div role='application'>
+            <div className={styles.container} role='application'>
                 <Modal
                     classNames={{ modal: styles.modal }}
                     isVisible={this.state.showSettingsDialog}
@@ -228,7 +259,9 @@ class App extends React.Component {
                     openSettingsDialog={this.openSettingsDialog}
                 />
 
-                <div className={styles.content}>
+                <div
+                    className={styles.content}
+                    style={{ height: this.state.contentHeight }}>
                     <CompletedSpecFilterBar />
                     <TabNavigator
                         classNames={{

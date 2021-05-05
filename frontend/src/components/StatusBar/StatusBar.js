@@ -67,7 +67,7 @@ class StatusBar extends React.Component {
             : 'No spec selection filter applied';
 
         return (
-            <header>
+            <header className='page-header'>
                 <ProgressBar
                     value={cypressStatus.totalSpecsRan}
                     max={cypressStatus.totalSpecs}

@@ -24,7 +24,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && rm -rf ../client && mv ./build ../client",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && rm -rf ../client && mv ./build ../client",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "test-server": "node test-server"
