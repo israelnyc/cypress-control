@@ -19,6 +19,8 @@
     height: 30px;
     min-width: 250px;
     border-radius: 5px;
+    /* setting font-size to minimum of 16px prevents zoom on input focus on iOS */
+    font-size: 16px;
 }
 
 .buttons {

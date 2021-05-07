@@ -29,11 +29,6 @@
     align-items: center;
 }
 
-.content_wrapper {
-    overflow: hidden;
-    height: 0;
-}
-
 .content {
     overflow: auto;
     height: 100%;

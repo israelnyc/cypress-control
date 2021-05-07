@@ -86,19 +86,11 @@ class Panel extends Component {
 
         const content = (
             <div
-                style={{
-                    height: this.state.isCollapsed ? '0' : 'auto',
-                }}
-                className={classNames({
-                    [styles.content_wrapper]: true,
-                })}>
-                <div
-                    className={classNames(
-                        styles.content,
-                        this.props.classNames.content || ''
-                    )}>
-                    {this.props.content}
-                </div>
+                className={classNames(
+                    styles.content,
+                    this.props.classNames.content || ''
+                )}>
+                {this.props.content}
             </div>
         );
 
