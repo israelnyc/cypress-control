@@ -1,6 +1,6 @@
 {
   "name": "@israelnyc/cypress-control",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "main": "index.js",
   "author": "Israel Schulman <israel.schulman@gmail.com>",
   "repository": {
