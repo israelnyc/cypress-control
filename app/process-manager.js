@@ -14,7 +14,14 @@ async function killCypressProcess() {
 
         console.log('killing cypress process:', cypressPID);
 
-        process.kill(cypressPID, 'SIGKILL');
+        try {
+            process.kill(cypressPID, 'SIGKILL');
+        } catch (e) {
+            console.log(
+                `Could not kill cypress process with id: ${cypressPID}`
+            );
+            console.log(e);
+        }
 
         resetProcessStatus();
     }

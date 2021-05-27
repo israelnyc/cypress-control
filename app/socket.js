@@ -55,10 +55,10 @@ function resetTestStatus(data, callback) {
     if (callback) callback();
 }
 
-function startRunner(specSelections = {}) {
-    console.log('Attempting to start runner...');
+function startRunner(options = {}) {
+    console.log('Starting runner...');
 
-    runner.start(specSelections.isFiltered ? specSelections.selectedSpecs : []);
+    runner.start(options);
 
     dispatchCypressStatus({ eventType: events.CYPRESS_CONTROL_START_RUNNER });
 }
@@ -106,8 +106,9 @@ function onSpecRunEnd(data) {
     let specHasFailures = false;
 
     currentSpec.suites.forEach(suite => {
-        const hasFailures = suite.tests.filter(test => test.status === 'failed')
-            .length;
+        const hasFailures = suite.tests.filter(
+            test => test.status === 'failed'
+        ).length;
 
         if (hasFailures) specHasFailures = true;
     });

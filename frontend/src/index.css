@@ -14,6 +14,7 @@
     --button-focus-color: #c0f6ff;
     --disabled-gray: #a5a5a5;
     --disabled-gray-lighter: #a5a5a596;
+    --box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
 }
 
 * {

@@ -1,5 +1,6 @@
 const glob = require('glob');
 const path = require('path');
+const merge = require('lodash/fp/merge');
 const { events } = require('./status-events');
 
 try {
@@ -14,9 +15,42 @@ try {
         integrationFolder = 'cypress/integration/',
     } = require(path.join(process.cwd(), 'cypress.json'));
 
-    const specSelections = process.argv[2]
-        ? process.argv[2].split(',').map(spec => path.normalize(spec))
-        : null;
+    const defaultBrowser = 'electron';
+
+    const options = process.argv[2] ? JSON.parse(process.argv[2]) : {};
+
+    const validBrowsers = [
+        'electron',
+        'chromium',
+        'chrome',
+        'chrome:canary',
+        'edge',
+        'edge:beta',
+        'edge:dev',
+        'edge:canary',
+        'firefox',
+        'firefox:dev',
+        'firefox:nightly',
+    ];
+
+    if (options.browser && !validBrowsers.includes(options.browser)) {
+        console.log(
+            `${options.browser} is not an available browser option. Defaulting to ${defaultBrowser}`
+        );
+
+        console.log(
+            'The following browser options are available, if installed on your system:'
+        );
+
+        validBrowsers.forEach(browser => console.log(browser));
+
+        options.browser = defaultBrowser;
+    }
+
+    const specSelections =
+        options.spec && options.spec.length
+            ? options.spec.map(spec => path.normalize(spec))
+            : null;
 
     const specPattern = specSelections ? specSelections : [];
 
@@ -28,15 +62,18 @@ try {
         }
     }
 
-    console.log('config componentFolder:', componentFolder);
-    console.log('config integrationFolder:', integrationFolder);
-    console.log('spec selections:', specSelections);
-    console.log('spec pattern:', specPattern);
+    const defaultOptions = {
+        browser: defaultBrowser,
+        spec: specPattern,
+        config: {
+            reporter: path.join(__dirname, 'reporter.js'),
+        },
+    };
+
+    const mergedOptions = merge(defaultOptions, options);
 
     const globPattern =
         specPattern.length > 1 ? `{${specPattern.join(',')}}` : specPattern[0];
-
-    console.log('globPattern:', globPattern);
 
     glob(globPattern, { nodir: true }, (err, matches) => {
         console.log('globPattern specs found:', matches.length);
@@ -48,13 +85,16 @@ try {
         });
     });
 
+    console.log('custom options:', options);
+    console.log('merged options:', mergedOptions);
+    console.log('config componentFolder:', componentFolder);
+    console.log('config integrationFolder:', integrationFolder);
+    console.log('spec selections:', specSelections);
+    console.log('spec pattern:', specPattern);
+    console.log('globPattern:', globPattern);
+
     cypress
-        .run({
-            config: {
-                reporter: path.join(__dirname, 'reporter.js'),
-            },
-            spec: specPattern,
-        })
+        .run(mergedOptions)
         .then(results => {
             process.send({
                 type: events.CYPRESS_CONTROL_RUN_COMPLETED,

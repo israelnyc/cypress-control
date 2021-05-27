@@ -62,7 +62,7 @@ class StatusBar extends React.Component {
             serverConnectionTitle.push('Waiting for server to be restarted.');
         }
 
-        const filterIconTitle = this.props.specSelections.isFiltered
+        const filterIconTitle = this.props.cypressOptions.specSelectionsFiltered
             ? 'Spec selection filter applied'
             : 'No spec selection filter applied';
 
@@ -184,8 +184,9 @@ class StatusBar extends React.Component {
                         <StatusIndicator
                             className={classNames({
                                 [styles.specs_filter_icon]: true,
-                                [styles.filter_applied]: this.props
-                                    .specSelections.isFiltered,
+                                [styles.filter_applied]:
+                                    this.props.cypressOptions
+                                        .specSelectionsFiltered,
                             })}
                             icon={faFilter}
                             title={filterIconTitle}
@@ -200,7 +201,7 @@ class StatusBar extends React.Component {
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
     connectionStatus: state.connectionStatus,
-    specSelections: state.specSelections,
+    cypressOptions: state.cypressOptions,
 });
 
 export default connect(mapStateToProps)(StatusBar);

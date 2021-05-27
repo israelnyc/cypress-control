@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux';
 import cypressStatusReducer from './cypressStatus';
 import connectionStatusReducer from './connectionStatus';
-import specSelectionsReducer from './specSelections';
 import specFilterReducer from './specFilter';
+import cypressOptionsReducer from './cypressOptions';
 
 export default combineReducers({
+    cypressOptions: cypressOptionsReducer,
     cypressStatus: cypressStatusReducer,
     connectionStatus: connectionStatusReducer,
-    specSelections: specSelectionsReducer,
     specFilters: specFilterReducer,
 });

@@ -18,16 +18,17 @@
     width: 100%;
     padding: 5px;
     background-color: var(--secondary-dark-color);
-    box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
+    box-shadow: var(--box-shadow);
 }
 
 .tab_navigator {
     height: 100%;
-    box-shadow: 0 5px 15px rgb(0 0 0 / 50%);
+    box-shadow: var(--box-shadow);
 }
 
 .modal {
     max-width: 1000px;
+    border: 2px solid var(--main-dark-color);
 }
 
 .settings_tabs_wrapper {

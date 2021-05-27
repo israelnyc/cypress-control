@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import * as cypressStatus from './reducers/cypressStatus';
 import * as connectionStatus from './reducers/connectionStatus';
-import * as specSelections from './reducers/specSelections';
+import * as cypressOptions from './reducers/cypressOptions';
 import events from './status-events';
 import { getSocket } from './utils';
 import StatusBar from './components/StatusBar/StatusBar';
@@ -13,6 +13,7 @@ import ComponentPlaceholder from './components/UI/ComponentPlaceholder';
 import Modal from './components/UI/Modal';
 import styles from './App.module.css';
 import CompletedSpecFilterBar from './components/CompletedSpecFilterBar';
+import CypressOptions from './components/cypress/CypressOptions';
 
 class App extends React.Component {
     constructor() {
@@ -38,6 +39,12 @@ class App extends React.Component {
 
     componentDidMount() {
         this.setContentHeight();
+
+        if (localStorage.cypressOptions) {
+            this.props.updateCypressOptions(
+                JSON.parse(localStorage.cypressOptions)
+            );
+        }
 
         window.addEventListener('resize', this.windowResizeHandler);
 
@@ -95,8 +102,6 @@ class App extends React.Component {
             this.isWindowResizing = true;
 
             setTimeout(() => {
-                console.log('windowResizeHandler');
-
                 this.setContentHeight();
 
                 this.isWindowResizing = false;
@@ -185,14 +190,13 @@ class App extends React.Component {
 
     get completedSpecsDisplay() {
         if (this.props.cypressStatus.completedSpecs.length) {
-            const completedSpecs = this.props.cypressStatus.completedSpecs.filter(
-                spec => {
+            const completedSpecs =
+                this.props.cypressStatus.completedSpecs.filter(spec => {
                     return (
                         (spec.hasFailures && this.props.specFilters.failing) ||
                         (!spec.hasFailures && this.props.specFilters.passing)
                     );
-                }
-            );
+                });
 
             return completedSpecs.map((spec, index) => (
                 <Spec key={index} spec={spec} />
@@ -251,6 +255,10 @@ class App extends React.Component {
                                 label: 'Spec Selection',
                                 render: () => this.specSelectionTree,
                             },
+                            {
+                                label: 'Runner Options',
+                                render: () => <CypressOptions />,
+                            },
                         ]}
                     />
                 </Modal>
@@ -299,15 +307,16 @@ class App extends React.Component {
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
     connectionStatus: state.connectionStatus,
-    specSelections: state.specSelections,
     specFilters: state.specFilters,
+    cypressOptions: state.cypressOptions,
 });
 
 const mapDispatchToProps = {
     updateCypressStatus: cypressStatus.update,
     setServerConnected: connectionStatus.setServerConnected,
     setSocketConnected: connectionStatus.setSocketConnected,
-    updateSpecSelections: specSelections.update,
+    updateCypressOptions: cypressOptions.update,
+    updateSpecSelections: cypressOptions.updateSpecs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
