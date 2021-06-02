@@ -35,6 +35,11 @@ function CypressOptions() {
             case 'select-one':
                 value = e.target.value;
                 break;
+            case 'select-multiple':
+                value = [...e.target.selectedOptions].map(
+                    option => option.value
+                );
+                break;
             case 'checkbox':
                 value = e.target.checked;
                 break;

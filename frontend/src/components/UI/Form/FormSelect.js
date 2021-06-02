@@ -6,15 +6,19 @@ function FormSelect({
     children,
     changeHandler = () => {},
     id = '',
+    multiple = false,
     options = {},
     selectedValue = '',
+    size = 0,
 }) {
     return (
         <select
             id={id}
-            className={styles.container}
+            className={styles.select}
             value={selectedValue}
-            onChange={changeHandler}>
+            multiple={multiple}
+            onChange={changeHandler}
+            size={size}>
             {Object.keys(options).map(option => {
                 const optionValue = options[option];
                 return (

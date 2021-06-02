@@ -1,4 +1,15 @@
-.container {
+.select {
     height: 30px;
     font-size: 0.9rem;
+}
+
+.select[size] {
+    height: auto;
+}
+
+.select option {
+    height: 25px;
+    padding-left: 5px;
+    display: flex;
+    align-items: center;
 }
