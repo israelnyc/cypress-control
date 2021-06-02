@@ -52,6 +52,11 @@ code {
         monospace;
 }
 
+a {
+    color: var(--light-blue);
+    text-decoration: none;
+}
+
 .hidden {
     display: none !important;
 }

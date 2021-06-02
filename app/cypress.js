@@ -1,6 +1,6 @@
 const glob = require('glob');
 const path = require('path');
-const merge = require('lodash/fp/merge');
+const merge = require('lodash/fp/mergeWith');
 const { events } = require('./status-events');
 
 try {
@@ -17,8 +17,6 @@ try {
 
     const defaultBrowser = 'electron';
 
-    const options = process.argv[2] ? JSON.parse(process.argv[2]) : {};
-
     const validBrowsers = [
         'electron',
         'chromium',
@@ -32,6 +30,15 @@ try {
         'firefox:dev',
         'firefox:nightly',
     ];
+
+    const options = process.argv[2] ? JSON.parse(process.argv[2]) : {};
+
+    options.config = options.config || {};
+    options.config.reporterOptions = options.config.reporterOptions || {};
+
+    if (options.reporters) {
+        options.config.reporterOptions.reporterEnabled = options.reporters;
+    }
 
     if (options.browser && !validBrowsers.includes(options.browser)) {
         console.log(
@@ -66,11 +73,27 @@ try {
         browser: defaultBrowser,
         spec: specPattern,
         config: {
-            reporter: path.join(__dirname, 'reporter.js'),
+            reporter: path.join(
+                __dirname,
+                '..',
+                'node_modules',
+                'cypress-multi-reporters'
+            ),
+            reporterOptions: {
+                reporterEnabled: [path.join(__dirname, 'reporter.js')],
+            },
         },
     };
 
-    const mergedOptions = merge(defaultOptions, options);
+    const mergedOptions = merge(
+        (objValue, srcValue) => {
+            if (Array.isArray(objValue)) {
+                return objValue.concat(srcValue);
+            }
+        },
+        defaultOptions,
+        options
+    );
 
     const globPattern =
         specPattern.length > 1 ? `{${specPattern.join(',')}}` : specPattern[0];
@@ -87,6 +110,10 @@ try {
 
     console.log('custom options:', options);
     console.log('merged options:', mergedOptions);
+    console.log(
+        'reporters enabled:',
+        mergedOptions.config.reporterOptions.reporterEnabled
+    );
     console.log('config componentFolder:', componentFolder);
     console.log('config integrationFolder:', integrationFolder);
     console.log('spec selections:', specSelections);

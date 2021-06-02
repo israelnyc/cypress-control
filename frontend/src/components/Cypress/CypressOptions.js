@@ -7,6 +7,7 @@ import FormCheckbox from '../UI/Form/FormCheckbox';
 import FormControl from '../UI/Form/FormControl';
 import FormRow from '../UI/Form/FormRow';
 import FormSelect from '../UI/Form/FormSelect';
+import FormTextInput from '../UI/Form/FormTextInput';
 
 import styles from './CypressOptions.module.css';
 
@@ -33,7 +34,12 @@ function CypressOptions() {
 
         switch (e.target.type) {
             case 'select-one':
-                value = e.target.value;
+            case 'text':
+                if (['reporters'].indexOf(option) > -1) {
+                    value = e.target.value.split(',').map(val => val.trim());
+                } else {
+                    value = e.target.value;
+                }
                 break;
             case 'select-multiple':
                 value = [...e.target.selectedOptions].map(
@@ -97,6 +103,31 @@ function CypressOptions() {
                                 )}
                                 options={browsers}
                                 selectedValue={options.browser}
+                            />
+                        }
+                    />
+                </FormRow>
+                <FormRow>
+                    <FormControl
+                        description={{
+                            __html: `Accepts comma delimited list of reporters, including valid 
+                            <a
+                                href='https://mochajs.org/#reporters'
+                                target='_blank'
+                                rel='noreferrer'>
+                                Mocha reporters
+                            </a>
+                        `,
+                        }}
+                        id='cypressOptionsCustomReporters'
+                        label='Custom Reporters'
+                        control={
+                            <FormTextInput
+                                changeHandler={formControlChangeHandler.bind(
+                                    null,
+                                    'reporters'
+                                )}
+                                value={options.reporters}
                             />
                         }
                     />

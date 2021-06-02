@@ -7,6 +7,7 @@ const cypressOptionsSlice = createSlice({
         headed: false,
         headless: true,
         quiet: false,
+        reporters: [],
         spec: [],
     },
     reducers: {
