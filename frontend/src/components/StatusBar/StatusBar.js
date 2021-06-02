@@ -20,7 +20,7 @@ import StatusBarSection from './StatusBarSection';
 import StatusBarResult from './StatusBarResult';
 import Button from '../UI/Button';
 import ButtonBar from '../UI/ButtonBar';
-import StatusIndicator from './StatusIndicator';
+import StatusIndicator from '../UI/StatusIndicator';
 import styles from './StatusBar.module.css';
 
 class StatusBar extends React.Component {
