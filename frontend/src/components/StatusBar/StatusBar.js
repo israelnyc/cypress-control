@@ -22,10 +22,11 @@ import Button from '../UI/Button';
 import ButtonBar from '../UI/ButtonBar';
 import StatusIndicator from '../UI/StatusIndicator';
 import styles from './StatusBar.module.css';
+import RunnerStatusIndicator from '../StatusIndicators/RunnerStatusIndicator';
 
 class StatusBar extends React.Component {
     render() {
-        const { cypressStatus, connectionStatus } = this.props;
+        const { cypressStatus } = this.props;
 
         const cypressIsRunningOrStarting =
             cypressStatus.isRunning || cypressStatus.isStarting;
@@ -39,28 +40,6 @@ class StatusBar extends React.Component {
         const totalDuration = cypressStatus.totalDuration
             ? prettyMilliseconds(cypressStatus.totalDuration)
             : '';
-
-        const serverConnectionTitle = [];
-
-        connectionStatus.isServerConnected
-            ? serverConnectionTitle.push('Connected to server.')
-            : serverConnectionTitle.push('Disconnected from server.');
-
-        if (
-            !connectionStatus.isServerConnected &&
-            !connectionStatus.isSocketConnected
-        ) {
-            serverConnectionTitle.push(
-                'Socket has also been disconnected, click to reconnect socket.'
-            );
-        }
-
-        if (
-            !connectionStatus.isServerConnected &&
-            connectionStatus.isSocketConnected
-        ) {
-            serverConnectionTitle.push('Waiting for server to be restarted.');
-        }
 
         const filterIconTitle = this.props.cypressOptions.specSelectionsFiltered
             ? 'Spec selection filter applied'
@@ -162,25 +141,7 @@ class StatusBar extends React.Component {
                                 onClick={this.props.openSettingsDialog}
                             />
                         </ButtonBar>
-                        <StatusIndicator
-                            className={classNames({
-                                pointer: !connectionStatus.isSocketConnected,
-                                [styles.connection_status]: true,
-                                [styles.server_connected]:
-                                    connectionStatus.isServerConnected,
-                                [styles.server_disconnected]:
-                                    !connectionStatus.isServerConnected ||
-                                    !connectionStatus.isSocketConnected,
-                            })}
-                            onClick={
-                                !connectionStatus.isSocketConnected
-                                    ? this.props.reconnectCypressSocket
-                                    : () => {}
-                            }
-                            icon={faCircleNotch}
-                            spin={cypressStatus.isRunning}
-                            title={serverConnectionTitle.join(' ')}
-                        />
+                        <RunnerStatusIndicator />
                         <StatusIndicator
                             className={classNames({
                                 [styles.specs_filter_icon]: true,
@@ -200,7 +161,6 @@ class StatusBar extends React.Component {
 
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
-    connectionStatus: state.connectionStatus,
     cypressOptions: state.cypressOptions,
 });
 

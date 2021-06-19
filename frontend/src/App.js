@@ -4,16 +4,19 @@ import * as cypressStatus from './reducers/cypressStatus';
 import * as connectionStatus from './reducers/connectionStatus';
 import * as cypressOptions from './reducers/cypressOptions';
 import events from './status-events';
-import { getSocket } from './utils';
+import {
+    getSocket,
+    startSocketDisconnectionTimer,
+    clearSocketDisconnectionTimer,
+} from './utils';
 import StatusBar from './components/StatusBar/StatusBar';
 import TabNavigator from './components/UI/TabNavigator';
 import Spec from './components/cypress/Spec';
-import DirectoryTree from './components/DirectoryTree';
 import ComponentPlaceholder from './components/UI/ComponentPlaceholder';
 import Modal from './components/UI/Modal';
 import styles from './App.module.css';
 import CompletedSpecFilterBar from './components/CompletedSpecFilterBar';
-import CypressOptions from './components/cypress/CypressOptions';
+import Settings from './components/Settings';
 
 class App extends React.Component {
     constructor() {
@@ -27,13 +30,11 @@ class App extends React.Component {
         };
 
         this.pageTitle = '%customValues Cypress Control';
-        this.socketDisconnectTimer = null;
 
         this.setPageTitle();
 
         this.isWindowResizing = false;
 
-        this.reconnectCypressSocket = this.reconnectCypressSocket.bind(this);
         this.windowResizeHandler = this.windowResizeHandler.bind(this);
     }
 
@@ -49,7 +50,7 @@ class App extends React.Component {
         window.addEventListener('resize', this.windowResizeHandler);
 
         if (this.socket.disconnected) {
-            this.startSocketDisconnectionTimer();
+            startSocketDisconnectionTimer();
         }
 
         this.socket.on(events.CYPRESS_CONTROL_STATUS, data => {
@@ -80,13 +81,13 @@ class App extends React.Component {
 
             this.updateCypressLog();
 
-            clearInterval(this.socketDisconnectTimer);
+            clearSocketDisconnectionTimer();
         });
 
         this.socket.on('disconnect', () => {
             this.props.setServerConnected(false);
 
-            this.startSocketDisconnectionTimer();
+            startSocketDisconnectionTimer();
         });
 
         this.updateCypressLog();
@@ -117,25 +118,6 @@ class App extends React.Component {
         });
     }
 
-    startSocketDisconnectionTimer() {
-        this.props.setSocketConnected(true);
-
-        this.socketDisconnectTimer = setTimeout(() => {
-            this.socket.disconnect();
-            this.props.setSocketConnected(false);
-            console.log('socket disconnected');
-        }, 2 * 60 * 1000);
-    }
-
-    reconnectCypressSocket() {
-        if (this.socket.disconnected) {
-            console.log('socket reconnected');
-            this.socket.connect();
-            this.props.setSocketConnected(true);
-            this.startSocketDisconnectionTimer();
-        }
-    }
-
     updateCypressStatus(data) {
         this.props.updateCypressStatus(data);
 
@@ -164,10 +146,6 @@ class App extends React.Component {
     setPageTitle(customValues = '') {
         document.title = this.pageTitle.replace('%customValues', customValues);
     }
-
-    onCypressFileSelectionChange = directoryTree => {
-        this.props.updateSpecSelections(directoryTree.state);
-    };
 
     get currentSpecDisplay() {
         if (this.props.cypressStatus.currentSpec.suites) {
@@ -215,18 +193,6 @@ class App extends React.Component {
         return <ComponentPlaceholder message='Runner is not started' />;
     }
 
-    get specSelectionTree() {
-        return (
-            <DirectoryTree
-                dataURL='/cypress-spec-directories/'
-                rendersCollapsed={false}
-                isCaseSensitive={false}
-                itemsHaveCheckboxes={true}
-                onSelectionChange={this.onCypressFileSelectionChange}
-            />
-        );
-    }
-
     async updateCypressLog() {
         if (!this.props.connectionStatus.isServerConnected) return;
 
@@ -245,27 +211,9 @@ class App extends React.Component {
                     classNames={{ modal: styles.modal }}
                     isVisible={this.state.showSettingsDialog}
                     closeModal={this.closeSettingsDialog}>
-                    <TabNavigator
-                        classNames={{
-                            container: styles.tab_navigator,
-                            tabs_wrapper: styles.settings_tabs_wrapper,
-                        }}
-                        sections={[
-                            {
-                                label: 'Spec Selection',
-                                render: () => this.specSelectionTree,
-                            },
-                            {
-                                label: 'Runner Options',
-                                render: () => <CypressOptions />,
-                            },
-                        ]}
-                    />
+                    <Settings />
                 </Modal>
-                <StatusBar
-                    reconnectCypressSocket={this.reconnectCypressSocket}
-                    openSettingsDialog={this.openSettingsDialog}
-                />
+                <StatusBar openSettingsDialog={this.openSettingsDialog} />
 
                 <div
                     className={styles.content}
@@ -316,7 +264,6 @@ const mapDispatchToProps = {
     setServerConnected: connectionStatus.setServerConnected,
     setSocketConnected: connectionStatus.setSocketConnected,
     updateCypressOptions: cypressOptions.update,
-    updateSpecSelections: cypressOptions.updateSpecs,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

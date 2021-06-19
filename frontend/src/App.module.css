@@ -31,10 +31,6 @@
     border: 2px solid var(--main-dark-color);
 }
 
-.settings_tabs_wrapper {
-    background-color: var(--main-dark-color);
-}
-
 .completed_specs {
     overflow: auto;
 }

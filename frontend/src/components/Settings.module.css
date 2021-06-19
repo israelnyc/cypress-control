@@ -1,0 +1,8 @@
+.container {
+    height: 100%;
+    box-shadow: var(--box-shadow);
+}
+
+.tabs_wrapper {
+    background-color: var(--main-dark-color);
+}

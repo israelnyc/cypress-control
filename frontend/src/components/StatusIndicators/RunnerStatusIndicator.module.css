@@ -1,0 +1,7 @@
+.connection_status.server_connected {
+    color: var(--success-green);
+}
+
+.connection_status.server_disconnected {
+    color: var(--disabled-gray);
+}

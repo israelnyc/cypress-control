@@ -35,14 +35,6 @@
     color: var(--button-focus-color);
 }
 
-.connection_status.server_connected {
-    color: var(--success-green);
-}
-
-.connection_status.server_disconnected {
-    color: var(--disabled-gray);
-}
-
 .specs_filter_icon {
     font-size: 0.78rem;
     color: var(--disabled-gray-lighter);
