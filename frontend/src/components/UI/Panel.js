@@ -10,13 +10,27 @@ class Panel extends Component {
         isCollapsible: true,
         hideToggleIcon: false,
         rendersCollapsed: false,
+        forcedCollapse: false,
         onToggled: () => {},
     };
+
+    static getDerivedStateFromProps(props, state) {
+        if (props.forcedCollapse && !state.forcedCollapse) {
+            return { forcedCollapse: true, isCollapsed: true };
+        }
+
+        if (!props.forcedCollapse && state.forcedCollapse) {
+            return { forcedCollapse: false, isCollapsed: false };
+        }
+
+        return null;
+    }
 
     constructor(props) {
         super(props);
 
         this.state = {
+            forcedCollapse: false,
             isCollapsed: false,
         };
     }
@@ -56,7 +70,11 @@ class Panel extends Component {
                 })}>
                 <FontAwesomeIcon
                     className={styles.toggle_icon}
-                    icon={this.state.isCollapsed ? faCaretRight : faCaretDown}
+                    icon={
+                        this.state.isCollapsed || this.state.forcedCollapse
+                            ? faCaretRight
+                            : faCaretDown
+                    }
                 />
             </div>
         );
@@ -105,7 +123,9 @@ class Panel extends Component {
                     this.props.classNames.panel || ''
                 )}>
                 {titleBar}
-                {!this.state.isCollapsed && content}
+                {!this.state.isCollapsed &&
+                    !this.state.forcedCollapse &&
+                    content}
             </div>
         );
     }

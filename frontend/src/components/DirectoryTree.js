@@ -28,21 +28,18 @@ class DirectoryTree extends Component {
             filterQuery: '',
             filteredFilesOrDirectories: [],
             selectedItems: [],
+            allDirectoriesCollapsed: false,
         };
 
         this.directoryPanels = {};
     }
 
     collapseAll = () => {
-        Object.keys(this.directoryPanels).forEach(key => {
-            this.directoryPanels[key].collapse();
-        });
+        this.setState({ allDirectoriesCollapsed: true });
     };
 
     expandAll = () => {
-        Object.keys(this.directoryPanels).forEach(key => {
-            this.directoryPanels[key].expand();
-        });
+        this.setState({ allDirectoriesCollapsed: false });
     };
 
     filter(data, query, parentDirectory = '') {
@@ -236,7 +233,10 @@ class DirectoryTree extends Component {
             if (item.type === 'directory') {
                 tree.push(
                     <Panel
-                        ref={panel => (this.directoryPanels[key] = panel)}
+                        forcedCollapse={this.state.allDirectoriesCollapsed}
+                        onToggled={() =>
+                            this.setState({ allDirectoriesCollapsed: false })
+                        }
                         classNames={{
                             panel: classNames({
                                 hidden: !matchesFilter,
