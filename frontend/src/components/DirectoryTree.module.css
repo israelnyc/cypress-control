@@ -42,8 +42,10 @@
     font-size: 0.8em;
 }
 
+.button:focus,
 .button:hover {
     background-color: var(--light-blue);
+    color: var(--secondary-dark-color);
 }
 
 .tree_item_wrapper {

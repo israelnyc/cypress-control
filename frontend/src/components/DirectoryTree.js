@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faSync } from '@fortawesome/free-solid-svg-icons';
-import Panel from './UI/Panel';
-import styles from './DirectoryTree.module.css';
 import classNames from 'classnames';
+import { faPlus, faMinus, faSync } from '@fortawesome/free-solid-svg-icons';
+import Button from './UI/Button';
+import ButtonBar from './UI/ButtonBar';
+import Panel from './UI/Panel';
+
+import styles from './DirectoryTree.module.css';
 
 class DirectoryTree extends Component {
     static defaultProps = {
@@ -176,18 +178,16 @@ class DirectoryTree extends Component {
 
             if (type === 'directory') {
                 directoryChildren.forEach(directoryChild => {
-                    const directoryChildPathIndex = selectedItems.indexOf(
-                        directoryChild
-                    );
+                    const directoryChildPathIndex =
+                        selectedItems.indexOf(directoryChild);
 
                     if (directoryChildPathIndex > -1) {
                         selectedItems.splice(directoryChildPathIndex, 1);
                     }
                 });
             } else {
-                const parentDirectoryIndex = selectedItems.indexOf(
-                    parentDirectory
-                );
+                const parentDirectoryIndex =
+                    selectedItems.indexOf(parentDirectory);
 
                 if (parentDirectoryIndex > -1) {
                     selectedItems.splice(parentDirectoryIndex, 1);
@@ -319,26 +319,32 @@ class DirectoryTree extends Component {
                     />
                 </div>
 
-                <div className={styles.buttons}>
-                    <div
-                        className={styles.button}
+                <ButtonBar className={styles.buttons}>
+                    <Button
+                        className={{
+                            container: styles.button,
+                        }}
                         title='Expand All'
-                        onClick={this.expandAll}>
-                        <FontAwesomeIcon icon={faPlus} />
-                    </div>
-                    <div
-                        className={styles.button}
+                        onClick={this.expandAll}
+                        icon={faPlus}
+                    />
+                    <Button
+                        className={{
+                            container: styles.button,
+                        }}
                         title='Collapse All'
-                        onClick={this.collapseAll}>
-                        <FontAwesomeIcon icon={faMinus} />
-                    </div>
-                    <div
-                        className={styles.button}
+                        onClick={this.collapseAll}
+                        icon={faMinus}
+                    />
+                    <Button
+                        className={{
+                            container: styles.button,
+                        }}
                         title='Refresh'
-                        onClick={this.refreshData}>
-                        <FontAwesomeIcon icon={faSync} />
-                    </div>
-                </div>
+                        onClick={this.refreshData}
+                        icon={faSync}
+                    />
+                </ButtonBar>
             </header>
         );
 
