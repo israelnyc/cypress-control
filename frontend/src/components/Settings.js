@@ -1,5 +1,5 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateSpecs } from '../reducers/cypressOptions';
 import TabNavigator from './UI/TabNavigator';
 import CypressOptions from './cypress/CypressOptions';
@@ -12,7 +12,9 @@ import StatusBarSection from './StatusBar/StatusBarSection';
 import FilterStatusIndicator from './StatusIndicators/FilterStatusIndicator';
 
 function Settings() {
+    const connectionStatus = useSelector(state => state.connectionStatus);
     const dispatch = useDispatch();
+    const directoryTree = useRef(null);
 
     const onCypressFileSelectionChange = directoryTree => {
         dispatch(updateSpecs(directoryTree.state));
@@ -20,6 +22,7 @@ function Settings() {
 
     const specSelectionTree = (
         <DirectoryTree
+            ref={directoryTree}
             dataURL='/cypress-spec-directories/'
             rendersCollapsed={false}
             isCaseSensitive={false}
@@ -27,6 +30,12 @@ function Settings() {
             onSelectionChange={onCypressFileSelectionChange}
         />
     );
+
+    useEffect(() => {
+        if (connectionStatus.isServerConnected) {
+            directoryTree.current.refreshData();
+        }
+    }, [connectionStatus]);
 
     return (
         <div className={styles.container}>
