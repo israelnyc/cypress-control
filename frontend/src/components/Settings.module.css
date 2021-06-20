@@ -3,6 +3,24 @@
     box-shadow: var(--box-shadow);
 }
 
+.status {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--main-dark-color);
+}
+
+.title {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.tab_navigator_container {
+    height: 100%;
+}
+
 .tabs_wrapper {
     background-color: var(--main-dark-color);
 }

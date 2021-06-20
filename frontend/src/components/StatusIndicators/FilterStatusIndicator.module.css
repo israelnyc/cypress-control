@@ -1,0 +1,8 @@
+.container {
+    font-size: 0.78rem;
+    color: var(--disabled-gray-lighter);
+}
+
+.filtered {
+    color: var(--success-green);
+}

@@ -1,35 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
 import prettyMilliseconds from 'pretty-ms';
 import {
     faCheck,
     faTimes,
-    faPlay,
-    faStop,
     faCog,
-    faFilter,
     faCircleNotch,
     faClock,
     faClipboardList,
     faTasks,
 } from '@fortawesome/free-solid-svg-icons';
-import { startCypressRunner, stopCypressRunner } from '../../utils';
 import ProgressBar from '../UI/ProgressBar';
 import StatusBarSection from './StatusBarSection';
 import StatusBarResult from './StatusBarResult';
 import Button from '../UI/Button';
 import ButtonBar from '../UI/ButtonBar';
-import StatusIndicator from '../UI/StatusIndicator';
 import styles from './StatusBar.module.css';
 import RunnerStatusIndicator from '../StatusIndicators/RunnerStatusIndicator';
+import RunnerControlButton from '../Buttons/RunnerControlButton';
+import FilterStatusIndicator from '../StatusIndicators/FilterStatusIndicator';
 
 class StatusBar extends React.Component {
     render() {
         const { cypressStatus } = this.props;
-
-        const cypressIsRunningOrStarting =
-            cypressStatus.isRunning || cypressStatus.isStarting;
 
         const specsProgress = `${cypressStatus.totalSpecsRan} / ${cypressStatus.totalSpecs}`;
 
@@ -40,10 +33,6 @@ class StatusBar extends React.Component {
         const totalDuration = cypressStatus.totalDuration
             ? prettyMilliseconds(cypressStatus.totalDuration)
             : '';
-
-        const filterIconTitle = this.props.cypressOptions.specSelectionsFiltered
-            ? 'Spec selection filter applied'
-            : 'No spec selection filter applied';
 
         return (
             <header className='page-header'>
@@ -114,44 +103,15 @@ class StatusBar extends React.Component {
 
                     <StatusBarSection className={styles.status_and_control}>
                         <ButtonBar>
-                            <Button
-                                title={
-                                    cypressIsRunningOrStarting
-                                        ? 'Stop test runner'
-                                        : 'Start test runner'
-                                }
-                                className={{
-                                    container: styles.button,
-                                }}
-                                onClick={
-                                    cypressIsRunningOrStarting
-                                        ? stopCypressRunner
-                                        : startCypressRunner
-                                }
-                                icon={
-                                    cypressIsRunningOrStarting ? faStop : faPlay
-                                }
-                            />
+                            <RunnerControlButton />
                             <Button
                                 title='Settings'
-                                className={{
-                                    container: styles.button,
-                                }}
                                 icon={faCog}
                                 onClick={this.props.openSettingsDialog}
                             />
                         </ButtonBar>
                         <RunnerStatusIndicator />
-                        <StatusIndicator
-                            className={classNames({
-                                [styles.specs_filter_icon]: true,
-                                [styles.filter_applied]:
-                                    this.props.cypressOptions
-                                        .specSelectionsFiltered,
-                            })}
-                            icon={faFilter}
-                            title={filterIconTitle}
-                        />
+                        <FilterStatusIndicator />
                     </StatusBarSection>
                 </div>
             </header>
@@ -161,7 +121,6 @@ class StatusBar extends React.Component {
 
 const mapStateToProps = state => ({
     cypressStatus: state.cypressStatus,
-    cypressOptions: state.cypressOptions,
 });
 
 export default connect(mapStateToProps)(StatusBar);

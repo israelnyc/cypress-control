@@ -16,6 +16,11 @@
     padding: 2px 15px;
 }
 
+.container:focus,
+.container:hover {
+    color: var(--button-focus-color);
+}
+
 .container[disabled] {
     cursor: default;
     color: var(--light-gray);

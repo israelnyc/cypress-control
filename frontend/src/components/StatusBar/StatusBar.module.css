@@ -30,20 +30,6 @@
     flex-grow: 1;
 }
 
-.button:focus,
-.button:hover {
-    color: var(--button-focus-color);
-}
-
-.specs_filter_icon {
-    font-size: 0.78rem;
-    color: var(--disabled-gray-lighter);
-}
-
-.specs_filter_icon.filter_applied {
-    color: var(--success-green);
-}
-
 @media (max-width: 700px) {
     .container {
         display: grid;

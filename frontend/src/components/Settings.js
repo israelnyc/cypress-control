@@ -6,6 +6,10 @@ import CypressOptions from './cypress/CypressOptions';
 import DirectoryTree from './DirectoryTree';
 
 import styles from './Settings.module.css';
+import RunnerStatusIndicator from './StatusIndicators/RunnerStatusIndicator';
+import RunnerControlButton from './Buttons/RunnerControlButton';
+import StatusBarSection from './StatusBar/StatusBarSection';
+import FilterStatusIndicator from './StatusIndicators/FilterStatusIndicator';
 
 function Settings() {
     const dispatch = useDispatch();
@@ -26,8 +30,17 @@ function Settings() {
 
     return (
         <div className={styles.container}>
+            <header className={styles.status}>
+                <div className={styles.title}>Settings</div>
+                <StatusBarSection>
+                    <RunnerControlButton />
+                    <RunnerStatusIndicator />
+                    <FilterStatusIndicator />
+                </StatusBarSection>
+            </header>
             <TabNavigator
                 classNames={{
+                    container: styles.tab_navigator_container,
                     tabs_wrapper: styles.tabs_wrapper,
                 }}
                 sections={[
